@@ -10,9 +10,9 @@ import com.system.roll.entity.dto.student.CourseDto;
 import com.system.roll.entity.dto.student.InfoDto;
 import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.pojo.*;
-import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
+import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
 import com.system.roll.excel.annotation.Excel;
 import com.system.roll.excel.uitl.ExcelUtil;
@@ -144,24 +144,25 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
         // 2.查出该督导员当天需要点名的课程信息
         LambdaQueryWrapper<CourseArrangement> caqw = new LambdaQueryWrapper<>();
-        caqw.in(CourseArrangement::getId,courseIds)
+        caqw.in(CourseArrangement::getCourseId,courseIds)
                 .eq(CourseArrangement::getWeekDay,currentDay)
-                .eq(CourseArrangement::getMode, isOdd ? TeachingMode.ODD_SINGLE_WEEK : TeachingMode.EVEN_SINGLE_WEEK)
-                .eq(CourseArrangement::getMode,TeachingMode.EVERY_WEEK);
+                .in(CourseArrangement::getMode,isOdd ? TeachingMode.ODD_SINGLE_WEEK : TeachingMode.EVEN_SINGLE_WEEK,TeachingMode.EVERY_WEEK);
 
         List<CourseArrangement> courseArrangements = courseArrangementMapper.selectList(caqw);
 
         // 3.将数据封装成vo对象
         LambdaQueryWrapper<Delivery> dqw = new LambdaQueryWrapper<>();
         LambdaQueryWrapper<Course> cqw = new LambdaQueryWrapper<>();
-        courseArrangements.forEach(item->{
+        for (CourseArrangement item : courseArrangements) {
             dqw.clear();
             cqw.clear();
 
             cqw.eq(Course::getId,item.getCourseId())
                     .le(Course::getStartWeek,currentWeek)
                     .ge(Course::getEndWeek,currentWeek);
+
             Course course = courseMapper.selectOne(cqw);
+            if (course==null) continue;
             dqw.eq(Delivery::getCourseId,item.getCourseId());
             List<Delivery> deliveries = deliveryMapper.selectList(dqw);
             List<String> professorNames = deliveries.stream().map(Delivery::getProfessorName).collect(Collectors.toList());
@@ -174,7 +175,7 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
                     .setProfessorName(StringUtils.join(professorNames,','));
 
             courses.add(courseVo);
-        });
+        }
 
         return new CourseListVo(courses,courses.size());
     }
@@ -192,6 +193,7 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         CourseRelation courseRelation = courseRelationMapper.selectOne(wrapper);
         ossHandler.deleteFile(courseRelation.getAttachment());
         courseRelationMapper.deleteByMap(map);
+        rollRelationMapper.deleteByMap(map);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class SupervisorBaseController {
             @RequestParam(value = "endWeek") Integer endWeek,
             @RequestParam(value = "grade") Integer grade,
             @RequestParam(value = "courseArrangements") List<String> courseArrangements,
-            @RequestPart(value = "studentList") MultipartFile studentList
+            @RequestParam(value = "studentList") MultipartFile studentList
     ){
         CourseDto courseDto = new CourseDto()
                 .setCourseName(courseName)
@@ -52,7 +52,7 @@ public class SupervisorBaseController {
             @RequestParam(value = "endWeek") Integer endWeek,
             @RequestParam(value = "grade") Integer grade,
             @RequestParam(value = "courseArrangements") List<String> courseArrangements,
-            @RequestPart(value = "studentList",required = false) MultipartFile studentList
+            @RequestParam(value = "studentList",required = false) MultipartFile studentList
     ){
         CourseDto courseDTO = new CourseDto()
                 .setId(courseId)

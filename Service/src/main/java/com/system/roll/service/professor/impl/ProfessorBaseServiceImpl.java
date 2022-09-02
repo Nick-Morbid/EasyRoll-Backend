@@ -1,8 +1,10 @@
 package com.system.roll.service.professor.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.Role;
 import com.system.roll.entity.dto.professor.InfoDto;
+import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.pojo.Professor;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.professor.InfoVo;
@@ -62,24 +64,29 @@ public class ProfessorBaseServiceImpl implements ProfessorBaseService {
     public InfoVo register(InfoDto infoDto) {
         /*获取用户的openId*/
         String openId = wxApiService.jsCode2session(infoDto.getCode()).getOpenId();
-        /*查找是否已有相关记录*/
+        /*查询是否已经注册过*/
         LambdaQueryWrapper<Professor> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Professor::getProfessorName,infoDto.getName());
+        wrapper.eq(Professor::getOpenId,openId);
         Professor professor1 = professorMapper.selectOne(wrapper);
+        if (professor1!=null) throw new ServiceException(ResultCode.USER_ALREADY_EXISTS);
+        /*查找是否已有相关记录*/
+        wrapper.clear();
+        wrapper.eq(Professor::getProfessorName,infoDto.getName());
+        Professor professor2 = professorMapper.selectOne(wrapper);
         /*插入新记录*/
         Professor professor = new Professor()
-                .setId(idUtil.getId())
+                .setId(infoDto.getId())
                 .setProfessorName(infoDto.getName())
                 .setOpenId(openId)
                 .setDepartmentId(departmentMapper.selectIdByNameAndGrade(infoDto.getDepartmentName(),2020))
                 .setRole(enumUtil.getEnumByCode(Role.class,infoDto.getRole()));
         professorMapper.insert(professor);
         /*如果之前已有相关记录，则进行记录的更新*/
-        if (professor1!=null){
+        if (professor2!=null){
             /*先删除原有的记录*/
-            professorMapper.deleteById(professor1.getId());
+            professorMapper.deleteById(professor2.getId());
             /*修改授课表中的记录*/
-            deliveryMapper.updateProfessorId(professor1.getId(),professor.getId());
+            deliveryMapper.updateProfessorId(professor2.getId(),professor.getId());
         }
         return professorConvertor.professorToInfoVo(professor)
                 .setCurrentWeek(dateUtil.getWeek(new Date(System.currentTimeMillis())))
