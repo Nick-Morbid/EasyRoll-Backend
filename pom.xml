@@ -23,7 +23,6 @@
         <module>Api</module>
         <module>Mapper</module>
         <module>Web</module>
-        <module>Entity</module>
     </modules>
     <dependencyManagement>
         <dependencies>
