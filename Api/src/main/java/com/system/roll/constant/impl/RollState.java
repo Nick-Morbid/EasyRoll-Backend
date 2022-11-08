@@ -1,5 +1,6 @@
 package com.system.roll.constant.impl;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.system.roll.constant.CommonEnum;
 
 /**
@@ -10,6 +11,7 @@ public enum  RollState implements CommonEnum {
     ABSENCE("缺勤",2);
 
     private final String msg;
+    @EnumValue
     private final Integer code;
 
     private RollState(String msg,Integer code){
