@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.roll.mapper.CourseRelationMapper">
+
+    <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.CourseRelation">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="studentId" column="student_id" jdbcType="BIGINT"/>
+        <result property="courseId" column="course_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+</mapper>

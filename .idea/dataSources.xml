@@ -7,5 +7,12 @@
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://nicklorry.top:3306/easyroll</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="easyroll@nicklorry.top" uuid="2a2c3352-984f-4aa2-adf5-130e7bcddbd8">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://nicklorry.top:3306/easyroll</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
