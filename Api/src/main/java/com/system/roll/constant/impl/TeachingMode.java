@@ -1,5 +1,6 @@
 package com.system.roll.constant.impl;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.system.roll.constant.CommonEnum;
 
 public enum  TeachingMode implements CommonEnum {
@@ -8,6 +9,7 @@ public enum  TeachingMode implements CommonEnum {
     EVEN_SINGLE_WEEK("双数周有",2);
 
     private final String msg;
+    @EnumValue
     private final Integer code;
 
     private TeachingMode(String msg,Integer code){

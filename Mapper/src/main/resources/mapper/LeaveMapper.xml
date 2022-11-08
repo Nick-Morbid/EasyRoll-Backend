@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.roll.mapper.LeaveMapper">
+
+    <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.Leave">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="studentId" column="student_id" jdbcType="BIGINT"/>
+        <result property="studentName" column="student_name" jdbcType="VARCHAR"/>
+        <result property="startTime" column="start_time" jdbcType="DATE"/>
+        <result property="endTime" column="end_time" jdbcType="DATE"/>
+        <result property="excuse" column="excuse" jdbcType="VARCHAR"/>
+        <result property="attachment" column="attachment" jdbcType="VARCHAR"/>
+    </resultMap>
+
+</mapper>

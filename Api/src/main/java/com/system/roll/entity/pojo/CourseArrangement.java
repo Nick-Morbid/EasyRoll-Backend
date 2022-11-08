@@ -3,6 +3,7 @@ package com.system.roll.entity.pojo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.system.roll.constant.impl.Period;
 import com.system.roll.constant.impl.TeachingMode;
 import com.system.roll.typehandler.AutoGenericEnumTypeHandler;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class CourseArrangement {
     private Integer classroomNo;
 
     @TableField(value = "class_time",typeHandler = AutoGenericEnumTypeHandler.class)
-    private Integer classTime;
+    private Period classTime;
 
     @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
     private TeachingMode mode;

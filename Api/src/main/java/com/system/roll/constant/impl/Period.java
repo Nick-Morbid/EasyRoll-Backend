@@ -1,5 +1,6 @@
 package com.system.roll.constant.impl;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.system.roll.constant.CommonEnum;
 
 /**
@@ -13,6 +14,7 @@ public enum  Period implements CommonEnum {
     NINETEEN_TO_TWENTY_ONE("晚上九十节",5);
 
     private final String msg;
+    @EnumValue
     private final Integer code;
 
     private Period(String msg,Integer code){
