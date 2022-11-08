@@ -4,7 +4,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     # 配置驱动
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/easyroll?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://nicklorry.top:3306/easyroll?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
     username: nick
     password: 15359503385nick
     hikari:
