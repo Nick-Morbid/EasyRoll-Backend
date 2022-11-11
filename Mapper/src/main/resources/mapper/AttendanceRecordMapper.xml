@@ -14,6 +14,7 @@
         <result property="created" column="created" jdbcType="TIMESTAMP"/>
         <result property="transactorId" column="transactor_id" jdbcType="BIGINT"/>
         <result property="transactorName" column="transactor_name" jdbcType="VARCHAR"/>
+
     </resultMap>
 
 </mapper>
