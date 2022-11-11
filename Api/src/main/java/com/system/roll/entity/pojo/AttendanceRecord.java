@@ -13,6 +13,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -37,4 +38,12 @@ public class AttendanceRecord {
 
     @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
     private RollState state;
+
+    private Timestamp created;
+
+    @TableField(value = "transactor_id")
+    private Long transactorId;
+
+    @TableField(value = "transactor_name")
+    private String transactorName;
 }
