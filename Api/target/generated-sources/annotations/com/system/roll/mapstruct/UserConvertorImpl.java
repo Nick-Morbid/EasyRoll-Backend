@@ -3,12 +3,12 @@ package com.system.roll.mapstruct;
 import com.system.roll.constant.impl.Role;
 import com.system.roll.entity.pojo.User;
 import com.system.roll.entity.vo.UserVo;
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-11-08T22:17:14+0800",
+    date = "2022-11-10T18:39:12+0800",
     comments = "version: 1.4.1.Final, compiler: javac, environment: Java 11.0.17 (Amazon.com Inc.)"
 )
 @Component

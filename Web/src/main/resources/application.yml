@@ -1,13 +1,7 @@
 spring:
   profiles:
-    include: mapper
+    include: mapper,ssl
 server:
   port: 8090
-# jwt 配置
-#请求头
-jwt:
-  header: Authorization
-  #盐值
-  base64-secret: meng
-  #过期时间
-  token-validity-in-seconds: 144000000 #添上一个0变成40小时候过期
+
+

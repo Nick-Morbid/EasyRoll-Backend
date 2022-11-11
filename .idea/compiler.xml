@@ -8,12 +8,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Mapper" />
+        <module name="Applet" />
         <module name="Web" />
+        <module name="StudentService" />
         <module name="Api" />
+        <module name="SupervisorService" />
+        <module name="ProfessorService" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Entity" target="15" />
+      <module name="StudentService" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
