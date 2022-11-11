@@ -1,8 +1,0 @@
-#https证书
-#https加密端口号
-#SSL证书路径，一定要加上classpath
-server:
-  ssl:
-    key-store: classpath:nicklorry.top_server.jks #证书pfx的名字
-    key-store-type: JKS #证书的类型
-    key-store-password: Ir1^#!m9QkRPNE0Y #SSL证书密码
