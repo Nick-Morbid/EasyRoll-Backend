@@ -3,6 +3,8 @@ package com.system.roll.entity.pojo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.system.roll.constant.impl.Period;
+import com.system.roll.typehandler.AutoGenericEnumTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,34 +12,35 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 @ToString
-@TableName(value = "leave")
-public class Leave {
+@TableName(value = "state")
+public class State {
+
     @TableId
     private Long id;
 
     @TableField(value = "student_id")
     private Long studentId;
 
-    @TableField(value = "start_time")
-    private Timestamp startTime;
-
-    @TableField(value = "end_time")
-    private Timestamp endTime;
-
-    private String excuse;
-
     @TableField(value = "student_name")
     private String studentName;
 
-    private String attachment;
+    @TableField(value = "course_id")
+    private Long courseId;
 
-    private Timestamp created;
+    @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
+    private Period period;
+
+    @TableField(value = "appeal_excuse")
+    private String appealExcuse;
+
+    private String attachment;
 
     @TableField(value = "transactor_id")
     private Long transactorId;
@@ -46,4 +49,8 @@ public class Leave {
     private String transactorName;
 
     private Integer result;
+
+    private Timestamp modified;
+
+    private Date date;
 }

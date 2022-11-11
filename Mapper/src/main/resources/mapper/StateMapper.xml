@@ -2,21 +2,19 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.system.roll.mapper.LeaveMapper">
-
-    <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.Leave">
+<mapper namespace="com.system.roll.mapper.StateMapper">
+    <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.State">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="studentId" column="student_id" jdbcType="BIGINT"/>
         <result property="studentName" column="student_name" jdbcType="VARCHAR"/>
-        <result property="startTime" column="start_time" jdbcType="DATE"/>
-        <result property="endTime" column="end_time" jdbcType="DATE"/>
-        <result property="excuse" column="excuse" jdbcType="VARCHAR"/>
+        <result property="courseId" column="course_id" jdbcType="BIGINT"/>
+        <result property="period" column="period" jdbcType="INTEGER"/>
+        <result property="appealExcuse" column="appeal_excuse" jdbcType="VARCHAR"/>
         <result property="attachment" column="attachment" jdbcType="VARCHAR"/>
-        <result property="created" column="created" jdbcType="TIMESTAMP"/>
         <result property="transactorId" column="transactor_id" jdbcType="BIGINT"/>
         <result property="transactorName" column="transactor_name" jdbcType="VARCHAR"/>
         <result property="result" column="result" jdbcType="INTEGER"/>
-
+        <result property="modified" column="modified" jdbcType="TIMESTAMP"/>
+        <result property="date" column="date" jdbcType="DATE"/>
     </resultMap>
-
 </mapper>

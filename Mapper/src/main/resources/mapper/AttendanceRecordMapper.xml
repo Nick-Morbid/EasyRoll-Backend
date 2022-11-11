@@ -11,6 +11,9 @@
         <result property="date" column="date" jdbcType="DATE"/>
         <result property="period" column="period" jdbcType="INTEGER"/>
         <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="created" column="created" jdbcType="TIMESTAMP"/>
+        <result property="transactorId" column="transactor_id" jdbcType="BIGINT"/>
+        <result property="transactorName" column="transactor_name" jdbcType="VARCHAR"/>
     </resultMap>
 
 </mapper>
