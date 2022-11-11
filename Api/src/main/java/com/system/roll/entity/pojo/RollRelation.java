@@ -3,9 +3,6 @@ package com.system.roll.entity.pojo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.system.roll.constant.impl.Period;
-import com.system.roll.constant.impl.TeachingMode;
-import com.system.roll.typehandler.AutoGenericEnumTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,20 +14,15 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 @ToString
-@TableName(value = "course_arrangement")
-public class CourseArrangement {
+@TableName(value = "roll_relation")
+public class RollRelation {
+
     @TableId
     private Long id;
 
+    @TableField(value = "supervisor_id")
+    private Long supervisor_id;
+
     @TableField(value = "course_id")
     private Long courseId;
-
-    @TableField(value = "classroom_no")
-    private Integer classroomNo;
-
-    @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
-    private Period period;
-
-    @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
-    private TeachingMode mode;
 }

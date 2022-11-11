@@ -10,6 +10,8 @@
         <result property="enrollNum" column="enroll_num" jdbcType="INTEGER"/>
         <result property="period" column="period" jdbcType="INTEGER"/>
         <result property="endTime" column="end_time" jdbcType="INTEGER"/>
+        <result property="total" column="total" jdbcType="INTEGER"/>
+        <result property="weekDay" column="week_day" jdbcType="INTEGER"/>
     </resultMap>
 
 </mapper>

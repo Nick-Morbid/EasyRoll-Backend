@@ -32,4 +32,9 @@ public class Course {
 
     @TableField(value = "end_time")
     private Integer endTime;
+
+    private Integer total;
+
+    @TableField(value = "week_day")
+    private Integer weekDay;
 }

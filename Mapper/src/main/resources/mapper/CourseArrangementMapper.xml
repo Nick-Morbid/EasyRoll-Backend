@@ -8,7 +8,7 @@
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="courseId" column="course_id" jdbcType="BIGINT"/>
         <result property="classroomNo" column="classroom_no" jdbcType="BIGINT"/>
-        <result property="classTime" column="class_time" jdbcType="INTEGER" javaType="com.system.roll.constant.impl.Period"/>
+        <result property="period" column="period" jdbcType="INTEGER" javaType="com.system.roll.constant.impl.Period"/>
         <result property="mode" column="mode" jdbcType="INTEGER"/>
     </resultMap>
 
