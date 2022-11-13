@@ -8,10 +8,10 @@ public enum  ResultCode implements CommonEnum {
 
     ACCESS_DENIED("权限不足",300),
     NOT_ACCESS("无访问凭证",301),
-    LOGIN_FAILURE("登录验证不通过",302),
-    NOT_FIND_USER("没有找到该用户",303),
-    NAME_ALREADY_EXIST("用户名已存在",304),
-    UPLOAD_FAILURE("文件上传失败",305),
+    SIGNATURE_NOT_MATCH("无效签名",302),
+    TOKEN_OVERDUE("token过期",303),
+    ALGORITHM_ERROR("token算法错误",304),
+    TOKEN_VOID("token无效",305),
 
 
     BODY_NOT_MATCH("请求格式异常",400),

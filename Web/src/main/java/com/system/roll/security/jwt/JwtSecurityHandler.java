@@ -2,7 +2,6 @@ package com.system.roll.security.jwt;
 
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.AllArgsConstructor;
@@ -32,7 +31,7 @@ public class JwtSecurityHandler {
      * @param payload 要写入token的载荷数据
      * @return 返回生成的token
      * */
-    public String getToken(Map<String,Object> payload) {
+    public String getToken(long id,int role,long departmentId) {
 
         /*设置token的header*/
         Map<String ,Object> header = new HashMap<>(2);
@@ -42,11 +41,13 @@ public class JwtSecurityHandler {
         /*设置过期时间和加密算法*/
         Date date = new Date(System.currentTimeMillis()+expiredTime);
         Algorithm algorithm = Algorithm.HMAC256(tokenSecret);
-        /*插入头信息*/
-        JWTCreator.Builder builder = JWT.create().withHeader(header);
-        payload.keySet().forEach(key->builder.withClaim(key, String.valueOf(payload.get(key))));
-        /*返回token*/
-        return builder.withExpiresAt(date).sign(algorithm);
+        /*插入头信息，返回token*/
+        return JWT.create()
+                .withHeader(header)
+                .withClaim("id",id)
+                .withClaim("role",role)
+                .withClaim("departmentId",departmentId)
+                .withExpiresAt(date).sign(algorithm);
     }
     /**
      * 验证签名
