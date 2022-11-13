@@ -10,6 +10,10 @@ public class SecurityContextHolder {
     private final static Map<Long,SecurityContext> contextPool = new ConcurrentHashMap<>();
 
     public static SecurityContext getContext(){
+        if (!contextPool.containsKey(Thread.currentThread().getId())){
+            contextPool.put(Thread.currentThread().getId(),new SecurityContext(new Authorization()));
+        }
+
         return contextPool.get(Thread.currentThread().getId());
     }
 
