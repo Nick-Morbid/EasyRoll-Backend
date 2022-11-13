@@ -4,11 +4,13 @@ import com.system.roll.constant.impl.ResultCode;
 import com.system.roll.exception.CommonException;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 通用的返回结果封装类
  * */
 @Data
-public class Result<T> {
+public class Result<T> implements Serializable {
     private final String message;
     private final Integer status;
     private final T data;

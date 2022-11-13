@@ -133,6 +133,13 @@
                 <version>1.4.1.Final</version>
             </dependency>
 
+            <!--    导入JWT（不是jjwt）    -->
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>3.4.1</version>
+            </dependency>
+
 
 
         </dependencies>

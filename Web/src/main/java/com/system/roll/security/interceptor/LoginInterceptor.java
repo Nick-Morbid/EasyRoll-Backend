@@ -1,4 +1,4 @@
-package com.system.roll.interceptor;
+package com.system.roll.security.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,6 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+
+//        String authorization = request.getHeader("Authorization");
+
+
 
         log.info("preHandle...");
         return true;

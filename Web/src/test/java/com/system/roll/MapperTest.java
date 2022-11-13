@@ -1,22 +1,21 @@
 package com.system.roll;
 
-import com.system.roll.constant.impl.Period;
-import com.system.roll.constant.impl.TeachingMode;
 import com.system.roll.entity.pojo.CourseArrangement;
 import com.system.roll.entity.pojo.Student;
 import com.system.roll.mapper.CourseArrangementMapper;
 import com.system.roll.mapper.StudentMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.annotation.Resource;
 
 @SpringBootTest
 public class MapperTest {
 
-    @Autowired
+    @Resource
     StudentMapper studentMapper;
 
-    @Autowired
+    @Resource
     CourseArrangementMapper courseArrangementMapper;
 
     @Test

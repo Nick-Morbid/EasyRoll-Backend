@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.system.roll.constant.CommonEnum;
 
 public enum  Role implements CommonEnum {
-    ADMIN("管理员",0),
-    NORMAL("普通用户",1)
+    STUDENT("学生",0),
+    SUPERVISOR("督导队员",1),
+    PROFESSOR("教授",2),
+    INSTRUCTOR("辅导员",3)
     ;
 
     private final String msg;
