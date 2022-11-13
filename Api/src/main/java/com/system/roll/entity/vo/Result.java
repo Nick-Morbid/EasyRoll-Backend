@@ -9,8 +9,8 @@ import lombok.Data;
  * */
 @Data
 public class Result<T> {
-    private final String msg;
-    private final Integer code;
+    private final String message;
+    private final Integer status;
     private final T data;
 
 //    下面是success构造方法
@@ -23,18 +23,18 @@ public class Result<T> {
         return new Result<>(data);
     }
 
-    public static<T> Result<T> success(String msg){return new Result<>(msg,ResultCode.SUCCESS.getCode());}
+    public static<T> Result<T> success(String message){return new Result<>(message,ResultCode.SUCCESS.getCode());}
 
-    public static<T> Result<T> success(String msg,T data){
-        return new Result<>(msg,data);
+    public static<T> Result<T> success(String message,T data){
+        return new Result<>(message,data);
     }
 
-    public static<T> Result<T> success(String msg,Integer code){
-        return new Result<>(msg,code);
+    public static<T> Result<T> success(String message,Integer status){
+        return new Result<>(message,status);
     }
 
-    public static<T> Result<T> success(String msg,Integer code,T data){
-        return new Result<>(msg,code,data);
+    public static<T> Result<T> success(String message,Integer status,T data){
+        return new Result<>(message,status,data);
     }
 
     public static<T> Result<T> success(ResultCode state){
@@ -46,12 +46,12 @@ public class Result<T> {
     }
 
 //    下面是error构造方法
-    public static<T> Result<T> error(String msg,Integer code){
-        return new Result<>(msg,code);
+    public static<T> Result<T> error(String message,Integer status){
+        return new Result<>(message,status);
     }
 
-    public static<T> Result<T> error(String msg,Integer code,T data){
-        return new Result<>(msg,code,data);
+    public static<T> Result<T> error(String message,Integer status,T data){
+        return new Result<>(message,status,data);
     }
 
     public static<T> Result<T> error(CommonException state){
@@ -76,23 +76,23 @@ public class Result<T> {
 //    下面是各种构造器
     /**
      * 最基本的构造器
-     * @param code 状态码
-     * @param msg 状态描述
+     * @param status 状态码
+     * @param message 状态描述
      * @param data 数据部分
      * */
-    private Result(String msg,Integer code,T data){
-        this.msg = msg;
-        this.code = code;
+    private Result(String message,Integer status,T data){
+        this.message = message;
+        this.status = status;
         this.data = data;
     }
 
     /**
      * 数据部分缺省的构造器
-     * @param code 状态码
-     * @param msg 状态描述
+     * @param status 状态码
+     * @param message 状态描述
      * */
-    private Result(String msg,Integer code){
-        this(msg,code,null);
+    private Result(String message,Integer status){
+        this(message,status,null);
     }
 
 
@@ -106,11 +106,11 @@ public class Result<T> {
 
     /**
      * 成功构造器
-     * @param msg 描述信息
+     * @param message 描述信息
      * @param data 数据
      * */
-    private Result(String msg,T data){
-        this(msg,ResultCode.SUCCESS.getCode(),data);
+    private Result(String message,T data){
+        this(message,ResultCode.SUCCESS.getCode(),data);
     }
 
     /**

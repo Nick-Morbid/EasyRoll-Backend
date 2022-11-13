@@ -1,6 +1,7 @@
 spring:
   profiles:
-    include: mapper,ssl
+    include: mapper
+#    include: mapper,ssl
 server:
   port: 8090
 

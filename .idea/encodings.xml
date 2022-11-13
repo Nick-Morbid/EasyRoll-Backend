@@ -7,11 +7,11 @@
     <file url="file://$PROJECT_DIR$/Mapper/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ProfessorService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ProfessorService/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/StudentService/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/StudentService/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/SupervisorService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/SupervisorService/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Web/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Web/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>
 </project>

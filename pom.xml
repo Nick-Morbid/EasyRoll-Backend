@@ -25,6 +25,7 @@
         <module>Web</module>
         <module>ProfessorService</module>
         <module>SupervisorService</module>
+        <module>StudentService</module>
     </modules>
     <dependencyManagement>
         <dependencies>
