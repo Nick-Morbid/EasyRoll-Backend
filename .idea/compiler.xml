@@ -12,12 +12,12 @@
         <module name="Web" />
         <module name="StudentService" />
         <module name="Api" />
-        <module name="SupervisorService" />
-        <module name="ProfessorService" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="ProfessorService" target="1.8" />
       <module name="StudentService" target="11" />
+      <module name="SupervisorService" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
