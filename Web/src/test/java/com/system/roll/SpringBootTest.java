@@ -32,6 +32,5 @@ public class SpringBootTest {
     private HttpRequestUtil httpRequestUtil;
     @Test
     public void testHttpGet() throws IOException {
-
     }
 }

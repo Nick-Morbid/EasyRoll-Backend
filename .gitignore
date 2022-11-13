@@ -14,6 +14,7 @@
 Api/src/main/resources/application-ssl.yml
 Api/src/main/resources/nicklorry.top_keystorePass.txt
 Api/src/main/resources/nicklorry.top_server.jks
+test
 
 # Package Files #
 *.jar
