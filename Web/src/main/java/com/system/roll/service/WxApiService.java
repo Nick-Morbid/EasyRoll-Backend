@@ -11,4 +11,14 @@ public interface WxApiService {
      * */
     JsCode2sessionBo jsCode2session(String code);
 
+    /**
+     * 调用微信小程序提供的token接口，获取access_token访问凭证
+     * */
+    String accessToken();
+
+    /**
+     * 调用微信消成提供的getGetWXACodeUnLimit接口，获取小程序跳转二维码
+     * */
+    String getGetWXACodeUnLimit(String socketId,String accessToken);
+
 }

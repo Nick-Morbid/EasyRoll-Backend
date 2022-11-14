@@ -3,6 +3,7 @@ package com.system.roll.entity.vo;
 import com.system.roll.constant.impl.ResultCode;
 import com.system.roll.exception.CommonException;
 import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -10,6 +11,7 @@ import java.io.Serializable;
  * 通用的返回结果封装类
  * */
 @Data
+@ToString
 public class Result<T> implements Serializable {
     private final String message;
     private final Integer status;

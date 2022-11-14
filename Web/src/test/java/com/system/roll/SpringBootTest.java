@@ -4,15 +4,19 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.system.roll.config.properties.AppletProperties;
 import com.system.roll.entity.vo.Result;
 import com.system.roll.security.jwt.JwtSecurityHandler;
+import com.system.roll.service.WxApiService;
 import com.system.roll.uitls.HttpRequestUtil;
+import com.system.roll.utils.IdUtil;
 import com.system.roll.utils.JsonUtil;
+import org.apache.http.entity.StringEntity;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
-@org.springframework.boot.test.context.SpringBootTest
+@org.springframework.boot.test.context.SpringBootTest(webEnvironment = org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SpringBootTest {
     @Resource
     private JwtSecurityHandler jwtSecurityHandler;
@@ -26,7 +30,7 @@ public class SpringBootTest {
 
     @Test
     public void testVerify(){
-        String token = jwtSecurityHandler.getToken(1,0,1);
+        String token = jwtSecurityHandler.getToken("1",0,"1");
         DecodedJWT verify = jwtSecurityHandler.verify(token);
         System.out.println(verify.getClaim("id").asInt());
         System.out.println(verify.getClaim("role").asInt());
@@ -51,5 +55,45 @@ public class SpringBootTest {
         System.out.println(data.get("errmsg"));
         System.out.println(data.get("session_key"));
         System.out.println(data.get("openid"));
+    }
+    @Resource
+    private WxApiService wxApiService;
+    @Test
+    public void testAccessToken(){
+        System.out.println(wxApiService.accessToken());
+    }
+    @Resource
+    private IdUtil idUtil;
+    @Test
+    public void testPostHttp() throws IOException {
+        Map<String,Object> param = new HashMap<>();
+        param.put("access_token",wxApiService.accessToken());
+        StringEntity body = httpRequestUtil.getStringEntityBuilder()
+                .add("scene", idUtil.getWebSocketId())
+                .add("page", "pages/login/login")
+                .add("check_path", false)
+                .add("env_version", "trial")
+                .build();
+        Result<?> result = httpRequestUtil.httpPost(appletProperties.getGetWXACodeUnLimit(),param,body);
+        System.out.println(result.toString());
+
+
+    }
+    @Test
+    public void testGetGetWXACodeUnLimit() throws IOException {
+//        wxApiService.getGetWXACodeUnLimit();
+//        InputStream inputStream = wxApiService.getGetWXACodeUnLimit();
+//        String path = System.getProperty("user.dir") + "/text.jpg";
+//        File file = new File(path);
+//        if (!file.exists()) file.createNewFile();
+//        FileImageOutputStream outputStream = new FileImageOutputStream(file);
+//        byte[] buffer =new byte[1024*1024];
+//        int res;
+//        while ((res = inputStream.read(buffer))>0){
+//            System.out.println(res);
+//            outputStream.write(buffer);
+//        }
+//        inputStream.close();
+//        outputStream.close();
     }
 }

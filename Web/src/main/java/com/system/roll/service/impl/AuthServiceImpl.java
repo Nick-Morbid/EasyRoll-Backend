@@ -12,14 +12,17 @@ import com.system.roll.service.StudentInfoService;
 import com.system.roll.service.SupervisorInfoService;
 import com.system.roll.service.WxApiService;
 import com.system.roll.service.professor.ProfessorInfoService;
+import com.system.roll.utils.IdUtil;
 import com.system.roll.utils.JsonUtil;
 import com.system.roll.webSocket.context.SocketContextHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.websocket.EncodeException;
 import java.io.IOException;
 
+@Slf4j
 @Service(value = "AuthService")
 public class AuthServiceImpl implements AuthService {
     @Resource(name = "WxApiService")
@@ -30,6 +33,8 @@ public class AuthServiceImpl implements AuthService {
     private SupervisorInfoService supervisorInfoService;
     @Resource(name = "ProfessorInfoService")
     private ProfessorInfoService professorInfoService;
+    @Resource
+    private IdUtil idUtil;
 
     @Override
     public StudentVo studentLogin(String code) {
@@ -54,7 +59,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ProfessorVo webLogin(String socketId, String code) {
+    public String generateQRCode(String socketId) {
+        /*获取access_token*/
+        String accessToken = wxApiService.accessToken();
+        /*获取图片流（这里是字符串形式）并返回*/
+        return wxApiService.getGetWXACodeUnLimit(socketId,accessToken);
+    }
+
+    @Override
+    public ProfessorVo professorLogin(String socketId, String code) {
         /*根据code获取用户唯一的标识*/
         JsCode2sessionBo jsCode2sessionBo = wxApiService.jsCode2session(code);
         String openId = jsCode2sessionBo.getOpenId();

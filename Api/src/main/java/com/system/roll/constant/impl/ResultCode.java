@@ -14,6 +14,7 @@ public enum  ResultCode implements CommonEnum {
     ALGORITHM_ERROR("token算法错误",304),
     TOKEN_VOID("token无效",305),
     CODE_VOID("code无效",306),
+    ACCESS_TOKEN_VOID("access_token无效",307),
 
 
     BODY_NOT_MATCH("请求格式异常",400),
@@ -24,7 +25,7 @@ public enum  ResultCode implements CommonEnum {
     NULL_POINT("空指针异常",500),
     NOT_RESPONSE("服务器无响应",501),
     API_CALLED_FAILED("接口调用失败",502),
-    NOT_RESOURCE("无相应的资源",503),
+    FAILED_TO_RESPONSE_RESOURCE("资源返回失败",503),
 
     WEBSOCKET_NOT_BUILT("长连接未建立",601),
     WEBSOCKET_SEND_FAILED("长连接消息发送失败",602),

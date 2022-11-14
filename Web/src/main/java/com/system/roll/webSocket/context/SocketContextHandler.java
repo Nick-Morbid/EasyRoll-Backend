@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Accessors(chain = true)
 public class SocketContextHandler {
     private static Map<String,SocketContext> contextPool = new ConcurrentHashMap<>();

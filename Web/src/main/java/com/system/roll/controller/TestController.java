@@ -43,7 +43,7 @@ public class TestController {
 
     @GetMapping(value = "/login")
     public User login(HttpServletResponse response) throws IOException {
-        String token = jwtSecurityHandler.getToken(32002601L,0,100000001L);
+        String token = jwtSecurityHandler.getToken("032002601",0,"100000001");
         response.setHeader("Authorization",token);
         return new User().setName("nick");
     }

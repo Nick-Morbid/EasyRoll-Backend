@@ -16,9 +16,15 @@ public interface AuthService {
      * */
     SupervisorVo supervisorLogin(String code);
     /**
-     * 网页端+微信小程序授权登录
+     * 微信小程序授权网页端登录（教师/辅导员登录）
      * */
-    ProfessorVo webLogin(String socketId, String code);
+    ProfessorVo professorLogin(String socketId, String code);
+
+    /**
+     * 生成QRCode码，并作为文件流发送给前端
+     * @return 随机生成的socketId（前端用该socketId去建立长连接）
+     * */
+    String generateQRCode(String socketId);
 
     /**
      * 学生端注册

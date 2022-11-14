@@ -1,27 +1,31 @@
 package com.system.roll.controller;
 
+import com.system.roll.constant.impl.ResultCode;
 import com.system.roll.constant.impl.Role;
 import com.system.roll.entity.vo.professor.ProfessorVo;
 import com.system.roll.entity.vo.student.StudentVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
+import com.system.roll.exception.impl.ServiceException;
 import com.system.roll.security.jwt.JwtSecurityHandler;
 import com.system.roll.service.AuthService;
+import com.system.roll.utils.IdUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * 负责学生端、督导队员端的授权登录
  * 负责web端的第三方授权验证
  * */
+@Slf4j
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthController {
@@ -30,6 +34,8 @@ public class AuthController {
     private AuthService authService;
     @Resource
     private JwtSecurityHandler jwtSecurityHandler;
+    @Resource
+    private IdUtil idUtil;
 
     /**
      * 学生端微信小程序登录
@@ -62,20 +68,12 @@ public class AuthController {
     }
 
     /**
-     * 生成第三方授权码
-     * */
-    @PostMapping(value = "/login/QRCode")
-    public void professorLogin(){
-
-    }
-
-    /**
      * 督导队员端小程序对web端登录进行第三方授权（由督导队员调用）
      * */
     @PostMapping(value = "/login/professor")
     public ProfessorVo professorLogin(@RequestBody LoginFormDto data,HttpServletResponse response){
         /*获取信息*/
-        ProfessorVo professorVo = authService.webLogin(data.getSocketId(),data.getCode());
+        ProfessorVo professorVo = authService.professorLogin(data.getSocketId(),data.getCode());
         /*生成token*/
         String token = jwtSecurityHandler.getToken(professorVo.getId(), professorVo.getRole(), professorVo.getDepartmentId());
         /*写入token*/
@@ -83,6 +81,32 @@ public class AuthController {
         /*返回信息*/
         return professorVo;
     }
+
+    /**
+     * 生成第三方授权码
+     * */
+    @GetMapping(value = "/login/QRCode")
+    public void professorLogin(HttpServletResponse response){
+        /*分配socketId*/
+        String socketId = idUtil.getWebSocketId();
+        /*调用微信小程序接口，获取图片流（字符串形式）*/
+        String stream = authService.generateQRCode(socketId);
+        /*将图片流字符串写入流中，并将分配的socketId写入响应头中*/
+        try {
+            response.setContentType("image/jpeg");
+            response.setHeader("Cache-Control","no-cache, must-revalidate");
+            response.setHeader("Content-disposition","attachment; filename=\"_123456789\"");
+            response.setHeader("Content-Length", String.valueOf(stream.length()));
+            response.setHeader("SocketId",socketId);//自定义响应头
+            PrintWriter writer = response.getWriter();
+            writer.write(stream);
+            writer.close();
+        } catch (IOException e) {
+            log.error(e.getCause().toString());
+            throw new ServiceException(ResultCode.FAILED_TO_RESPONSE_RESOURCE);
+        }
+    }
+
 
     /**
      * 学生端小程序注册（注册后直接完成登录）

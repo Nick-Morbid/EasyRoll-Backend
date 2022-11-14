@@ -21,4 +21,6 @@ public class AppletProperties {
     private String appId;
     private String secret;
     private String jsCode2session;
+    private String accessToken;
+    private String getWXACodeUnLimit;
 }
