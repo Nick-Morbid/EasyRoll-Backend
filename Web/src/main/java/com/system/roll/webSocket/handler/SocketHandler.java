@@ -19,11 +19,11 @@ public interface SocketHandler {
     /**
      * 长连接断开
      * */
-    void onClose();
+    void onClose(String socketId) throws IOException;
     /**
      * 发送消息
      * */
-    void sendMessage(String data) throws IOException, EncodeException;
+    void sendMessage(Object data) throws IOException, EncodeException;
     /**
      * 断开连接
      * */

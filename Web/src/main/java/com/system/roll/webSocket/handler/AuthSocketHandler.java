@@ -1,5 +1,12 @@
 package com.system.roll.webSocket.handler;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.system.roll.entity.vo.Result;
+import com.system.roll.entity.vo.professor.ProfessorVo;
+import com.system.roll.security.jwt.JwtSecurityHandler;
+import com.system.roll.utils.JsonUtil;
+import com.system.roll.utils.SpringContextUtil;
 import com.system.roll.webSocket.context.SocketContext;
 import com.system.roll.webSocket.context.SocketContextHandler;
 import org.springframework.stereotype.Component;
@@ -34,13 +41,21 @@ public class AuthSocketHandler implements SocketHandler{
     @OnClose
     @OnError
     @Override
-    public void onClose() {
-
+    public void onClose(@PathParam(value = "socketId")String socketId) throws IOException {
+        SocketContextHandler.clearContext(socketId);
     }
 
     @Override
-    public void sendMessage(String data) throws IOException, EncodeException {
-        session.getBasicRemote().sendText(data);
+    public void sendMessage(Object data) throws IOException {
+        ProfessorVo professorVo = (ProfessorVo) ((Result<?>) data).getData();
+        if (professorVo==null){
+            session.getBasicRemote().sendText(JsonUtil.toJson(data));
+        }else {
+            JwtSecurityHandler jwtSecurityHandler = SpringContextUtil.getBean("JwtSecurityHandler");
+            JsonObject jsonObject = (JsonObject) new Gson().toJsonTree(data);
+            jsonObject.addProperty("Authorization",jwtSecurityHandler.getToken(professorVo.getId(),professorVo.getRole(),professorVo.getDepartmentId()));
+            session.getBasicRemote().sendText(JsonUtil.toJson(jsonObject));
+        }
     }
 
     @Override

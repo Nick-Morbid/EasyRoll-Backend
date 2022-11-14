@@ -19,7 +19,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@Component
+@Component(value = "JwtSecurityHandler")
 @ConfigurationProperties(prefix = "security")
 public class JwtSecurityHandler {
 

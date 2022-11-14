@@ -13,7 +13,6 @@ import com.system.roll.service.SupervisorInfoService;
 import com.system.roll.service.WxApiService;
 import com.system.roll.service.professor.ProfessorInfoService;
 import com.system.roll.utils.IdUtil;
-import com.system.roll.utils.JsonUtil;
 import com.system.roll.webSocket.context.SocketContextHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -76,8 +75,8 @@ public class AuthServiceImpl implements AuthService {
 //        ProfessorVo professorVo = new ProfessorVo().setId("123456789").setName("Kex").setDepartmentId("123").setDepartmentName("计算机与大数据学院").setRole(Role.PROFESSOR.getCode());
         /*调用长连接，通知web端登录成功*/
         try {
-            if (professorVo!=null) SocketContextHandler.getContext(socketId).getSocketHandler().sendMessage(JsonUtil.toJson(professorVo));
-            else SocketContextHandler.getContext(socketId).getSocketHandler().sendMessage(JsonUtil.toJson(new ServiceException(ResultCode.NOT_REGISTER)));
+            if (professorVo!=null) SocketContextHandler.sendMessage(socketId,ResultCode.SUCCESS,professorVo);
+            else SocketContextHandler.sendMessage(socketId,ResultCode.NOT_REGISTER,null);
             SocketContextHandler.getContext(socketId).getSocketHandler().close();//关闭长连接
         }
         catch (IOException | EncodeException e) { throw new ServiceException(ResultCode.WEBSOCKET_SEND_FAILED);}
