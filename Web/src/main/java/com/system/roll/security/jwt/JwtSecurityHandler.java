@@ -28,10 +28,12 @@ public class JwtSecurityHandler {
     private String tokenSecret;
 
     /**
-     * @param payload 要写入token的载荷数据
+     * @param id id信息
+     * @param role 角色信息
+     * @param departmentId 学院id
      * @return 返回生成的token
      * */
-    public String getToken(long id,int role,long departmentId) {
+    public String getToken(String id,int role,String departmentId) {
 
         /*设置token的header*/
         Map<String ,Object> header = new HashMap<>(2);

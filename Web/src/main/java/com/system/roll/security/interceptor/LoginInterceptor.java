@@ -52,9 +52,9 @@ public class LoginInterceptor implements HandlerInterceptor {
             /*将鉴权消息存入安全上下文容器*/
             DecodedJWT verify = jwtSecurityHandler.verify(token);
             Authorization authorization = new Authorization()
-                    .addInfo("id",(long)verify.getClaim("id").asInt())
+                    .addInfo("id",verify.getClaim("id").asString())
                     .addInfo("role",enumUtil.getEnumByCode(Role.class,verify.getClaim("role").asInt()))
-                    .addInfo("departmentId",(long)verify.getClaim("departmentId").asInt());
+                    .addInfo("departmentId",verify.getClaim("departmentId").asString());
             SecurityContextHolder.setContext(new SecurityContext(authorization));
 
             return true;

@@ -6,7 +6,6 @@ import com.system.roll.entity.pojo.User;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.security.context.SecurityContextHolder;
 import com.system.roll.security.jwt.JwtSecurityHandler;
-import com.system.roll.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +25,6 @@ public class TestController {
     public User test01(){
         return new User().setId("1").setName("nick").setPassword("123");
     }
-
-    @Resource(name = "UserService")
-    private UserService userService;
 
     @GetMapping("/test02")
     public CourseListVo test02(){

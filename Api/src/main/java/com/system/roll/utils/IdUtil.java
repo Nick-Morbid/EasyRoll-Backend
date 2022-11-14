@@ -17,4 +17,10 @@ public class IdUtil {
         s.append(Double.toString(tm).substring(Double.toString(tm).length()-4));
         return s.toString();
     }
+    /**
+     * 生成长连接的id
+     * */
+    public String getWebSocketId(){
+        return "ws:"+getId();
+    }
 }

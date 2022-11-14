@@ -5,6 +5,7 @@ import com.system.roll.constant.CommonEnum;
 
 public enum  ResultCode implements CommonEnum {
     SUCCESS("成功",200),
+    NOT_REGISTER("尚未注册",201),
 
     ACCESS_DENIED("权限不足",300),
     NOT_ACCESS("无访问凭证",301),
@@ -12,16 +13,23 @@ public enum  ResultCode implements CommonEnum {
     TOKEN_OVERDUE("token过期",303),
     ALGORITHM_ERROR("token算法错误",304),
     TOKEN_VOID("token无效",305),
+    CODE_VOID("code无效",306),
 
 
     BODY_NOT_MATCH("请求格式异常",400),
     METHOD_NOT_MATCH("请求方法异常",401),
     PATH_NOT_MATCH("请求路径异常",402),
 
+
     NULL_POINT("空指针异常",500),
     NOT_RESPONSE("服务器无响应",501),
+    API_CALLED_FAILED("接口调用失败",502),
+    NOT_RESOURCE("无相应的资源",503),
 
-    UNKNOWN("未知异常",600)
+    WEBSOCKET_NOT_BUILT("长连接未建立",601),
+    WEBSOCKET_SEND_FAILED("长连接消息发送失败",602),
+
+    UNKNOWN("未知异常",700)
 
     ;
 

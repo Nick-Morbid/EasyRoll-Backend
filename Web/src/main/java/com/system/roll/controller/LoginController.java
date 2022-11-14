@@ -18,7 +18,7 @@ public class LoginController {
      * */
     @PostMapping("/auth")
     public void auth(@RequestBody AuthDto data){
-        log.info("authId:{}",data.getAuthId());
+        log.info("socketId:{}",data.getSocketId());
         log.info("code:{}",data.getCode());
     }
 
@@ -41,9 +41,9 @@ public class LoginController {
     @Accessors(chain = true)
     public static class AuthDto{
         /**
-         * 授权id（后端生成）
+         * 对应长连接id（后端生成）
          * */
-        private Long authId;
+        private String socketId;
         /**
          * 授权码（微信平台提供）
          * */

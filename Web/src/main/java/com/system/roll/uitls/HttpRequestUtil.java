@@ -49,6 +49,9 @@ public class HttpRequestUtil {
             log.info("httpGet status:{},message:{},data:{}",statusLine.getStatusCode(),statusLine.getReasonPhrase(),json);
             data = JsonUtil.toObject(json, HashMap.class);
         }
+        /*释放资源*/
+        client.close();
+        response.close();
         return Result.success(statusLine.getReasonPhrase(),statusLine.getStatusCode(),data);
     }
 
