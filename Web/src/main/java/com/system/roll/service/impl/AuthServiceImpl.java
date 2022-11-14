@@ -73,13 +73,15 @@ public class AuthServiceImpl implements AuthService {
         String openId = jsCode2sessionBo.getOpenId();
         /*根据openId获取教师/辅导员信息*/
         ProfessorVo professorVo = professorInfoService.getProfessorInfo(openId);
-        if (professorVo==null) throw new ServiceException(ResultCode.NOT_REGISTER);
+//        ProfessorVo professorVo = new ProfessorVo().setId("123456789").setName("Kex").setDepartmentId("123").setDepartmentName("计算机与大数据学院").setRole(Role.PROFESSOR.getCode());
         /*调用长连接，通知web端登录成功*/
         try {
-            SocketContextHandler.getContext(socketId).getSocketHandler().sendMessage(JsonUtil.toJson(professorVo));
+            if (professorVo!=null) SocketContextHandler.getContext(socketId).getSocketHandler().sendMessage(JsonUtil.toJson(professorVo));
+            else SocketContextHandler.getContext(socketId).getSocketHandler().sendMessage(JsonUtil.toJson(new ServiceException(ResultCode.NOT_REGISTER)));
             SocketContextHandler.getContext(socketId).getSocketHandler().close();//关闭长连接
         }
         catch (IOException | EncodeException e) { throw new ServiceException(ResultCode.WEBSOCKET_SEND_FAILED);}
+        if (professorVo==null) throw new ServiceException(ResultCode.NOT_REGISTER);
         /*返回信息*/
         return professorVo;
     }

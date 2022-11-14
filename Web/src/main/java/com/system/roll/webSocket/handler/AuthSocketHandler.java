@@ -4,8 +4,7 @@ import com.system.roll.webSocket.context.SocketContext;
 import com.system.roll.webSocket.context.SocketContextHandler;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.EncodeException;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -18,6 +17,7 @@ import java.io.IOException;
 public class AuthSocketHandler implements SocketHandler{
     private Session session;
 
+    @OnOpen
     @Override
     public void open(Session session,@PathParam(value = "socketId")String socketId) {
         this.session = session;
@@ -25,11 +25,14 @@ public class AuthSocketHandler implements SocketHandler{
         SocketContextHandler.addContext(socketId,new SocketContext().setSocketHandler(this));
     }
 
+    @OnMessage
     @Override
     public void onMessage(String data) {
 
     }
 
+    @OnClose
+    @OnError
     @Override
     public void onClose() {
 

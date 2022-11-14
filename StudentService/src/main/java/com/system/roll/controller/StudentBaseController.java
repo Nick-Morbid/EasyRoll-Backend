@@ -1,5 +1,6 @@
 package com.system.roll.controller;
 
+import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.service.StudentBaseService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,7 @@ public class StudentBaseController {
     private StudentBaseService studentBaseService;
 
     @GetMapping("/course/getAll")
-    public void getAllCourse(){
-
+    public CourseListVo getAllCourse(){
+        return null;
     }
 }
