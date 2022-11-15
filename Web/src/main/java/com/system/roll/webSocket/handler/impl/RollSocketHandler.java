@@ -1,5 +1,8 @@
 package com.system.roll.webSocket.handler.impl;
 
+import com.system.roll.properites.RabbitProperties;
+import com.system.roll.rabbit.utils.RabbitUtil;
+import com.system.roll.utils.SpringContextUtil;
 import com.system.roll.webSocket.handler.SocketHandler;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +18,9 @@ import java.io.IOException;
 @ServerEndpoint(value = "/supervisor/roll/call/{socketId}")
 public class RollSocketHandler implements SocketHandler {
 
+    private String socket;
+    RabbitUtil rabbitUtil;
+    RabbitProperties rabbitProperties;
 
     /**
      * 建立督导队员发送点名考勤数据的长连接
@@ -24,13 +30,16 @@ public class RollSocketHandler implements SocketHandler {
     @OnOpen
     @Override
     public void open(Session session,@PathParam(value = "socketId") String socketId) {
-
+        /*手动注入组件*/
+        rabbitUtil = SpringContextUtil.getBean("RabbitUtil");
+        rabbitProperties = SpringContextUtil.getBean("RabbitProperties");
+        this.socket = socketId;
     }
 
     @OnMessage
     @Override
     public void onMessage(String data) {
-
+        rabbitUtil.sendMessage(rabbitProperties.getWsExchange(),rabbitProperties.getRollDataSource(),this.socket+","+data);
     }
 
     @OnClose

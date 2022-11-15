@@ -19,8 +19,10 @@ public class RollDataTask implements FlinkTask{
     public void defineTask() {
         /*定义数据源*/
         RabbitProperties rabbitProperties = SpringContextUtil.getBean("RabbitProperties");//由于RollDataTask也是通过SpringContextUtil获取的，所以内部的注解注释无效，内部用到的属性也需要用SpringContextUtil来获取
-        RabbitSource rabbitSource = new RabbitSource(rabbitProperties.getRollDataQueuePrefix() + "flink", rabbitProperties.getRollDataExchange(), rabbitProperties.getRollDataSource());
+        RabbitSource rabbitSource = new RabbitSource(rabbitProperties.getRollDataQueuePrefix() + "flink", rabbitProperties.getWsExchange(), rabbitProperties.getRollDataSource());
         DataStream<String> dataSource = env.addSource(rabbitSource);
+        /*设置并行度*/
+        env.setParallelism(8);
         dataSource.print();
     }
 

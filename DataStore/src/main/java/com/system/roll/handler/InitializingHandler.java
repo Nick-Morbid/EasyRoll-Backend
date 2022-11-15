@@ -32,8 +32,8 @@ public class InitializingHandler {
 
     public void init() throws Exception {
         /*创建推送考勤数据的交换机*/
-        rabbitUtil.createExchange(rabbitProperties.getRollDataExchange());
-        log.info("[Thread:{}]:交换机:{}创建完成.",Thread.currentThread().getId(),rabbitProperties.getRollDataExchange());
+        rabbitUtil.createExchange(rabbitProperties.getWsExchange());
+        log.info("[Thread:{}]:交换机:{}创建完成.",Thread.currentThread().getId(),rabbitProperties.getWsExchange());
         /*执行所有的task*/
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         for (String taskClassName : taskClassNames) {
