@@ -6,6 +6,7 @@ import com.system.roll.entity.vo.Result;
 import com.system.roll.security.jwt.JwtSecurityHandler;
 import com.system.roll.service.WxApiService;
 import com.system.roll.uitls.HttpRequestUtil;
+import com.system.roll.utils.DateUtil;
 import com.system.roll.utils.IdUtil;
 import com.system.roll.utils.JsonUtil;
 import org.apache.http.entity.StringEntity;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,5 +98,25 @@ public class SpringBootTest {
 //        }
 //        inputStream.close();
 //        outputStream.close();
+    }
+    @Resource
+    private DateUtil dateUtil;
+    @Test
+    public void testGetFirstWeek() throws ParseException {
+        System.out.println(dateUtil.FirstWeek());
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//        System.out.println(new Date(format.parse(dateUtil.getFirstWeek()).getTime()));
+    }
+    @Test
+    public void testGetWeek(){
+        Date date = dateUtil.FirstWeek();
+        Long time = date.getTime();
+        while (time<System.currentTimeMillis()){
+            Date date1 = new Date(time);
+            Integer week = dateUtil.getWeek(date1);
+            System.out.println("日期 "+date1+"是第"+week+"周.");
+            time+=DateUtil.DAY;
+        }
+//        dateUtil.getWeek(dateUtil.stringToDate("2020-08-30"));
     }
 }

@@ -1,13 +1,11 @@
 package com.system.roll.webSocket.context;
 
 import com.system.roll.constant.impl.ResultCode;
-import com.system.roll.entity.vo.Result;
 import com.system.roll.exception.impl.ServiceException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.websocket.EncodeException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,16 +27,10 @@ public class SocketContextHandler {
         return contextPool.get(key);
     }
 
-    public static void sendMessage(String socketId,ResultCode state,Object data) throws IOException, EncodeException {
-        SocketContext context = getContext(socketId);
-        Result<?> result = Result.success(state, data);
-        context.getSocketHandler().sendMessage(result);
-    }
-
     public static void clearContext(String key) throws IOException {
         if (contextPool.containsKey(key)){
-            contextPool.get(key).getSocketHandler().close();
-            contextPool.remove(key);
+            contextPool.get(key).clear();//清除上下文
+            contextPool.remove(key);//移除记录
         }
     }
 }
