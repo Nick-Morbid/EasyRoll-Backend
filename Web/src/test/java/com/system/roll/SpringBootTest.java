@@ -1,7 +1,7 @@
 package com.system.roll;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.system.roll.config.properties.AppletProperties;
+import com.system.roll.properites.AppletProperties;
 import com.system.roll.entity.vo.Result;
 import com.system.roll.security.jwt.JwtSecurityHandler;
 import com.system.roll.service.WxApiService;
@@ -103,13 +103,13 @@ public class SpringBootTest {
     private DateUtil dateUtil;
     @Test
     public void testGetFirstWeek() throws ParseException {
-        System.out.println(dateUtil.FirstWeek());
+        System.out.println(dateUtil.getFirstWeek());
 //        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 //        System.out.println(new Date(format.parse(dateUtil.getFirstWeek()).getTime()));
     }
     @Test
     public void testGetWeek(){
-        Date date = dateUtil.FirstWeek();
+        Date date = dateUtil.getFirstWeek();
         Long time = date.getTime();
         while (time<System.currentTimeMillis()){
             Date date1 = new Date(time);

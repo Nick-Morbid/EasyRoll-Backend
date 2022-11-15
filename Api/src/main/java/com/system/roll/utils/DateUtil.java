@@ -2,12 +2,11 @@ package com.system.roll.utils;
 
 import com.system.roll.constant.impl.ResultCode;
 import com.system.roll.exception.impl.ServiceException;
-import lombok.Data;
+import com.system.roll.properites.CommonProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,14 +16,10 @@ import java.text.SimpleDateFormat;
  * */
 @Slf4j
 @Component
-@Data
-@PropertySource("classpath:common.properties")
 public class DateUtil {
 
-    @Value(value = "${term.firstWeek}")
-    private String firstWeek;
-    @Value(value = "${term.totalWeek}")
-    private Integer totalWeek;
+    @Resource
+    private CommonProperties commonProperties;
 
     public static Integer SECOND = 1000;//1s = 1000ms
     public static Integer MINUTE = 60*SECOND;//1m = 60s
@@ -35,15 +30,15 @@ public class DateUtil {
     /**
      * 获取本学期第一周的星期一的date对象
      * */
-    public Date FirstWeek(){
-        return stringToDate(this.firstWeek);
+    public Date getFirstWeek(){
+        return stringToDate(commonProperties.getFirstWeek());
     }
 
     /**
      * 获取当前日期对应的周数
      * */
     public Integer getWeek(Date date){
-        Date firstWeek = FirstWeek();
+        Date firstWeek = getFirstWeek();
         int deltaDay = Math.toIntExact((date.getTime() - firstWeek.getTime()) / DAY);
         return (deltaDay+7)/7;
     }

@@ -14,7 +14,7 @@ public class RabbitConfiguration {
     /**
      * Rabbit工具类
      * */
-    @Bean
+    @Bean(value = "RabbitAdmin")
     public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory){
         RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
         rabbitAdmin.setAutoStartup(true);

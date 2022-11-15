@@ -1,20 +1,24 @@
 package com.system.roll.properites;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Accessors(chain = true)
-@Configuration
-@ConfigurationProperties(prefix = "rabbit")
+@Component(value = "RabbitProperties")
+@PropertySource("classpath:properties/rabbit.properties")
 public class RabbitProperties {
+    @Value("${rabbit.ttl}")
     private Integer ttl;
+    @Value("${rabbit.wsExchange}")
+    private String wsExchange;
+    @Value("${rabbit.rollDataSource}")
+    private String rollDataSource;
+    @Value("${rabbit.rollDataExchange}")
+    private String rollDataExchange;
+    @Value("${rabbit.rollDataQueuePrefix}")
+    private String rollDataQueuePrefix;
 
     public Integer getTotalTTL(){
         return ttl*60*1000;
