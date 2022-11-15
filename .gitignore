@@ -15,6 +15,7 @@ Api/src/main/resources/application-ssl.yml
 Api/src/main/resources/nicklorry.top_keystorePass.txt
 Api/src/main/resources/nicklorry.top_server.jks
 Api/src/main/resources/application-applet.yml
+Api/src/main/resources/application-rabbit.yml
 
 test
 

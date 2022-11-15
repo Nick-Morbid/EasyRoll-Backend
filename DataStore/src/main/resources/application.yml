@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    include: mapper,rabbit
+#    include: mapper,ssl,applet
+server:
+  port: 8091

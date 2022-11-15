@@ -10,6 +10,7 @@
         <module name="Mapper" />
         <module name="Applet" />
         <module name="Web" />
+        <module name="DataStore" />
         <module name="StudentService" />
         <module name="Api" />
         <module name="SupervisorService" />
