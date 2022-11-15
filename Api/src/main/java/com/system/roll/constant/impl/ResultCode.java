@@ -23,7 +23,7 @@ public enum  ResultCode implements CommonEnum {
 
 
     NULL_POINT("空指针异常",500),
-    NOT_RESPONSE("服务器无响应",501),
+    SERVER_ERROR("服务器异常",501),
     API_CALLED_FAILED("接口调用失败",502),
     FAILED_TO_RESPONSE_RESOURCE("资源返回失败",503),
 

@@ -1,5 +1,7 @@
 package com.system.roll.security.context;
 
+import com.system.roll.constant.impl.ResultCode;
+import com.system.roll.exception.impl.ServiceException;
 import lombok.Data;
 
 import java.util.Map;
@@ -12,8 +14,9 @@ public class SecurityContextHolder {
     public static SecurityContext getContext(){
         if (!contextPool.containsKey(Thread.currentThread().getId())){
             contextPool.put(Thread.currentThread().getId(),new SecurityContext(new Authorization()));
+        }else {
+            throw new ServiceException(ResultCode.UNKNOWN);
         }
-
         return contextPool.get(Thread.currentThread().getId());
     }
 
