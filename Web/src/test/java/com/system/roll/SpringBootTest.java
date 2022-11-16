@@ -1,6 +1,9 @@
 package com.system.roll;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.system.roll.constant.impl.MsgType;
+import com.system.roll.entity.vo.message.rabbit.builder.MessageBuilder;
+import com.system.roll.entity.vo.message.rabbit.message.Message;
 import com.system.roll.properites.AppletProperties;
 import com.system.roll.entity.vo.Result;
 import com.system.roll.security.jwt.JwtSecurityHandler;
@@ -15,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -118,5 +122,29 @@ public class SpringBootTest {
             time+=DateUtil.DAY;
         }
 //        dateUtil.getWeek(dateUtil.stringToDate("2020-08-30"));
+    }
+    @Test
+    public void testMsgBuilder(){
+        Message message1 = MessageBuilder.getBuilder(MsgType.OPERATION_NOTICE)
+                .setContent("督导人员tom删除了<<软件工程>>的课程信息")
+                .setTime(new Timestamp(System.currentTimeMillis()))
+                .setData("operationId", "123456789")
+                .setData("operationLog", "督导人员tom删除了<<软件工程>>的课程信息")
+                .setData("isRejected", 1)
+                .setData("rejectors", new String[]{"庄洁洁", "王涛涛"})
+                .build();
+
+        Message message2 = MessageBuilder.getBuilder(MsgType.LEAVE_APPLICATION)
+                .setContent("学生胡彬彬(100000005)的请假申请（2022-11-11:08:20到2022-11-12:08:20）")
+                .setTime(new Timestamp(System.currentTimeMillis()))
+                .setData("leaveId", "123456789")
+                .setData("startTime", new Timestamp(System.currentTimeMillis()))
+                .setData("endTime", new Timestamp(System.currentTimeMillis()))
+                .setData("excuse", "请假理由")
+                .setData("attachment", "https:nicklorry/resources/images?id=123456789")
+                .build();
+
+        System.out.println(message1);
+        System.out.println(message2);
     }
 }

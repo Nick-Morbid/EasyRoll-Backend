@@ -26,7 +26,7 @@ public enum  ResultCode implements CommonEnum {
     SERVER_ERROR("服务器异常",501),
     API_CALLED_FAILED("接口调用失败",502),
     FAILED_TO_RESPONSE_RESOURCE("资源返回失败",503),
-    NOT_RELATED_RESOURCE("无相应资源",504),
+    FAILED_TO_GET_ELEMENT_FROM_MAP("map中无对应的元素",504),
 
     WEBSOCKET_NOT_BUILT("长连接未建立",601),
     WEBSOCKET_SEND_FAILED("长连接消息发送失败",602),

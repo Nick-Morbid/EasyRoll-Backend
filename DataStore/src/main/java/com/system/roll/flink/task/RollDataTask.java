@@ -22,7 +22,7 @@ public class RollDataTask implements FlinkTask{
         RabbitSource rabbitSource = new RabbitSource(rabbitProperties.getRollDataQueuePrefix() + "flink", rabbitProperties.getWsExchange(), rabbitProperties.getRollDataSource());
         DataStream<String> dataSource = env.addSource(rabbitSource);
         /*设置并行度*/
-        env.setParallelism(8);
+        env.setParallelism(2);
         dataSource.print();
     }
 

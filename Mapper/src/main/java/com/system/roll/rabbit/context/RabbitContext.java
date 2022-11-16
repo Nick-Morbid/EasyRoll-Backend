@@ -32,7 +32,7 @@ public class RabbitContext {
         if (exchangeMap.containsKey(name)){
             return exchangeMap.get(name);
         }else {
-            throw new ServiceException(ResultCode.NOT_RELATED_RESOURCE);
+            throw new ServiceException(ResultCode.FAILED_TO_GET_ELEMENT_FROM_MAP);
         }
     }
 
@@ -48,7 +48,7 @@ public class RabbitContext {
         if (queueMap.containsKey(name)){
             return queueMap.get(name);
         }else {
-            throw new ServiceException(ResultCode.NOT_RELATED_RESOURCE);
+            throw new ServiceException(ResultCode.FAILED_TO_GET_ELEMENT_FROM_MAP);
         }
     }
 

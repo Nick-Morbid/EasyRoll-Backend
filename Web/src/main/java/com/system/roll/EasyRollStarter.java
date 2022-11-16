@@ -23,12 +23,12 @@ public class EasyRollStarter {
 //                securityConstraint.addCollection(collection);
 //
 //                context.addConstraint(securityConstraint); } };
-
+//
 //        tomcat.addAdditionalTomcatConnectors(redirectConnector());
 //        return tomcat;
 //
 //    }
-
+//
 //    @Bean
 //    public Connector redirectConnector() {
 //        Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
