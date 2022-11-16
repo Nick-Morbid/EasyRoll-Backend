@@ -47,6 +47,15 @@ public class DateUtil {
         int deltaDay = Math.toIntExact((date.getTime() - firstWeek.getTime()) / DAY);
         return (deltaDay+7)/7;
     }
+    /**
+     * 获取日期所对应的工作日（星期几）
+     * */
+    public Integer getWeekDay(Date date){
+        Date firstWeek = FirstWeek();
+        int deltaDay = Math.toIntExact((date.getTime() - firstWeek.getTime()) / DAY);
+        return deltaDay %7+1;
+    }
+
 
     /**
      * 根据字符串生成对应的date对象
