@@ -32,7 +32,7 @@ public class JwtSecurityHandler {
      * @param departmentId 学院id
      * @return 返回生成的token
      * */
-    public String getToken(String id,int role,String departmentId) {
+    public String getToken(String id,String name,int role,String departmentId) {
 
         /*设置token的header*/
         Map<String ,Object> header = new HashMap<>(2);
@@ -46,6 +46,7 @@ public class JwtSecurityHandler {
         return JWT.create()
                 .withHeader(header)
                 .withClaim("id",id)
+                .withClaim("name",name)
                 .withClaim("role",role)
                 .withClaim("departmentId",departmentId)
                 .withExpiresAt(date).sign(algorithm);

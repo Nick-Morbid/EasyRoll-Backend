@@ -1,4 +1,6 @@
 package com.system.roll.operationLog.annotation;
+import com.system.roll.constant.impl.OperationType;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -19,5 +21,5 @@ import java.lang.annotation.ElementType;
 @Documented
 @SuppressWarnings("all")
 public @interface Operation {
-    String value() default "";
+    OperationType type() default OperationType.NO_OPERATION;
 }

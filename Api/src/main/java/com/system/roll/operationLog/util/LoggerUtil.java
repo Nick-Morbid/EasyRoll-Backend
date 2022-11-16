@@ -23,10 +23,17 @@ public class LoggerUtil {
         return logInfo.get(Thread.currentThread().getId());
     }
 
-    public List<String> popContents(){
+    /**
+     * 获取具体的操作日志
+     * */
+    public String getOperationLog(){
         List<String> contents = getContents();
         logInfo.remove(Thread.currentThread().getId());
-        return contents;
+        StringBuilder operationLogBuilder = new  StringBuilder();
+        for (int i = 0; i < contents.size(); i++) {
+            operationLogBuilder.append("(").append(i).append(")").append(contents.get(i+1)).append("\\n");
+        }
+        return operationLogBuilder.toString();
     }
 
     /*对log的日志打印方法进行装饰，加上保存到内存中的功能*/

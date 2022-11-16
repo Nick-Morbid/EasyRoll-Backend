@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 public interface CourseConvertor {
 
     CourseConvertor INSTANCE = Mappers.getMapper(CourseConvertor.class);
-    
+
     @Mappings({
             @Mapping(source = "id",target = "id"),
             @Mapping(source = "courseName",target = "name"),
@@ -19,7 +19,6 @@ public interface CourseConvertor {
             @Mapping(source = "period",target = "period"),
             @Mapping(source = "startWeek",target = "startWeek"),
             @Mapping(source = "endWeek",target = "endWeek"),
-            @Mapping(source = "professorName",target = "professorName")
     })
     CourseListVo.CourseVo convert(Course course);
 }

@@ -41,7 +41,7 @@ public class AuthSocketHandler implements SocketHandler {
         ProfessorVo professorVo = (ProfessorVo) data;
         JwtSecurityHandler jwtSecurityHandler = SpringContextUtil.getBean("JwtSecurityHandler");
         JsonObject jsonObject = (JsonObject) new Gson().toJsonTree(data);
-        jsonObject.addProperty("Authorization",jwtSecurityHandler.getToken(professorVo.getId(),professorVo.getRole(),professorVo.getDepartmentId()));
+        jsonObject.addProperty("Authorization",jwtSecurityHandler.getToken(professorVo.getId(),professorVo.getName(),professorVo.getRole(),professorVo.getDepartmentId()));
         return jsonObject;
     }
 

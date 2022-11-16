@@ -37,7 +37,7 @@ public class SpringBootTest {
 
     @Test
     public void testVerify(){
-        String token = jwtSecurityHandler.getToken("1",0,"1");
+        String token = jwtSecurityHandler.getToken("1","nick",0,"1");
         DecodedJWT verify = jwtSecurityHandler.verify(token);
         System.out.println(verify.getClaim("id").asInt());
         System.out.println(verify.getClaim("role").asInt());
