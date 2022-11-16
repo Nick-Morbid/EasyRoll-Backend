@@ -1,5 +1,7 @@
 package com.system.roll;
 
+import com.system.roll.handler.InitializingHandler;
+import com.system.roll.utils.SpringContextUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,6 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EasyRollStarter {
     public static void main(String[] args) {
         SpringApplication.run(EasyRollStarter.class,args);
+        InitializingHandler initializingHandler = SpringContextUtil.getBean("InitializingHandler");
+        initializingHandler.init();
     }
 //    @Bean
 //    public ServletWebServerFactory servletContainer() {
@@ -19,12 +23,12 @@ public class EasyRollStarter {
 //                securityConstraint.addCollection(collection);
 //
 //                context.addConstraint(securityConstraint); } };
-
+//
 //        tomcat.addAdditionalTomcatConnectors(redirectConnector());
 //        return tomcat;
 //
 //    }
-
+//
 //    @Bean
 //    public Connector redirectConnector() {
 //        Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);

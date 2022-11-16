@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    include: mapper,rabbit
+#    include: mapper,ssl,applet
+server:
+  port: 8091
+
+# 项目自定义参数
+custom:
+  # 项目中flink任务的执行器的类名称
+  taskClassNames:
+    - 'com.system.roll.flink.task.RollDataTask'
