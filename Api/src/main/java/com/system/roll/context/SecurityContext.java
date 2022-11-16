@@ -1,16 +1,15 @@
-package com.system.roll.entity.vo.leave;
+package com.system.roll.context;
+
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class LeaveListVo {
-    private List<LeaveVo> leaveRecords;
-    private Integer total;
+public class SecurityContext {
+    private Authorization authorization;
 }
