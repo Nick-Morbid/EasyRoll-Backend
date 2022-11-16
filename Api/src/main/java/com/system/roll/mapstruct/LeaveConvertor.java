@@ -14,8 +14,8 @@ public interface LeaveConvertor {
 
     @Mappings({
             @Mapping(source = "id",target = "id"),
-            @Mapping(source = "start_time",target = "startTime"),
-            @Mapping(source = "end_time",target = "endTime"),
+            @Mapping(source = "startTime",target = "startTime"),
+            @Mapping(source = "endTime",target = "endTime"),
             @Mapping(source = "result",target = "result")
     })
     LeaveVo LeaveToLeaveVo(Leave leave);
