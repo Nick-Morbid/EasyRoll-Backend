@@ -30,8 +30,11 @@ public class Course {
     @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
     private Period period;
 
-    @TableField(value = "end_time")
-    private Integer endTime;
+    @TableField(value = "start_week")
+    private Integer startWeek;
+
+    @TableField(value = "end_week")
+    private Integer endWeek;
 
     private Integer total;
 

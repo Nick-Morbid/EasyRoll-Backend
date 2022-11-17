@@ -45,7 +45,7 @@ public class AuthController {
         /*获取信息*/
         StudentVo studentVo = authService.studentLogin(data.getCode());
         /*生成token*/
-        String token = jwtSecurityHandler.getToken(studentVo.getId(), Role.STUDENT.getCode(), studentVo.getDepartmentId());
+        String token = jwtSecurityHandler.getToken(studentVo.getId(),studentVo.getName(), Role.STUDENT.getCode(), studentVo.getDepartmentId());
         /*写入token*/
         response.setHeader("Authorization",token);
         /*返回信息*/
@@ -60,7 +60,7 @@ public class AuthController {
         /*获取信息*/
         SupervisorVo supervisorVo = authService.supervisorLogin(data.getCode());
         /*生成token*/
-        String token = jwtSecurityHandler.getToken(supervisorVo.getId(), supervisorVo.getRole(), supervisorVo.getDepartmentId());
+        String token = jwtSecurityHandler.getToken(supervisorVo.getId(),supervisorVo.getName(), supervisorVo.getRole(), supervisorVo.getDepartmentId());
         /*写入token*/
         response.setHeader("Authorization",token);
         /*返回信息*/
@@ -75,7 +75,7 @@ public class AuthController {
         /*获取信息*/
         ProfessorVo professorVo = authService.professorLogin(data.getSocketId(),data.getCode());
         /*生成token*/
-        String token = jwtSecurityHandler.getToken(professorVo.getId(), professorVo.getRole(), professorVo.getDepartmentId());
+        String token = jwtSecurityHandler.getToken(professorVo.getId(),professorVo.getName(), professorVo.getRole(), professorVo.getDepartmentId());
         /*写入token*/
         response.setHeader("Authorization",token);
         /*返回信息*/

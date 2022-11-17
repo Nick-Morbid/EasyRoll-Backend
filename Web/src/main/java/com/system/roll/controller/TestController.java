@@ -7,6 +7,7 @@ import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
 import com.system.roll.security.context.SecurityContextHolder;
 import com.system.roll.security.jwt.JwtSecurityHandler;
+import com.system.roll.service.TestService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,8 +45,16 @@ public class TestController {
 
     @GetMapping(value = "/login")
     public User login(HttpServletResponse response) throws IOException {
-        String token = jwtSecurityHandler.getToken("032002601",0,"100000001");
+        String token = jwtSecurityHandler.getToken("032002601","nick",0,"100000001");
         response.setHeader("Authorization",token);
         return new User().setName("nick");
+    }
+
+    @Resource
+    private TestService testService;
+
+    @GetMapping(value = "/uploadCourse")
+    public void uploadCourse(){
+        testService.uploadCourse();
     }
 }

@@ -53,6 +53,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             DecodedJWT verify = jwtSecurityHandler.verify(token);
             Authorization authorization = new Authorization()
                     .addInfo("id",verify.getClaim("id").asString())
+                    .addInfo("name",verify.getClaim("name").asString())
                     .addInfo("role",enumUtil.getEnumByCode(Role.class,verify.getClaim("role").asInt()))
                     .addInfo("departmentId",verify.getClaim("departmentId").asString());
             SecurityContextHolder.setContext(new SecurityContext(authorization));

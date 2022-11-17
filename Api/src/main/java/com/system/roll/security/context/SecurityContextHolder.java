@@ -13,9 +13,7 @@ public class SecurityContextHolder {
 
     public static SecurityContext getContext(){
         if (!contextPool.containsKey(Thread.currentThread().getId())){
-            contextPool.put(Thread.currentThread().getId(),new SecurityContext(new Authorization()));
-        }else {
-            throw new ServiceException(ResultCode.UNKNOWN);
+            throw new ServiceException(ResultCode.FAILED_TO_GET_ELEMENT_FROM_MAP);
         }
         return contextPool.get(Thread.currentThread().getId());
     }
