@@ -5,9 +5,9 @@
 <mapper namespace="com.system.roll.mapper.RollRelationMapper">
 
     <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.RollRelation">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="supervisor_id" column="supervisor_id" jdbcType="BIGINT"/>
-        <result property="courseId" column="course_id" jdbcType="BIGINT"/>
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="supervisor_id" column="supervisor_id" jdbcType="VARCHAR"/>
+        <result property="courseId" column="course_id" jdbcType="VARCHAR"/>
     </resultMap>
 
 </mapper>

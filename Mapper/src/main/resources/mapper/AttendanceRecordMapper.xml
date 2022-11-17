@@ -5,14 +5,14 @@
 <mapper namespace="com.system.roll.mapper.AttendanceRecordMapper">
 
     <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.AttendanceRecord">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="studentId" column="student_id" jdbcType="BIGINT"/>
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="studentId" column="student_id" jdbcType="VARCHAR"/>
         <result property="studentName" column="student_name" jdbcType="VARCHAR"/>
         <result property="date" column="date" jdbcType="DATE"/>
         <result property="period" column="period" jdbcType="INTEGER"/>
         <result property="state" column="state" jdbcType="INTEGER"/>
         <result property="created" column="created" jdbcType="TIMESTAMP"/>
-        <result property="transactorId" column="transactor_id" jdbcType="BIGINT"/>
+        <result property="transactorId" column="transactor_id" jdbcType="VARCHAR"/>
         <result property="transactorName" column="transactor_name" jdbcType="VARCHAR"/>
 
     </resultMap>

@@ -5,12 +5,11 @@
 <mapper namespace="com.system.roll.mapper.StudentMapper">
 
     <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.Student">
-        <id property="id" column="id" jdbcType="BIGINT"/>
+        <id property="id" column="id" jdbcType="VARCHAR"/>
         <result property="studentName" column="student_name" jdbcType="VARCHAR"/>
-        <result property="departmentId" column="department_id" jdbcType="BIGINT"/>
-        <result property="majorId" column="major_id" jdbcType="BIGINT"/>
+        <result property="departmentId" column="department_id" jdbcType="VARCHAR"/>
+        <result property="majorId" column="major_id" jdbcType="VARCHAR"/>
         <result property="grade" column="grade" jdbcType="INTEGER"/>
         <result property="classNo" column="class_no" jdbcType="INTEGER"/>
     </resultMap>
-
 </mapper>

@@ -5,7 +5,7 @@
 <mapper namespace="com.system.roll.mapper.DepartmentMapper">
 
     <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.Department">
-        <id property="id" column="id" jdbcType="BIGINT"/>
+        <id property="id" column="id" jdbcType="VARCHAR"/>
         <result property="departmentName" column="department_name" jdbcType="VARCHAR"/>
         <result property="totalNum" column="total_num" jdbcType="INTEGER"/>
         <result property="grade" column="grade" jdbcType="INTEGER"/>

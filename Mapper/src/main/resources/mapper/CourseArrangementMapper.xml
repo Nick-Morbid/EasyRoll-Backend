@@ -5,11 +5,14 @@
 <mapper namespace="com.system.roll.mapper.CourseArrangementMapper">
 
     <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.CourseArrangement">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="courseId" column="course_id" jdbcType="BIGINT"/>
-        <result property="classroomNo" column="classroom_no" jdbcType="BIGINT"/>
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="courseId" column="course_id" jdbcType="VARCHAR"/>
+        <result property="classroomNo" column="classroom_no" jdbcType="VARCHAR"/>
         <result property="period" column="period" jdbcType="INTEGER" javaType="com.system.roll.constant.impl.Period"/>
         <result property="mode" column="mode" jdbcType="INTEGER"/>
+        <result property="startWeek" column="start_week" jdbcType="INTEGER"/>
+        <result property="endWeek" column="end_week" jdbcType="INTEGER"/>
+        <result property="weekDay" column="week_day" jdbcType="INTEGER"/>
     </resultMap>
 
 </mapper>
