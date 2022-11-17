@@ -8,11 +8,15 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
+/**
+ * 对应教师端【数据导出】界面
+ * 课程的考勤数据统计
+ * */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class RollStatistic {
+public class TotalRollStatisticVo {
     private Integer enrollNum;
     private List<Record> rollRecords;
     private Integer total;

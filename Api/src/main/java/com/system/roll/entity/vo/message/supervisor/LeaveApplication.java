@@ -1,6 +1,6 @@
-package com.system.roll.entity.vo.message.rabbit.message.impl;
+package com.system.roll.entity.vo.message.supervisor;
 
-import com.system.roll.entity.vo.message.rabbit.message.Message;
+import com.system.roll.entity.vo.message.Message;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class OperationNotice implements Message {
+public class LeaveApplication implements Message {
     private Timestamp time;
     private Integer msgType;
     private String content;
@@ -23,9 +23,10 @@ public class OperationNotice implements Message {
     @NoArgsConstructor
     @Accessors(chain = true)
     public static class MessageData{
-        private String operationId;
-        private String operationLog;
-        private Integer isRejected;
-        private String[] rejectors;
+        private String leaveId;
+        private Timestamp startTime;
+        private Timestamp endTime;
+        private String excuse;
+        private String attachment;
     }
 }

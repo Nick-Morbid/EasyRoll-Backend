@@ -1,4 +1,4 @@
-package com.system.roll.entity.vo.message.rabbit.message;
+package com.system.roll.entity.vo.message;
 
 import java.sql.Timestamp;
 

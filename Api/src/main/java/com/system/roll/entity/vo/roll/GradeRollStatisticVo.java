@@ -7,11 +7,15 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
+/**
+ * 对应辅导员端【数据导出】界面
+ * 年级的考勤数据统计
+ * */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class GradeStatistic {
+public class GradeRollStatisticVo {
     private List<GradeRollData> rollDataList;
     private Integer total;
 

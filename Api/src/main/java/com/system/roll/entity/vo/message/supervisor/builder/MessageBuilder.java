@@ -1,10 +1,10 @@
-package com.system.roll.entity.vo.message.rabbit.builder;
+package com.system.roll.entity.vo.message.supervisor.builder;
 
 import com.system.roll.constant.impl.MsgType;
 import com.system.roll.constant.impl.ResultCode;
-import com.system.roll.entity.vo.message.rabbit.message.Message;
-import com.system.roll.entity.vo.message.rabbit.builder.impl.LeaveApplicationBuilder;
-import com.system.roll.entity.vo.message.rabbit.builder.impl.OperationNoticeBuilder;
+import com.system.roll.entity.vo.message.Message;
+import com.system.roll.entity.vo.message.supervisor.builder.impl.LeaveApplicationBuilder;
+import com.system.roll.entity.vo.message.supervisor.builder.impl.OperationNoticeBuilder;
 import com.system.roll.exception.impl.ServiceException;
 import lombok.Data;
 import lombok.experimental.Accessors;

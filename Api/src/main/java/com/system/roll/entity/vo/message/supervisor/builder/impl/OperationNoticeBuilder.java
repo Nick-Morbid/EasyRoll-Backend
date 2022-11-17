@@ -1,9 +1,9 @@
-package com.system.roll.entity.vo.message.rabbit.builder.impl;
+package com.system.roll.entity.vo.message.supervisor.builder.impl;
 
 import com.system.roll.constant.impl.MsgType;
-import com.system.roll.entity.vo.message.rabbit.builder.MessageBuilder;
-import com.system.roll.entity.vo.message.rabbit.message.Message;
-import com.system.roll.entity.vo.message.rabbit.message.impl.OperationNotice;
+import com.system.roll.entity.vo.message.supervisor.builder.MessageBuilder;
+import com.system.roll.entity.vo.message.Message;
+import com.system.roll.entity.vo.message.supervisor.OperationNotice;
 
 public class OperationNoticeBuilder extends MessageBuilder {
     @Override

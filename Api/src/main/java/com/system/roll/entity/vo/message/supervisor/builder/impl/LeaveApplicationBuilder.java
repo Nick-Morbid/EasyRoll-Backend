@@ -1,9 +1,9 @@
-package com.system.roll.entity.vo.message.rabbit.builder.impl;
+package com.system.roll.entity.vo.message.supervisor.builder.impl;
 
 import com.system.roll.constant.impl.MsgType;
-import com.system.roll.entity.vo.message.rabbit.message.Message;
-import com.system.roll.entity.vo.message.rabbit.builder.MessageBuilder;
-import com.system.roll.entity.vo.message.rabbit.message.impl.LeaveApplication;
+import com.system.roll.entity.vo.message.Message;
+import com.system.roll.entity.vo.message.supervisor.builder.MessageBuilder;
+import com.system.roll.entity.vo.message.supervisor.LeaveApplication;
 
 import java.sql.Timestamp;
 

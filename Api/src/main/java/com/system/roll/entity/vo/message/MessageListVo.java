@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -14,15 +13,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class MessageListVo {
 
-    List<MessageVo> messages;
+    List<Message> messages;
     private Integer total;
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    public static class MessageVo{
-        private Timestamp time;
-        private String content;
-        private String transactor;
-    }
+
 }
