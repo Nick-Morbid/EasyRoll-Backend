@@ -18,8 +18,10 @@ Api/src/main/resources/nicklorry.top_keystorePass.txt
 Api/src/main/resources/nicklorry.top_server.jks
 Api/src/main/resources/application-rabbit.yml
 
-test
-Api/src/main/resources/properties/
+Web/src/test/java/com/system/roll/SpringBootTest.java
+Web/src/test/java/com/system/roll/MapperTest.java
+
+Api/src/main/resources/properties
 
 # Package Files #
 *.jar

@@ -1,7 +1,7 @@
 package com.system.roll.mapstruct;
 
 import com.system.roll.entity.pojo.Course;
-import com.system.roll.entity.vo.course.CourseListVo;
+import com.system.roll.entity.vo.course.CourseVo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -20,5 +20,5 @@ public interface CourseConvertor {
             @Mapping(source = "startWeek",target = "startWeek"),
             @Mapping(source = "endWeek",target = "endWeek"),
     })
-    CourseListVo.CourseVo convert(Course course);
+    CourseVo convert(Course course);
 }
