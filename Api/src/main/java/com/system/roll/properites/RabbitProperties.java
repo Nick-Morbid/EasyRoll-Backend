@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 @Component(value = "RabbitProperties")
 @PropertySource("classpath:properties/rabbit.properties")
 public class RabbitProperties {
-    @Value("${rabbit.ttl}")
-    private Integer ttl;
     @Value("${rabbit.wsExchange}")
     private String wsExchange;
     @Value("${rabbit.rollDataSource}")
@@ -20,7 +18,4 @@ public class RabbitProperties {
     @Value("${rabbit.rollDataQueuePrefix}")
     private String rollDataQueuePrefix;
 
-    public Integer getTotalTTL(){
-        return ttl*60*1000;
-    }
 }

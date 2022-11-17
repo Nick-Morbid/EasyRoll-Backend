@@ -1,4 +1,4 @@
-package com.system.roll.redis;
+package com.system.roll.redis.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

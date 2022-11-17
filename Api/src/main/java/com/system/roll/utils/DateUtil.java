@@ -26,19 +26,11 @@ public class DateUtil {
     public static Integer HOUR = 60*MINUTE;//1h = 60m
     public static Integer DAY = 24*HOUR;//1d = 24h
 
-
-    /**
-     * 获取本学期第一周的星期一的date对象
-     * */
-    public Date getFirstWeek(){
-        return stringToDate(commonProperties.getFirstWeek());
-    }
-
     /**
      * 获取当前日期对应的周数
      * */
     public Integer getWeek(Date date){
-        Date firstWeek = getFirstWeek();
+        Date firstWeek = commonProperties.FirstWeek();
         int deltaDay = Math.toIntExact((date.getTime() - firstWeek.getTime()) / DAY);
         return (deltaDay+7)/7;
     }
@@ -46,7 +38,7 @@ public class DateUtil {
      * 获取日期所对应的工作日（星期几）
      * */
     public Integer getWeekDay(Date date){
-        Date firstWeek = getFirstWeek();
+        Date firstWeek = commonProperties.FirstWeek();
         int deltaDay = Math.toIntExact((date.getTime() - firstWeek.getTime()) / DAY);
         return deltaDay %7+1;
     }

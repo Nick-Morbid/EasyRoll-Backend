@@ -20,6 +20,7 @@ import java.util.Map;
  * */
 @Slf4j
 @Component(value = "RabbitUtil")
+@SuppressWarnings("all")
 public class RabbitUtil {
     @Resource
     private RabbitAdmin rabbitAdmin;
@@ -33,7 +34,7 @@ public class RabbitUtil {
      * @param exchangeName 交换机的名称
      * */
     public DirectExchange createExchange(String exchangeName){
-        rabbitAdmin.deleteExchange(exchangeName);
+//        rabbitAdmin.deleteExchange(exchangeName);
         /*创建交换机*/
         DirectExchange exchange = new DirectExchange(exchangeName,true,false);
         /*声明交换机*/
@@ -49,9 +50,13 @@ public class RabbitUtil {
      * @param exchangeName 交换机名称
      * @param key 路由规则
      * @param args 参数
+     * @param deleteExisted 是否删除已经创建的队列
      * */
-    public Queue createQueue(String queueName,String exchangeName,String key,Map<String,Object> args){
-        rabbitAdmin.deleteQueue(queueName);
+    public void createQueue(String queueName,String exchangeName,String key,Map<String,Object> args,boolean deleteExisted){
+        /*删除原有队列*/
+        if (deleteExisted) rabbitAdmin.deleteQueue(queueName);
+        else if (rabbitAdmin.getQueueInfo(queueName) != null) return;
+        //        rabbitAdmin.deleteQueue(queueName);
         /*创建队列*/
         Queue queue = new Queue(queueName,true,false,false,args);
         /*队列声明*/
@@ -60,8 +65,6 @@ public class RabbitUtil {
         rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to((DirectExchange) rabbitContext.getExchange(exchangeName)).with(key));
         /*保存到上下文对象中*/
         rabbitContext.addQueue(queueName,queue);
-        /*返回队列*/
-        return queue;
     }
 
     /**
@@ -69,9 +72,10 @@ public class RabbitUtil {
      * @param queueName 队列名称
      * @param exchangeName 交换机名称
      * @param key 路由规则
+     * @param deleteExisted 是否删除已经创建的队列
      * */
-    public Queue createQueue(String queueName,String exchangeName,String key){
-        return createQueue(queueName,exchangeName,key,null);
+    public void createQueue(String queueName,String exchangeName,String key,boolean deleteExisted){
+        createQueue(queueName,exchangeName,key,null,deleteExisted);
     }
 
     /**
@@ -79,12 +83,14 @@ public class RabbitUtil {
      * @param queueName 队列名称
      * @param exchangeName 交换机名称
      * @param key 路由规则
+     * @param deleteExisted 是否删除已经创建的队列
+     * @param ttl 过期时间
      * */
-    public Queue createTTLQueue(String queueName,String exchangeName,String key){
+    public void createTTLQueue(String queueName,String exchangeName,String key,boolean deleteExisted,long ttl){
         /*队列参数*/
         Map<String,Object> args = new HashMap<>();
-        args.put("x-message-ttl",rabbitProperties.getTotalTTL());
-        return createQueue(queueName,exchangeName,key,args);
+        args.put("x-message-ttl",ttl);
+        createQueue(queueName,exchangeName,key,args,deleteExisted);
     }
 
     /**

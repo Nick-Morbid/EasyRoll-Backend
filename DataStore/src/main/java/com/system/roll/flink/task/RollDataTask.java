@@ -11,6 +11,8 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+
 /**
  * 定义考勤数据的计算任务
  * */
@@ -46,10 +48,10 @@ public class RollDataTask implements FlinkTask{
             /*如果长度为2，说明传入了课程号和总人数信息*/
             if (split.length==2){
                 log.info("收到了课程号为：{}的点名请求，点名人数为：{}",split[0],split[1]);
-                return new RollData().setCourseId(split[0]).setEnrollNum(Integer.valueOf(split[1]));
+                return new RollData().setCourseId(split[0]).setEnrollNum(Integer.valueOf(split[1])).setTime(new Timestamp(System.currentTimeMillis()));
             }else if (split.length==3){
                 log.info("在课程号：{}的课程中，学号：{}的同学的考勤状态为：{}",split[0],split[1],split[2]);
-                return new RollData().setCourseId(split[0]).setStudentId(split[1]).setState(Integer.valueOf(split[2]));
+                return new RollData().setCourseId(split[0]).setStudentId(split[1]).setState(Integer.valueOf(split[2])).setTime(new Timestamp(System.currentTimeMillis()));
             }
             return null;
         }

@@ -1,7 +1,14 @@
 package com.system.roll.flink.sink;
 
+import com.system.roll.constant.impl.TimeUnit;
 import com.system.roll.entity.pojo.RollData;
 import com.system.roll.flink.context.FlinkContext;
+import com.system.roll.properites.CommonProperties;
+import com.system.roll.properites.RabbitProperties;
+import com.system.roll.rabbit.utils.RabbitUtil;
+import com.system.roll.redis.RollDataRedis;
+import com.system.roll.utils.JsonUtil;
+import com.system.roll.utils.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.springframework.stereotype.Component;
@@ -23,21 +30,31 @@ public class RollDataSink extends RichSinkFunction<RollData> {
     @Override
     public void invoke(RollData value, Context context) {
         String courseId = value.getCourseId();
+        RabbitUtil rabbitUtil = SpringContextUtil.getBean("RabbitUtil");
+        RabbitProperties rabbitProperties = SpringContextUtil.getBean("RabbitProperties");
         /*存入点名人数*/
         if (value.getEnrollNum()!=null){
             log.info("开始对课程号：{}的点名",courseId);
             rollDataContext.add(courseId,value.getEnrollNum());
+            /*创建对应的消息队列*/
+            CommonProperties commonProperties = SpringContextUtil.getBean("CommonProperties");
+            rabbitUtil.createTTLQueue(rabbitProperties.getRollDataQueuePrefix()+courseId,rabbitProperties.getRollDataExchange(),courseId,true,commonProperties.RollDataTTL(TimeUnit.MINUTE));
             return;
         }
-        /*存入考勤数据*/
         else {
+            /*存入考勤数据*/
             rollDataContext.listAdd(courseId,value);
+            /*给相应课程的老师推送数据*/
+            rabbitUtil.sendMessage(rabbitProperties.getRollDataExchange(),courseId, JsonUtil.toJson(value));
         }
         /*检查是否完成点名*/
         if (Objects.equals(rollDataContext.listLength(courseId), rollDataContext.get(courseId))){
             log.info("课程号：{}完成点名",courseId);
             /*将数据存入redis中*/
             List<RollData> rollDataList = rollDataContext.listGet(courseId);
+            RollDataRedis rollDataRedis = SpringContextUtil.getBean("RollDataRedis");
+            rollDataRedis.saveRollDataList(courseId,rollDataList);
+
             rollDataContext.remove(courseId);
             rollDataContext.listRemove(courseId);
         }

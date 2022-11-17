@@ -20,7 +20,7 @@ public class RabbitSource extends RichSourceFunction<String> {
         /*手动注入组件*/
         RabbitUtil rabbitUtil =SpringContextUtil.getBean("RabbitUtil");
         /*创建队列*/
-        rabbitUtil.createQueue(queueName, exchangeName, routingKey);
+        rabbitUtil.createQueue(queueName, exchangeName, routingKey,false);
         this.queueName = queueName;
         /*设置标志位为false（还未开始接收消息）*/
         isRunning = false;

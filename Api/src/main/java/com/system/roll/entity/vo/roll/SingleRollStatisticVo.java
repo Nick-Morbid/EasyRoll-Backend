@@ -13,9 +13,9 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class SingleRollStatisticVo {
-    private Integer enrollNum;
-    private Integer attendanceNum;
-    private Integer lateNum;
-    private Integer absenceNum;
-    private Integer leaveNum;
+    private Integer enrollNum = 0;
+    private Integer attendanceNum = 0;
+    private Integer lateNum = 0;
+    private Integer absenceNum = 0;
+    private Integer leaveNum = 0;
 }

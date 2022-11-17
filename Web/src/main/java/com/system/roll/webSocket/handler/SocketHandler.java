@@ -17,7 +17,7 @@ public interface SocketHandler {
      * 长连接信息接收
      * @param data 前端数据流
      * */
-    void onMessage(String data);
+    void onMessage(String data) throws Exception;
 
     /**
      * 消息加工

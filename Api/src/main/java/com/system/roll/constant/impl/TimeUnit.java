@@ -3,20 +3,18 @@ package com.system.roll.constant.impl;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.system.roll.constant.CommonEnum;
 
-/**
- * 考勤状态枚举
- * */
-public enum  RollState implements CommonEnum {
-    ATTENDANCE("出勤",0),
-    LEAVE("请假",1),
-    LATE("迟到",2),
-    ABSENCE("缺勤",3);
+public enum TimeUnit implements CommonEnum {
+    SECOND("秒",0),
+    MINUTE("分",1),
+    HOUR("小时",2),
+    DAY("天",3)
+    ;
 
     private final String msg;
     @EnumValue
     private final Integer code;
 
-    private RollState(String msg,Integer code){
+    private TimeUnit(String msg,Integer code){
         this.msg = msg;
         this.code = code;
     }

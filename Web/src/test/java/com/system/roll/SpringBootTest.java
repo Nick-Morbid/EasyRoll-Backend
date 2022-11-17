@@ -9,6 +9,7 @@ import com.system.roll.entity.vo.Result;
 import com.system.roll.entity.vo.message.supervisor.builder.MessageBuilder;
 import com.system.roll.entity.vo.message.Message;
 import com.system.roll.properites.AppletProperties;
+import com.system.roll.properites.CommonProperties;
 import com.system.roll.security.jwt.JwtSecurityHandler;
 import com.system.roll.service.WxApiService;
 import com.system.roll.uitls.HttpRequestUtil;
@@ -108,15 +109,17 @@ public class SpringBootTest {
     }
     @Resource
     private DateUtil dateUtil;
+    @Resource
+    private CommonProperties commonProperties;
     @Test
     public void testGetFirstWeek() throws ParseException {
-        System.out.println(dateUtil.getFirstWeek());
+        System.out.println(commonProperties.FirstWeek());
 //        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 //        System.out.println(new Date(format.parse(dateUtil.getFirstWeek()).getTime()));
     }
     @Test
     public void testGetWeek(){
-        Date date = dateUtil.getFirstWeek();
+        Date date = commonProperties.FirstWeek();
         Long time = date.getTime();
         while (time<System.currentTimeMillis()){
             Date date1 = new Date(time);
@@ -165,5 +168,12 @@ public class SpringBootTest {
         System.out.println(describer3.getClass());
         System.out.println(describer4.getClass());
         System.out.println(describer5.getClass());
+    }
+    @Test
+    public void test(){
+        String data1 = "123456789";
+        String data2 = data1+",";
+        System.out.println(data1.matches("\\d+"));
+        System.out.println(data2.matches("\\d+"));
     }
 }

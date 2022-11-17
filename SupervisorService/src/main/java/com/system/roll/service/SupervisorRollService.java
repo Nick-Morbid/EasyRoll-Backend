@@ -20,7 +20,7 @@ public interface SupervisorRollService {
     /**
      * 获取单次点名的统计结果
      * */
-    SingleRollStatisticVo getRollDataStatistic(String courseId);
+    SingleRollStatisticVo getRollDataStatistic(String courseId) throws InterruptedException;
 
     /**
      * 获取消息列表
