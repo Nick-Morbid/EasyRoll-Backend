@@ -1,0 +1,7 @@
+spring:
+  rabbitmq:
+    host: 'nicklorry.top'
+    port: 5672
+    username: 'nick'
+    password: '15359503385m'
+    virtual-host: '/nick'

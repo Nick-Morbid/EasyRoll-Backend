@@ -53,7 +53,8 @@ public class AuthServiceImpl implements AuthService {
         JsCode2sessionBo jsCode2sessionBo = wxApiService.jsCode2session(code);
         String openId = jsCode2sessionBo.getOpenId();
         /*根据openId获取督导人员信息*/
-        SupervisorVo supervisorInfo = supervisorInfoService.getSupervisorInfo(openId);
+//        SupervisorVo supervisorInfo = supervisorInfoService.getSupervisorInfo(openId);
+        SupervisorVo supervisorInfo = new SupervisorVo().setId(openId).setName("nick").setRole(Role.STUDENT.getCode()).setDepartmentId("123456789").setDepartmentName("计算机与大数据学院");
         if (supervisorInfo==null) throw new ServiceException(ResultCode.NOT_REGISTER);
         return supervisorInfo;
     }
@@ -72,8 +73,8 @@ public class AuthServiceImpl implements AuthService {
         JsCode2sessionBo jsCode2sessionBo = wxApiService.jsCode2session(code);
         String openId = jsCode2sessionBo.getOpenId();
         /*根据openId获取教师/辅导员信息*/
-//        ProfessorVo professorVo = professorInfoService.getProfessorInfo(openId);
-        ProfessorVo professorVo = new ProfessorVo().setId("123456789").setName("Kex").setDepartmentId("123").setDepartmentName("计算机与大数据学院").setRole(Role.PROFESSOR.getCode());
+        ProfessorVo professorVo = professorInfoService.getProfessorInfo(openId);
+//        ProfessorVo professorVo = new ProfessorVo().setId("123456789").setName("Kex").setDepartmentId("123").setDepartmentName("计算机与大数据学院").setRole(Role.PROFESSOR.getCode());
         /*调用长连接，通知web端登录成功*/
         try {
             if (professorVo!=null) SocketContextHandler.getContext(socketId).sendMessage(ResultCode.SUCCESS,professorVo);

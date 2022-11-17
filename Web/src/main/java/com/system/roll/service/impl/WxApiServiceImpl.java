@@ -1,6 +1,6 @@
 package com.system.roll.service.impl;
 
-import com.system.roll.config.properties.AppletProperties;
+import com.system.roll.properites.AppletProperties;
 import com.system.roll.constant.impl.ResultCode;
 import com.system.roll.entity.bo.JsCode2sessionBo;
 import com.system.roll.entity.vo.Result;

@@ -9,15 +9,17 @@
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
-.idea/*
+.idea/encodings.xml
+.idea
+
 */target
 Api/src/main/resources/application-ssl.yml
 Api/src/main/resources/nicklorry.top_keystorePass.txt
 Api/src/main/resources/nicklorry.top_server.jks
-Api/src/main/resources/application-applet.yml
+Api/src/main/resources/application-rabbit.yml
 
-test/
-
+test
+Api/src/main/resources/properties/
 
 # Package Files #
 *.jar
