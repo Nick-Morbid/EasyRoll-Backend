@@ -16,24 +16,4 @@ public class CourseListVo {
     private List<CourseVo> courses;
 
     private Integer total;
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    public static class CourseVo{
-        private Long id;
-
-        private String name;
-
-        private Integer enrollNum;
-
-        private String  period;
-
-        private Integer startWeek;
-
-        private Integer endWeek;
-
-        private String professorName;
-    }
 }

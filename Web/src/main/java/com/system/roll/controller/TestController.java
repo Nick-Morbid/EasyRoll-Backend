@@ -4,6 +4,7 @@ import com.system.roll.constant.impl.Period;
 import com.system.roll.constant.impl.Role;
 import com.system.roll.entity.pojo.User;
 import com.system.roll.entity.vo.course.CourseListVo;
+import com.system.roll.entity.vo.course.CourseVo;
 import com.system.roll.security.context.SecurityContextHolder;
 import com.system.roll.security.jwt.JwtSecurityHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +34,8 @@ public class TestController {
         System.out.println(SecurityContextHolder.getContext().getAuthorization().getInfo(Role.class, "role"));
         System.out.println(SecurityContextHolder.getContext().getAuthorization().getInfo(Long.class, "departmentId"));
 
-        List<CourseListVo.CourseVo> courses = new ArrayList<>();
-        courses.add(new CourseListVo.CourseVo().setName("软件工程").setProfessorName("Kex").setStartWeek(2).setEndWeek(14).setId(1L).setEnrollNum(139).setPeriod(Period.EIGHT_TO_TEN.getMsg()));
+        List<CourseVo> courses = new ArrayList<>();
+        courses.add(new CourseVo().setName("软件工程").setProfessorName("Kex").setStartWeek(2).setEndWeek(14).setId("1").setEnrollNum(139).setPeriod(Period.EIGHT_TO_TEN.getMsg()));
         return new CourseListVo().setCourses(courses).setTotal(courses.size());
     }
 

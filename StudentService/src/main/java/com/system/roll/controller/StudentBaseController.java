@@ -17,6 +17,6 @@ public class StudentBaseController {
     @GetMapping("/course/getAll")
     public CourseListVo getAllCourse(){
         CourseListVo courseListVo = studentBaseService.getAllCourse();
-        return null;
+        return courseListVo;
     }
 }

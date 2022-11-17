@@ -10,6 +10,18 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class CourseVo {
+
     private String id;
+
     private String name;
+
+    private Integer enrollNum;
+
+    private String  period;
+
+    private Integer startWeek;
+
+    private Integer endWeek;
+
+    private String professorName;
 }
