@@ -2,6 +2,7 @@ package com.system.roll.rabbit.utils;
 
 import com.system.roll.properites.RabbitProperties;
 import com.system.roll.rabbit.context.RabbitContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Message;
@@ -17,6 +18,7 @@ import java.util.Map;
 /**
  * Rabbit工具类
  * */
+@Slf4j
 @Component(value = "RabbitUtil")
 public class RabbitUtil {
     @Resource
@@ -116,6 +118,7 @@ public class RabbitUtil {
      * 发送一条消息
      * */
     public void sendMessage(String exchangeName,String routingKey,String data) {
+        log.info("交换机为：{}，路由规则为：{}，发送数据内容为：{}",exchangeName,routingKey,data);
         rabbitAdmin.getRabbitTemplate().convertAndSend(exchangeName,routingKey,data);
     }
 }
