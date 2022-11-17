@@ -20,10 +20,10 @@ import lombok.experimental.Accessors;
 @TableName(value = "course_arrangement")
 public class CourseArrangement {
     @TableId
-    private Long id;
+    private String id;
 
     @TableField(value = "course_id")
-    private Long courseId;
+    private String courseId;
 
     @TableField(value = "classroom_no")
     private Integer classroomNo;
@@ -33,4 +33,13 @@ public class CourseArrangement {
 
     @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
     private TeachingMode mode;
+
+    @TableField(value = "start_week")
+    private Integer startWeek;
+
+    @TableField(value = "end_week")
+    private Integer endWeek;
+
+    @TableField(value = "week_day")
+    private Integer weekDay;
 }

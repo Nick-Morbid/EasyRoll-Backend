@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @TableName(value = "course")
 public class Course {
     @TableId
-    private Long id;
+    private String id;
 
     @TableField(value = "course_name")
     private String courseName;

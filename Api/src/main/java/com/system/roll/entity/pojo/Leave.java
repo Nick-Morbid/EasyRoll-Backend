@@ -19,10 +19,10 @@ import java.sql.Timestamp;
 @TableName(value = "leave")
 public class Leave {
     @TableId
-    private Long id;
+    private String id;
 
     @TableField(value = "student_id")
-    private Long studentId;
+    private String studentId;
 
     @TableField(value = "start_time")
     private Timestamp startTime;
@@ -40,7 +40,7 @@ public class Leave {
     private Timestamp created;
 
     @TableField(value = "transactor_id")
-    private Long transactorId;
+    private String transactorId;
 
     @TableField(value = "transactor_name")
     private String transactorName;

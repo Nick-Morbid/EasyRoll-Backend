@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @TableName(value = "major")
 public class Major {
     @TableId
-    private Long id;
+    private String id;
 
     @TableField(value = "major_name")
     private String majorName;

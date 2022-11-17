@@ -23,16 +23,16 @@ import java.util.Date;
 public class State {
 
     @TableId
-    private Long id;
+    private String id;
 
     @TableField(value = "student_id")
-    private Long studentId;
+    private String studentId;
 
     @TableField(value = "student_name")
     private String studentName;
 
     @TableField(value = "course_id")
-    private Long courseId;
+    private String courseId;
 
     @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
     private Period period;
@@ -43,7 +43,7 @@ public class State {
     private String attachment;
 
     @TableField(value = "transactor_id")
-    private Long transactorId;
+    private String transactorId;
 
     @TableField(value = "transactor_name")
     private String transactorName;

@@ -17,11 +17,11 @@ import lombok.experimental.Accessors;
 @TableName(value = "course_relation")
 public class CourseRelation {
     @TableId
-    private Long id;
+    private String id;
 
     @TableField(value = "student_id")
-    private Long studentId;
+    private String studentId;
 
     @TableField(value = "course_id")
-    private Long courseId;
+    private String courseId;
 }

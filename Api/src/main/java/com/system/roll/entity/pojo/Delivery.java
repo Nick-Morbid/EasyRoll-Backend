@@ -17,14 +17,14 @@ import lombok.experimental.Accessors;
 @TableName(value = "delivery")
 public class Delivery {
     @TableId
-    private Long id;
+    private String id;
 
     @TableField(value = "professor_id")
-    private Long professorId;
+    private String professorId;
 
     @TableField(value = "professor_name")
     private String professorName;
 
     @TableField(value = "course_id")
-    private Long courseId;
+    private String courseId;
 }

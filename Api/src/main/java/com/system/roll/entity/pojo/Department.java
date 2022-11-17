@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @TableName(value = "department")
 public class Department {
     @TableId
-    private Long id;
+    private String id;
 
     @TableField(value = "department_name")
     private String departmentName;

@@ -18,11 +18,11 @@ import lombok.experimental.Accessors;
 public class RollRelation {
 
     @TableId
-    private Long id;
+    private String id;
 
     @TableField(value = "supervisor_id")
-    private Long supervisor_id;
+    private String supervisor_id;
 
     @TableField(value = "course_id")
-    private Long courseId;
+    private String courseId;
 }
