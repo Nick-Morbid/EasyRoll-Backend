@@ -20,7 +20,7 @@ public class MapperTest {
 
     @Test
     void testInsert(){
-        Student student = new Student(1L,"陈宏侨",1L,1L,2020,6);
+        Student student = new Student("1","陈宏侨","1","1",2020,6);
         studentMapper.insert(student);
     }
 
