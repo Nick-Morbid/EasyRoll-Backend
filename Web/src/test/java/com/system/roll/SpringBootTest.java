@@ -2,10 +2,13 @@ package com.system.roll;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.system.roll.constant.impl.MsgType;
+import com.system.roll.constant.impl.OperationType;
+import com.system.roll.describer.Describer;
+import com.system.roll.describer.DescriberPoll;
+import com.system.roll.entity.vo.Result;
 import com.system.roll.entity.vo.message.rabbit.builder.MessageBuilder;
 import com.system.roll.entity.vo.message.rabbit.message.Message;
 import com.system.roll.properites.AppletProperties;
-import com.system.roll.entity.vo.Result;
 import com.system.roll.security.jwt.JwtSecurityHandler;
 import com.system.roll.service.WxApiService;
 import com.system.roll.uitls.HttpRequestUtil;
@@ -146,5 +149,21 @@ public class SpringBootTest {
 
         System.out.println(message1);
         System.out.println(message2);
+    }
+
+    @Resource(name = "DescriberPoll")
+    private DescriberPoll describerPoll;
+    @Test
+    public void testDescriberPoll(){
+        Describer describer1 = describerPoll.getDescriber(OperationType.UPLOAD_COURSE);
+        Describer describer2 = describerPoll.getDescriber(OperationType.UPDATE_COURSE);
+        Describer describer3 = describerPoll.getDescriber(OperationType.DELETE_COURSE);
+        Describer describer4 = describerPoll.getDescriber(OperationType.TAKE_A_ROLL);
+        Describer describer5 = describerPoll.getDescriber(OperationType.SOLVE_LEAVE_APPLICATION);
+        System.out.println(describer1.getClass());
+        System.out.println(describer2.getClass());
+        System.out.println(describer3.getClass());
+        System.out.println(describer4.getClass());
+        System.out.println(describer5.getClass());
     }
 }

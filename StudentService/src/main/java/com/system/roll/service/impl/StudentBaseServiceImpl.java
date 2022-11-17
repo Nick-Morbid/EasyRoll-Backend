@@ -1,9 +1,7 @@
 package com.system.roll.service.impl;
 
-import com.system.roll.constant.impl.OperationType;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.mapper.CourseMapper;
-import com.system.roll.operationLog.annotation.Operation;
 import com.system.roll.security.context.SecurityContextHolder;
 import com.system.roll.service.StudentBaseService;
 import com.system.roll.utils.DateUtil;

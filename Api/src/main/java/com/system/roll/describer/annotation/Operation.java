@@ -1,4 +1,4 @@
-package com.system.roll.operationLog.annotation;
+package com.system.roll.describer.annotation;
 import com.system.roll.constant.impl.OperationType;
 
 import java.lang.annotation.Documented;

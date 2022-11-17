@@ -1,4 +1,4 @@
-package com.system.roll.operationLog.util;
+package com.system.roll.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
