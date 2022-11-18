@@ -8,6 +8,9 @@ import com.system.roll.entity.vo.supervisor.SupervisorVo;
 import com.system.roll.exception.impl.ServiceException;
 import com.system.roll.security.jwt.JwtSecurityHandler;
 import com.system.roll.service.AuthService;
+import com.system.roll.service.StudentInfoService;
+import com.system.roll.service.SupervisorInfoService;
+import com.system.roll.service.professor.ProfessorInfoService;
 import com.system.roll.utils.IdUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +39,12 @@ public class AuthController {
     private JwtSecurityHandler jwtSecurityHandler;
     @Resource
     private IdUtil idUtil;
+    @Resource(name = "StudentInfoService")
+    private StudentInfoService studentInfoService;
+    @Resource(name = "SupervisorInfoService")
+    private SupervisorInfoService supervisorInfoService;
+    @Resource(name = "ProfessorInfoService")
+    private ProfessorInfoService professorInfoService;
 
     /**
      * 学生端微信小程序登录
@@ -95,7 +104,8 @@ public class AuthController {
         try {
             response.setContentType("image/jpeg");
             response.setHeader("Cache-Control","no-cache, must-revalidate");
-            response.setHeader("Content-disposition","attachment; filename=\"_123456789\"");
+//            response.setHeader("Content-disposition","attachment; filename=\"_123456789\"");
+            response.setHeader("Content-disposition","inline");
             response.setHeader("Content-Length", String.valueOf(stream.length()));
             response.setHeader("SocketId",socketId);//自定义响应头
             PrintWriter writer = response.getWriter();
@@ -113,6 +123,7 @@ public class AuthController {
      * */
     @PostMapping(value = "/register/student")
     public StudentVo studentRegister(@RequestBody RegisterFormDto data){
+
         return null;
     }
 

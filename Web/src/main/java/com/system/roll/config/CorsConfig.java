@@ -6,7 +6,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.Collections;
+import java.util.Arrays;
 
 @Configuration
 public class CorsConfig {
@@ -22,7 +22,7 @@ public class CorsConfig {
 
         corsConfiguration.setAllowCredentials(true);
 
-        corsConfiguration.setExposedHeaders(Collections.singletonList("Authorization"));//将Authorization暴露出来，解决跨域token携带问题
+        corsConfiguration.setExposedHeaders(Arrays.asList("Authorization","SocketId"));//将Authorization暴露出来，解决跨域token携带问题
         return corsConfiguration;
     }
 

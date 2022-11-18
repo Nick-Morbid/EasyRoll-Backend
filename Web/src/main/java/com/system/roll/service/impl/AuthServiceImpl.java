@@ -4,6 +4,7 @@ import com.system.roll.constant.impl.ResultCode;
 import com.system.roll.constant.impl.Role;
 import com.system.roll.controller.AuthController;
 import com.system.roll.entity.bo.JsCode2sessionBo;
+import com.system.roll.entity.pojo.Student;
 import com.system.roll.entity.vo.professor.ProfessorVo;
 import com.system.roll.entity.vo.student.StudentVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
@@ -90,16 +91,21 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public StudentVo studentRegister(AuthController.RegisterFormDto data) {
+
+        Student student = new Student();
+//        return studentInfoService.register();
         return null;
     }
 
     @Override
     public SupervisorVo supervisorRegister(AuthController.RegisterFormDto data) {
+//        return supervisorInfoService.register();
         return null;
     }
 
     @Override
     public ProfessorVo professorRegister(AuthController.RegisterFormDto data) {
+//        return professorInfoService.register();
         return null;
     }
 }
