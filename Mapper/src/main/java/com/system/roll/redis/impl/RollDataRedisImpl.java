@@ -1,5 +1,6 @@
 package com.system.roll.redis.impl;
 
+import com.google.gson.reflect.TypeToken;
 import com.system.roll.constant.impl.TimeUnit;
 import com.system.roll.entity.pojo.RollData;
 import com.system.roll.properites.CommonProperties;
@@ -31,9 +32,10 @@ public class RollDataRedisImpl implements RollDataRedis {
     }
 
     @Override
-    @SuppressWarnings("all")
     public List<RollData> getRollDataList(String courseId) {
-        if (listIsExist(courseId)) return JsonUtil.toObject((String) redisUtil.get(rollDataList(courseId)),List.class);
+
+        if (listIsExist(courseId)) return JsonUtil.getGson().fromJson((String) redisUtil.get(rollDataList(courseId)),new TypeToken<List<RollData>>(){}.getType());
         return new ArrayList<>();
+//        return new Gson().fromJson((String) redisUtil.get(rollDataList(courseId)),new TypeToken<List<RollData>>(){}.getType());
     }
 }

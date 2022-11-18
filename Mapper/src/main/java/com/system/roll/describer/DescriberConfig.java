@@ -1,9 +1,7 @@
-package com.system.roll.describer.config;
+package com.system.roll.describer;
 
-import com.system.roll.describer.Describer;
-import com.system.roll.describer.DescriberPoll;
 import com.system.roll.describer.impl.*;
-import lombok.extern.slf4j.Slf4j;
+import com.system.roll.redis.RollDataRedis;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,18 +9,21 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Resource;
 
 /**
- * 备份器的配置类
+ * 督导队员相关操作的备份器的配置类
  * */
 @Configuration
 public class DescriberConfig {
 
     @Resource(name = "DescriberPoll")
     private DescriberPoll describerPoll;
+    @Resource(name = "RollDataRedis")
+    private RollDataRedis rollDataRedis;
 
     @Bean(name = "UploadCourseDescriber")
     @ConditionalOnBean(DescriberPoll.class)
     public Describer uploadCourseDescriber(){
-        Describer uploadCourseDescriber = new UploadCourseDescriber();
+        UploadCourseDescriber uploadCourseDescriber = new UploadCourseDescriber();
+        uploadCourseDescriber.setRollDataRedis(rollDataRedis);
         describerPoll.addDescriber(uploadCourseDescriber);
         return uploadCourseDescriber;
     }
@@ -30,7 +31,8 @@ public class DescriberConfig {
     @Bean(name = "UpdateCourseDescriber")
     @ConditionalOnBean(DescriberPoll.class)
     public Describer updateCourseDescriber(){
-        Describer updateCourseDescriber = new UpdateCourseDescriber();
+        UpdateCourseDescriber updateCourseDescriber = new UpdateCourseDescriber();
+        updateCourseDescriber.setRollDataRedis(rollDataRedis);
         describerPoll.addDescriber(updateCourseDescriber);
         return updateCourseDescriber;
     }
@@ -38,7 +40,8 @@ public class DescriberConfig {
     @Bean(name = "DeleteCourseDescriber")
     @ConditionalOnBean(DescriberPoll.class)
     public Describer deleteCourseDescriber(){
-        Describer deleteCourseDescriber = new DeleteCourseDescriber();
+        DeleteCourseDescriber deleteCourseDescriber = new DeleteCourseDescriber();
+        deleteCourseDescriber.setRollDataRedis(rollDataRedis);
         describerPoll.addDescriber(deleteCourseDescriber);
         return deleteCourseDescriber;
     }
@@ -46,7 +49,8 @@ public class DescriberConfig {
     @Bean(name = "RollTakingDescriber")
     @ConditionalOnBean(DescriberPoll.class)
     public Describer rollTakingDescriber(){
-        Describer rollTakingDescriber = new RollTakingDescriber();
+        RollTakingDescriber rollTakingDescriber = new RollTakingDescriber();
+        rollTakingDescriber.setRollDataRedis(rollDataRedis);
         describerPoll.addDescriber(rollTakingDescriber);
         return rollTakingDescriber;
     }
@@ -54,7 +58,8 @@ public class DescriberConfig {
     @Bean(name = "LeaveSolvingDescriber")
     @ConditionalOnBean(DescriberPoll.class)
     public Describer leaveSolvingDescriber(){
-        Describer leaveSolvingDescriber = new LeaveSolvingDescriber();
+        LeaveSolvingDescriber leaveSolvingDescriber = new LeaveSolvingDescriber();
+        leaveSolvingDescriber.setRollDataRedis(rollDataRedis);
         describerPoll.addDescriber(leaveSolvingDescriber);
         return leaveSolvingDescriber;
     }

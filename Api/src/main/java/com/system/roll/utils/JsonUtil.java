@@ -21,4 +21,7 @@ public class JsonUtil {
     public static JsonObject toJsonObject(Object obj) {
         return (JsonObject) gson.toJsonTree(obj);
     }
+
+    public static Gson getGson(){return gson;}
+
 }

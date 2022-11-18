@@ -2,11 +2,16 @@ package com.system.roll.describer.impl;
 
 import com.system.roll.constant.impl.OperationType;
 import com.system.roll.describer.Describer;
+import com.system.roll.redis.RollDataRedis;
+import lombok.Data;
 
 /**
- * 考勤操作的备份器
+ * 删除课程操作的备份器
  * */
-public class RollTakingDescriber implements Describer {
+@Data
+public class DeleteCourseDescriber implements Describer {
+    private RollDataRedis rollDataRedis;
+
     @Override
     public Snapshot<?> saveSnapshot(String operationId,Object[] args) {
         return null;
@@ -24,6 +29,6 @@ public class RollTakingDescriber implements Describer {
 
     @Override
     public OperationType getOperationType() {
-        return OperationType.TAKE_A_ROLL;
+        return OperationType.DELETE_COURSE;
     }
 }

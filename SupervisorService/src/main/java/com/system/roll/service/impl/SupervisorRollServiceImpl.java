@@ -1,8 +1,10 @@
 package com.system.roll.service.impl;
 
+import com.system.roll.constant.impl.OperationType;
 import com.system.roll.constant.impl.ResultCode;
 import com.system.roll.constant.impl.RollState;
 import com.system.roll.controller.SupervisorRollController;
+import com.system.roll.describer.annotation.Operation;
 import com.system.roll.entity.pojo.RollData;
 import com.system.roll.entity.vo.message.MessageListVo;
 import com.system.roll.entity.vo.roll.SingleRollStatisticVo;
@@ -33,10 +35,10 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
     }
 
     @Override
-//    @Operation(type = OperationType.TAKE_A_ROLL)
+    @Operation(type = OperationType.TAKE_A_ROLL)
     public SingleRollStatisticVo getRollDataStatistic(String courseId) throws InterruptedException {
         /*获取redis中的记录*/
-        int count = 100;
+        int count = 1000;
         while (!(count-- <= 0)){
             if (rollDataRedis.listIsExist(courseId)) break;
             Thread.sleep(100);

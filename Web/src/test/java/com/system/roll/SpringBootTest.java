@@ -1,15 +1,20 @@
 package com.system.roll;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.system.roll.constant.impl.MsgType;
 import com.system.roll.constant.impl.OperationType;
 import com.system.roll.describer.Describer;
 import com.system.roll.describer.DescriberPoll;
+import com.system.roll.entity.pojo.RollData;
+import com.system.roll.entity.pojo.User;
 import com.system.roll.entity.vo.Result;
-import com.system.roll.entity.vo.message.supervisor.builder.MessageBuilder;
 import com.system.roll.entity.vo.message.Message;
+import com.system.roll.entity.vo.message.supervisor.builder.MessageBuilder;
 import com.system.roll.properites.AppletProperties;
 import com.system.roll.properites.CommonProperties;
+import com.system.roll.redis.RollDataRedis;
 import com.system.roll.security.jwt.JwtSecurityHandler;
 import com.system.roll.service.WxApiService;
 import com.system.roll.uitls.HttpRequestUtil;
@@ -24,7 +29,9 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @org.springframework.boot.test.context.SpringBootTest(webEnvironment = org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -175,5 +182,40 @@ public class SpringBootTest {
         String data2 = data1+",";
         System.out.println(data1.matches("\\d+"));
         System.out.println(data2.matches("\\d+"));
+    }
+    @Resource(name = "RollDataRedis")
+    private RollDataRedis rollDataRedis;
+    @Test
+    public void testRollDataRedis(){
+        String courseId = "123456789";
+        List<RollData> rollDataList =  new ArrayList<>();
+        rollDataList.add(new RollData().setCourseId(courseId).setStudentId("1").setState(1).setTime(new Timestamp(System.currentTimeMillis())));
+        rollDataList.add(new RollData().setCourseId(courseId).setStudentId("2").setState(1).setTime(new Timestamp(System.currentTimeMillis())));
+        rollDataList.add(new RollData().setCourseId(courseId).setStudentId("3").setState(1).setTime(new Timestamp(System.currentTimeMillis())));
+        rollDataList.add(new RollData().setCourseId(courseId).setStudentId("4").setState(1).setTime(new Timestamp(System.currentTimeMillis())));
+        rollDataList.add(new RollData().setCourseId(courseId).setStudentId("5").setState(1).setTime(new Timestamp(System.currentTimeMillis())));
+        rollDataRedis.saveRollDataList("123456789",rollDataList);
+        List<RollData> rollDataList1 = rollDataRedis.getRollDataList(courseId);
+        for (int i = 0; i < rollDataList1.size(); i++) {
+            System.out.println(rollDataList1.get(i));
+            System.out.println(rollDataList1.get(i).getClass());
+        }
+        rollDataList1.forEach(System.out::println);
+//        System.out.println(JsonUtil.toJson(rollDataList));
+//        List<RollData> rollDataList1 = new Gson().fromJson(JsonUtil.toJson(rollDataList), new TypeToken<List<RollData>>() {
+//        List<RollData> rollDataList1 = JsonUtil.toList(JsonUtil.toJson(rollDataList));
+//        rollDataList1.forEach(System.out::println);
+    }
+
+    @Test
+    public void testGson(){
+        List<User> users = new ArrayList<>();
+        users.add(new User().setName("nick").setId("123"));
+        users.add(new User().setName("nick").setId("123"));
+        users.add(new User().setName("nick").setId("123"));
+        System.out.println(new Gson().toJson(users));
+        List<User> users1 = new Gson().fromJson(new Gson().toJson(users), new TypeToken<List<User>>() {
+        }.getType());
+        users1.forEach(System.out::println);
     }
 }

@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * Project:Okr Leader
  * */
 //登录认证拦截器
-@Component
+@Component(value = "LoginInterceptor")
 @Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
     @Resource

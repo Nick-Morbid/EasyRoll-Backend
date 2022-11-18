@@ -14,6 +14,13 @@ public interface SocketHandler {
      * */
     void open(Session session,@PathParam(value = "socketId")String socketId);
     /**
+     * 长连接开启
+     * @param session 会话对象
+     * @param socketId 路径固定参数
+     * @param token 身份令牌
+     * */
+    void open(Session session,@PathParam(value = "socketId")String socketId,@PathParam(value = "token")String token) throws IOException;
+    /**
      * 长连接信息接收
      * @param data 前端数据流
      * */

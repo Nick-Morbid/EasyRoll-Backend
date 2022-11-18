@@ -29,6 +29,11 @@ public class AuthSocketHandler implements SocketHandler {
         SocketContextHandler.addContext(socketId,new SocketContext(this,session));
     }
 
+    @Override
+    public void open(Session session, String socketId, String token) {
+
+    }
+
     @OnMessage
     @Override
     public void onMessage(String data) {

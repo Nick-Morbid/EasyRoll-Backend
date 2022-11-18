@@ -26,6 +26,8 @@ public class CommonProperties {
     private Integer messageTTL;
     @Value(value = "${message.expire}")
     private Integer messageExpire;
+    @Value(value = "${snapshot.expire}")
+    private Integer snapshotExpire;
 
     @Resource
     private DateUtil dateUtil;
@@ -91,6 +93,20 @@ public class CommonProperties {
             case DAY:d = 60*60*24;
         }
         return messageExpire*d;
+    }
+
+    /**
+     * 获取快照在redis中的过期时间
+     * */
+    public Long ShapshotExpire(TimeUnit timeUnit){
+        long d = 0;
+        switch (timeUnit){
+            case SECOND:d = 1;break;
+            case MINUTE:d = 60;break;
+            case HOUR:d = 60*60;break;
+            case DAY:d = 60*60*24;
+        }
+        return snapshotExpire*d;
     }
 
 
