@@ -23,7 +23,6 @@ public class StudentRollServiceImpl implements StudentRollService {
     @Override
     public LeaveListVo getAllLeave() {
 
-        // TODO:获取studentId
         String studentId = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
         LambdaQueryWrapper<Leave> leaveQueryWrapper = new LambdaQueryWrapper<>();
 
