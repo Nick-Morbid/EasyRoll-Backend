@@ -21,7 +21,7 @@ public class RollRelation {
     private String id;
 
     @TableField(value = "supervisor_id")
-    private String supervisor_id;
+    private String supervisorId;
 
     @TableField(value = "course_id")
     private String courseId;

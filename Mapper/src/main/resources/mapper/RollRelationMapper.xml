@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.RollRelation">
         <id property="id" column="id" jdbcType="VARCHAR"/>
-        <result property="supervisor_id" column="supervisor_id" jdbcType="VARCHAR"/>
+        <result property="supervisorId" column="supervisor_id" jdbcType="VARCHAR"/>
         <result property="courseId" column="course_id" jdbcType="VARCHAR"/>
     </resultMap>
 
