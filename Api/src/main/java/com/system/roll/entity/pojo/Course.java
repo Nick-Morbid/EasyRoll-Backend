@@ -27,8 +27,6 @@ public class Course {
     @TableField(value = "enroll_num")
     private Integer enrollNum;
 
-    @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
-    private Period period;
 
     @TableField(value = "start_week")
     private Integer startWeek;

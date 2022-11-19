@@ -65,13 +65,13 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         List<CourseVo> courses = new ArrayList<>();
 
         boolean isOdd = currentWeek % 2 == 1;
-        // 1.查出该学生选了哪些课程
+        // 1.查出该督导员督导哪些课程
         LambdaQueryWrapper<RollRelation> crqw = new LambdaQueryWrapper<>();
         crqw.eq(RollRelation::getSupervisorId,studentId);
         List<RollRelation> rollRelations = rollRelationMapper.selectList(crqw);
         List<String> courseIds = rollRelations.stream().map(RollRelation::getCourseId).collect(Collectors.toList());
 
-        // 2.查出该学生所选的课程中，当天需要点名的课程信息
+        // 2.查出该督导员当天需要点名的课程信息
         LambdaQueryWrapper<CourseArrangement> caqw = new LambdaQueryWrapper<>();
         caqw.in(CourseArrangement::getId,courseIds)
                 .eq(CourseArrangement::getWeekDay,currentDay)
@@ -124,19 +124,25 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
         // TODO:插入课程关系表
         List<SupervisorBaseController.CourseArrangement> courseArrangements = courseDTO.getCourseArrangements();
+        if(courseArrangements.isEmpty()){
+            throw new ServiceException(ResultCode.METHOD_NOT_MATCH);
+        }
+
+        Course course = new Course();
+        // TODO: setEnrollNum、setTotal
+        course.setId(idUtil.getId())
+                .setCourseName(courseDTO.getCourseName())
+                .setStartWeek(courseDTO.getStartWeek())
+                .setEndWeek(courseDTO.getEndWeek());
+        // 插入课程
+        courseMapper.insert(course);
+
+        CourseVo courseVo = new CourseVo();
+        courseVo.setId(course.getId()).setName(course.getCourseName());
+
         LambdaQueryWrapper<Professor> pqw = new LambdaQueryWrapper<>();
         courseArrangements.forEach(courseArrangement -> {
             pqw.clear();
-            Course course = new Course();
-            // TODO: setEnrollNum、setTotal
-            course.setId(idUtil.getId())
-                    .setCourseName(courseDTO.getCourseName())
-                    .setStartWeek(courseDTO.getStartWeek())
-                    .setEndWeek(courseDTO.getEndWeek())
-                    .setPeriod(enumUtil.getEnumByCode(Period.class,courseArrangement.getPeriod()));
-            // 插入课程
-            courseMapper.insert(course);
-
             // 插入点名关系表
             rollRelationMapper.insert(new RollRelation(idUtil.getId(), supervisorId,course.getId()));
 
@@ -175,6 +181,6 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
             }
         });
 
-        return null;
+        return courseVo;
     }
 }
