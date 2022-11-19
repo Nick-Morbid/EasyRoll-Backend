@@ -10,8 +10,6 @@
         <result property="classroomNo" column="classroom_no" jdbcType="VARCHAR"/>
         <result property="period" column="period" jdbcType="INTEGER" javaType="com.system.roll.constant.impl.Period"/>
         <result property="mode" column="mode" jdbcType="INTEGER"/>
-        <result property="startWeek" column="start_week" jdbcType="INTEGER"/>
-        <result property="endWeek" column="end_week" jdbcType="INTEGER"/>
         <result property="weekDay" column="week_day" jdbcType="INTEGER"/>
     </resultMap>
 

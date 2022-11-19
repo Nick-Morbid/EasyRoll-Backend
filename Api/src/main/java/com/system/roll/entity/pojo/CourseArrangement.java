@@ -34,12 +34,6 @@ public class CourseArrangement {
     @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
     private TeachingMode mode;
 
-    @TableField(value = "start_week")
-    private Integer startWeek;
-
-    @TableField(value = "end_week")
-    private Integer endWeek;
-
     @TableField(value = "week_day")
     private Integer weekDay;
 }

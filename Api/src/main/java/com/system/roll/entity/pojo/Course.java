@@ -37,7 +37,4 @@ public class Course {
     private Integer endWeek;
 
     private Integer total;
-
-    @TableField(value = "week_day")
-    private Integer weekDay;
 }

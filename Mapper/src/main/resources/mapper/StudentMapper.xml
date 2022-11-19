@@ -11,5 +11,6 @@
         <result property="majorId" column="major_id" jdbcType="VARCHAR"/>
         <result property="grade" column="grade" jdbcType="INTEGER"/>
         <result property="classNo" column="class_no" jdbcType="INTEGER"/>
+        <result property="openId" column="open_id" jdbcType="VARCHAR"/>
     </resultMap>
 </mapper>

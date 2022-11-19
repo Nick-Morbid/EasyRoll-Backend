@@ -42,8 +42,5 @@ public class AttendanceRecord {
     private Timestamp created;
 
     @TableField(value = "transactor_id")
-    private String transactorId;
-
-    @TableField(value = "transactor_name")
-    private String transactorName;
+    private String supervisorId;
 }
