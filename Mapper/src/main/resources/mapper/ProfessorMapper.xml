@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.roll.mapper.ProfessorMapper">
+
+    <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.Professor">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="professorName" column="professor_name" jdbcType="VARCHAR"/>
+        <result property="openId" column="open_id" jdbcType="VARCHAR"/>
+        <result property="departmentId" column="department_id" jdbcType="VARCHAR"/>
+        <result property="role" column="role" jdbcType="INTEGER"/>
+        <result property="grade" column="grade" jdbcType="INTEGER"/>
+    </resultMap>
+
+</mapper>
