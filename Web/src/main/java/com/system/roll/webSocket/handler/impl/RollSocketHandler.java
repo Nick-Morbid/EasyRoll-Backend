@@ -8,7 +8,6 @@ import com.system.roll.properites.RabbitProperties;
 import com.system.roll.rabbit.utils.RabbitUtil;
 import com.system.roll.security.interceptor.LoginInterceptor;
 import com.system.roll.service.SupervisorRollService;
-import com.system.roll.utils.JsonUtil;
 import com.system.roll.utils.SpringContextUtil;
 import com.system.roll.webSocket.context.SocketContext;
 import com.system.roll.webSocket.context.SocketContextHandler;
@@ -49,12 +48,12 @@ public class RollSocketHandler implements SocketHandler {
      * */
     @OnOpen
     @Override
-    public void open(Session session, @PathParam(value = "socketId") String socketId,@PathParam(value = "token") String token) throws IOException {
+    public void open(Session session, @PathParam(value = "socketId") String socketId,@PathParam(value = "token") String token) throws IOException, EncodeException {
         /*进行token验证*/
         LoginInterceptor loginInterceptor = SpringContextUtil.getBean("LoginInterceptor");
         try {loginInterceptor.preHandle(new CustomHttpServletRequest().setHeader("Authorization",token).setSession(session),new Response(),token);}
         catch (ServiceException e){
-            session.getBasicRemote().sendText(JsonUtil.toJson(Result.error(e)));
+            session.getBasicRemote().sendObject(Result.error(e));
             session.close();
         }
         /*手动注入组件*/

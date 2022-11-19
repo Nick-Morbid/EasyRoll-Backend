@@ -19,7 +19,7 @@ public interface SocketHandler {
      * @param socketId 路径固定参数
      * @param token 身份令牌
      * */
-    void open(Session session,@PathParam(value = "socketId")String socketId,@PathParam(value = "token")String token) throws IOException;
+    void open(Session session,@PathParam(value = "socketId")String socketId,@PathParam(value = "token")String token) throws IOException, EncodeException;
     /**
      * 长连接信息接收
      * @param data 前端数据流

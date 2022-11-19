@@ -2,7 +2,6 @@ package com.system.roll.webSocket.context;
 
 import com.system.roll.constant.impl.ResultCode;
 import com.system.roll.entity.vo.Result;
-import com.system.roll.utils.JsonUtil;
 import com.system.roll.webSocket.handler.SocketHandler;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -35,7 +34,7 @@ public class SocketContext {
         /*组装消息*/
         Result<?> result = Result.success(state, processedData);
         /*发送消息*/
-        session.getBasicRemote().sendText(JsonUtil.toJson(result));
+        session.getBasicRemote().sendObject(result);
     }
 
     /*销毁操作*/

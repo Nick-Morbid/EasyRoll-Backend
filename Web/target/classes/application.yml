@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: mapper,applet,security,rabbit
-#    include: mapper,ssl,applet,security,rabbit
+#    include: mapper,applet,security,rabbit
+    include: mapper,ssl,applet,security,rabbit
 server:
   port: 8090

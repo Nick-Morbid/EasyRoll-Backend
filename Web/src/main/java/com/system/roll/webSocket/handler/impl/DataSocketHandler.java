@@ -40,12 +40,12 @@ public class DataSocketHandler implements SocketHandler {
 
     @OnOpen
     @Override
-    public void open(Session session, @PathParam(value = "socketId")String socketId, @PathParam(value = "token")String token) throws IOException {
+    public void open(Session session, @PathParam(value = "socketId")String socketId, @PathParam(value = "token")String token) throws IOException, EncodeException {
         /*进行token验证*/
         LoginInterceptor loginInterceptor = SpringContextUtil.getBean("LoginInterceptor");
         try {loginInterceptor.preHandle(new CustomHttpServletRequest().setHeader("Authorization",token).setSession(session),new Response(),token);}
         catch (ServiceException e){
-            session.getBasicRemote().sendText(JsonUtil.toJson(Result.error(e)));
+            session.getBasicRemote().sendObject(Result.error(e));
             session.close();
         }
         /*将自己注册到context中*/
