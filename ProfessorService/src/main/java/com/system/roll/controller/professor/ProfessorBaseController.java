@@ -23,6 +23,12 @@ public class ProfessorBaseController {
     /**
      * 上传课程信息
      * */
+    @PostMapping("/register")
+    public InfoVo register(@RequestBody InfoDto infoDto) {
+        return professorBaseService.register(infoDto);
+    }
+
+
     @PostMapping(value = "/course/upload")
     public CourseVo uploadCourse(
             @RequestParam(value = "courseName")String courseName,
@@ -92,5 +98,30 @@ public class ProfessorBaseController {
        private Integer endWeek;
        private Integer grade;
        private List<CourseArrangementDto> courseArrangements;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class InfoVo{
+        private String id;
+        private String name;
+        private String departmentId;
+        private Integer role;
+        private Integer currentWeek;
+        private Integer grade;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class InfoDto{
+        private String name;
+        private String departmentId;
+        private Integer role;
+        private String openId;
+        private Integer grade;
     }
 }

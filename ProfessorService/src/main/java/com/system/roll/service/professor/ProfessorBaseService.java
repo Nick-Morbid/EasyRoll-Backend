@@ -14,4 +14,6 @@ public interface ProfessorBaseService {
     void deleteCourse(String courseId);
 
     CourseListVo getCourseList(String courseId);
+
+    ProfessorBaseController.InfoVo register(ProfessorBaseController.InfoDto infoDto);
 }

@@ -2,19 +2,15 @@ package com.system.roll.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.constant.impl.TeachingMode;
-import com.system.roll.entity.pojo.Course;
-import com.system.roll.entity.pojo.CourseArrangement;
-import com.system.roll.entity.pojo.CourseRelation;
-import com.system.roll.entity.pojo.Delivery;
+import com.system.roll.controller.StudentBaseController;
+import com.system.roll.entity.pojo.*;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
-import com.system.roll.mapper.CourseArrangementMapper;
-import com.system.roll.mapper.CourseMapper;
-import com.system.roll.mapper.CourseRelationMapper;
-import com.system.roll.mapper.DeliveryMapper;
+import com.system.roll.mapper.*;
 import com.system.roll.security.context.SecurityContextHolder;
 import com.system.roll.service.StudentBaseService;
 import com.system.roll.utils.DateUtil;
+import com.system.roll.utils.IdUtil;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +36,18 @@ public class StudentBaseServiceImpl implements StudentBaseService {
 
     @Resource
     private DeliveryMapper deliveryMapper;
+
+    @Resource
+    private IdUtil idUtil;
+
+    @Resource
+    private StudentMapper studentMapper;
+
+    @Resource
+    private DepartmentMapper departmentMapper;
+
+    @Resource
+    private MajorMapper majorMapper;
 
     @Override
     public CourseListVo getAllCourse() {
@@ -91,5 +99,34 @@ public class StudentBaseServiceImpl implements StudentBaseService {
         });
 
         return new CourseListVo(courses,courses.size());
+    }
+
+    @Override
+    public StudentBaseController.InfoVo register(StudentBaseController.InfoDto infoDto) {
+        Student student = new Student(idUtil.getId(),
+                infoDto.getName(),
+                infoDto.getDepartmentId(),
+                infoDto.getMajorId(),
+                infoDto.getGrade(),
+                infoDto.getClassNo(),
+                infoDto.getOpenId(),
+                infoDto.getRole());
+
+        studentMapper.insert(student);
+        Department department = departmentMapper.selectById(infoDto.getDepartmentId());
+        Major major = majorMapper.selectById(infoDto.getMajorId());
+
+        StudentBaseController.InfoVo infoVo = new StudentBaseController.InfoVo(
+                student.getId(),
+                student.getStudentName(),
+                student.getDepartmentId(),
+                department.getDepartmentName(),
+                student.getMajorId(),
+                major.getMajorName(),
+                student.getGrade(),
+                student.getClassNo(),
+                dateUtil.getWeek(new Date(System.currentTimeMillis())));
+
+        return infoVo;
     }
 }

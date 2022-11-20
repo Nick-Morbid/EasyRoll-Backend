@@ -10,4 +10,6 @@ public interface SupervisorBaseService {
     void deleteCourse(String courseId);
 
     CourseVo uploadCourse(SupervisorBaseController.CourseDTO courseDTO);
+
+    SupervisorBaseController.InfoVo register(SupervisorBaseController.InfoDto infoDto);
 }

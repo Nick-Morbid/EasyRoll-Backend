@@ -18,18 +18,13 @@ public class MapperTest {
     @Resource
     CourseArrangementMapper courseArrangementMapper;
 
-    @Test
-    void testInsert(){
-        Student student = new Student("1","陈宏侨","1","1",2020,6);
-        studentMapper.insert(student);
-    }
 
     @Test
     void insert(){
 //        CourseArrangement courseArrangement = new CourseArrangement(1L, 1L, 1, Period.EIGHT_TO_TEN, TeachingMode.EVEN_SINGLE_WEEK);
 //        courseArrangementMapper.insert(courseArrangement);
 
-        CourseArrangement courseArrangement = courseArrangementMapper.selectById(1L);
+        CourseArrangement courseArrangement = courseArrangementMapper.selectById("1");
         System.out.println(courseArrangement);
 
     }

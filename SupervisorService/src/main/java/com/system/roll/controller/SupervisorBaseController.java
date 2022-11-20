@@ -46,6 +46,11 @@ public class SupervisorBaseController {
         return supervisorBaseService.getAllCourse();
     }
 
+    @PostMapping("/register")
+    public InfoVo register(InfoDto infoDto){
+        return supervisorBaseService.register(infoDto);
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -71,6 +76,36 @@ public class SupervisorBaseController {
         private Integer weekDay;
         private Integer period;
         private Integer mode;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class InfoVo{
+        private String id;
+        private String name;
+        private String departmentId;
+        private String departmentName;
+        private String majorId;
+        private String major;
+        private Integer grade;
+        private Integer classNo;
+        private Integer currentWeek;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class InfoDto{
+        private String name;
+        private String departmentId;
+        private String majorId;
+        private Integer role;
+        private String openId;
+        private Integer grade;
+        private Integer classNo;
     }
 }
 

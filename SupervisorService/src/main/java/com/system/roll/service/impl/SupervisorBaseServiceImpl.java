@@ -53,8 +53,18 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
     @Resource
     private CourseRelationMapper courseRelationMapper;
+
     @Resource
     private EnumUtil enumUtil;
+
+    @Resource
+    private DepartmentMapper departmentMapper;
+
+    @Resource
+    private StudentMapper studentMapper;
+
+    @Resource
+    private MajorMapper majorMapper;
 
     @Override
     public CourseListVo getAllCourse() {
@@ -182,5 +192,34 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         });
 
         return courseVo;
+    }
+
+    @Override
+    public SupervisorBaseController.InfoVo register(SupervisorBaseController.InfoDto infoDto) {
+        Student student = new Student(idUtil.getId(),
+                infoDto.getName(),
+                infoDto.getDepartmentId(),
+                infoDto.getMajorId(),
+                infoDto.getGrade(),
+                infoDto.getClassNo(),
+                infoDto.getOpenId(),
+                infoDto.getRole());
+
+        studentMapper.insert(student);
+        Department department = departmentMapper.selectById(infoDto.getDepartmentId());
+        Major major = majorMapper.selectById(infoDto.getMajorId());
+
+        SupervisorBaseController.InfoVo infoVo = new SupervisorBaseController.InfoVo(
+                student.getId(),
+                student.getStudentName(),
+                student.getDepartmentId(),
+                department.getDepartmentName(),
+                student.getMajorId(),
+                major.getMajorName(),
+                student.getGrade(),
+                student.getClassNo(),
+                dateUtil.getWeek(new Date(System.currentTimeMillis())));
+
+        return infoVo;
     }
 }

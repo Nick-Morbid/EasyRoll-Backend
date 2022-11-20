@@ -36,4 +36,6 @@ public class Student {
 
     @TableField(value = "open_id")
     private String openId;
+
+    private Integer role;
 }
