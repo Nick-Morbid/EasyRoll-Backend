@@ -16,7 +16,6 @@ public interface CourseConvertor {
             @Mapping(source = "id",target = "id"),
             @Mapping(source = "courseName",target = "name"),
             @Mapping(source = "enrollNum",target = "enrollNum"),
-            @Mapping(source = "period",target = "period"),
             @Mapping(source = "startWeek",target = "startWeek"),
             @Mapping(source = "endWeek",target = "endWeek"),
     })
