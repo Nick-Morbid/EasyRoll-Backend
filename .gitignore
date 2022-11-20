@@ -11,6 +11,7 @@
 .mtj.tmp/
 .idea/encodings.xml
 .idea
+Web/target
 
 */target
 Api/src/main/resources/application-ssl.yml

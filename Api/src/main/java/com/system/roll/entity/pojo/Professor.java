@@ -2,17 +2,18 @@ package com.system.roll.entity.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.system.roll.constant.impl.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.lang.model.element.NestingKind;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
+@TableName(value = "professor")
 public class Professor {
 
     @TableId(value = "id")
@@ -27,7 +28,7 @@ public class Professor {
     @TableField(value = "department_id")
     private String departmentId;
 
-    private Integer role;
+    private Role role;
 
     private Integer grade;
 }
