@@ -2,6 +2,7 @@ package com.system.roll.entity.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import javax.lang.model.element.NestingKind;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
+@TableName(value = "professor")
 public class Professor {
 
     @TableId(value = "id")
