@@ -13,4 +13,8 @@
         <result property="classNo" column="class_no" jdbcType="INTEGER"/>
         <result property="openId" column="open_id" jdbcType="VARCHAR"/>
     </resultMap>
+
+    <select id="selectListByCourseId" resultMap="BaseResultMap">
+        select stu.id,stu.student_name  from course_relation cr left join student stu on cr.student_id = stu.id where cr.course_id = #{courseId};
+    </select>
 </mapper>

@@ -20,6 +20,8 @@ public enum  ResultCode implements CommonEnum {
     BODY_NOT_MATCH("请求格式异常",400),
     METHOD_NOT_MATCH("请求方法异常",401),
     PATH_NOT_MATCH("请求路径异常",402),
+    FAILED_TO_IMPORT_EXCEL("excel导入异常",403),
+    FAILED_TO_EXPORT_EXCEL("excel导出异常",404),
 
 
     NULL_POINT("空指针异常",500),

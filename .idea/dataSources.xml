@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="@腾讯云" uuid="b3f2d9f3-0b0e-43a2-a18c-1aa1343dc45c">
+    <data-source source="LOCAL" name="腾讯云" uuid="ef0fcd44-d987-4695-84f4-caf72876f74a">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://nicklorry.top:3306/easyroll</jdbc-url>
-    </data-source>
-    <data-source source="LOCAL" name="easyroll@nicklorry.top" uuid="2a2c3352-984f-4aa2-adf5-130e7bcddbd8">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://nicklorry.top:3306/easyroll</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
 </project>
