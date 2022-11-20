@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.lang.model.element.NestingKind;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
