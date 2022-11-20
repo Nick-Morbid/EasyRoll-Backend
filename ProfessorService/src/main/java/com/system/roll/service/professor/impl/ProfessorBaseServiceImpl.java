@@ -60,14 +60,14 @@ public class ProfessorBaseServiceImpl implements ProfessorBaseService {
                 infoDto.getName(),
                 infoDto.getOpenId(),
                 infoDto.getDepartmentId(),
-                Role.PROFESSOR.getCode(),
+                Role.PROFESSOR,
                 infoDto.getGrade());
         professorMapper.insert(professor);
         ProfessorBaseController.InfoVo infoVo = new ProfessorBaseController.InfoVo(
                 professor.getId(),
                 professor.getProfessorName(),
                 professor.getDepartmentId(),
-                professor.getRole(),
+                professor.getRole().getCode(),
                 dateUtil.getWeek(new Date(System.currentTimeMillis())),
                 professor.getGrade());
 
