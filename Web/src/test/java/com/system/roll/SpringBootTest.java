@@ -29,7 +29,6 @@ import lombok.Data;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.apache.http.entity.StringEntity;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
