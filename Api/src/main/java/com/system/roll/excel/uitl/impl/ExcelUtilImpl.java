@@ -1,5 +1,6 @@
 package com.system.roll.excel.uitl.impl;
 
+import com.system.roll.common.context.CommonContext;
 import com.system.roll.constant.impl.ResultCode;
 import com.system.roll.excel.annotation.Excel;
 import com.system.roll.excel.uitl.ExcelUtil;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -17,6 +19,7 @@ import org.apache.poi.util.StringUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -24,8 +27,11 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Component(value = "ExcelUtil")
 public class ExcelUtilImpl implements ExcelUtil {
+    @Resource
+    private CommonContext commonContext;
     @Override
     public <T> List<T> importExcel(Class<T> tClass, InputStream inputStream, ExcelType type) throws IOException {
         Workbook workbook;
@@ -69,18 +75,31 @@ public class ExcelUtilImpl implements ExcelUtil {
             /*开始生成导出的数据*/
             List<T> res = new ArrayList<>();
             /*开始遍历excel（从包含所需列的那一行的下一行开始*/
-            for (rowIndex = rowIndex+1;rowIndex<=sheet.getLastRowNum();++rowIndex){
+            for (rowIndex = rowIndex+1,flag = false;rowIndex<=sheet.getLastRowNum()&&!flag;++rowIndex){
                 Row row = sheet.getRow(rowIndex);
                 /*获取构造器*/
                 ItemBuilderFactory.ItemBuilder<T> builder = factory.getItemBuilder();
                 for (Integer index : indexNameMap.keySet()) {
                     /*进行构造*/
-                    builder.add(indexNameMap.get(index),row.getCell(index).getStringCellValue());
+                    try {
+                        Cell cell = row.getCell(index);
+                        try {
+                            builder.add(indexNameMap.get(index),cell.getStringCellValue());
+                        }catch (IllegalStateException e){
+                            builder.add(indexNameMap.get(index),cell.getNumericCellValue());
+                        }
+                    }catch (NullPointerException e){
+                        log.info("出现空行，构造结束");
+                        flag = true;
+                        break;
+                    }
                 }
-                /*获取构造结果*/
-                T build = builder.build();
-                /*保存构造结果*/
-                res.add(build);
+                if (!flag){
+                    /*获取构造结果*/
+                    T build = builder.build();
+                    /*保存构造结果*/
+                    res.add(build);
+                }
             }
             return res;
         } catch (Exception e) {
@@ -90,8 +109,38 @@ public class ExcelUtilImpl implements ExcelUtil {
     }
 
     @Override
-    public <T> OutputStream exportExcel(List<T> data, ExcelType type) {
-        return null;
+    public <T> String exportExcel(Class<T>tClass,List<T> data,ExcelType type) {
+        /*创建工作簿*/
+        Workbook workbook;
+        if (type.equals(ExcelType.XLS)){
+            workbook = new HSSFWorkbook();
+        }else {
+            workbook = new XSSFWorkbook();
+        }
+        /*创建工作区*/
+        Sheet sheet = workbook.createSheet();
+        try {
+            /*获取Row的构造器工厂*/
+            RowBuilderFactory<T> factory = new RowBuilderFactory<>(tClass);
+            /*获取索引和名称的映射*/
+            Map<Integer, String> indexNameMap = factory.getIndexNameMap();
+            /*创建表头*/
+            Row header = sheet.createRow(0);
+            for (Integer colIndex : indexNameMap.keySet()) header.createCell(colIndex).setCellValue(indexNameMap.get(colIndex));
+            /*获取构造器*/
+            RowBuilderFactory.RowBuilder<T> builder = factory.getRowBuilder();
+            /*开始进行构造*/
+            for (int i = 0; i < data.size(); i++) builder.build(sheet.createRow(i+1),data.get(i));
+            /*构造完成，准备输出*/
+            File tempFile = File.createTempFile( "excel", type.getMsg(), new File(commonContext.getTempDir()));
+            FileOutputStream outputStream = new FileOutputStream(tempFile);
+            workbook.write(outputStream);
+            outputStream.close();
+            return tempFile.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(ResultCode.FAILED_TO_EXPORT_EXCEL);
+        }
     }
 
 
@@ -211,7 +260,25 @@ public class ExcelUtilImpl implements ExcelUtil {
          * @param param 用于构造的属性的值
          * */
         public void invoke(T instance,Object param) throws InvocationTargetException, IllegalAccessException {
-            setMethod.invoke(instance,type.cast(param));
+            setMethod.invoke(instance,cast(param));
+        }
+
+        private Object cast(Object param){
+            if (param instanceof Double||param instanceof Long || param instanceof Integer){
+                if (type.equals(String.class)){
+                    if (param instanceof Double) return String.format("%.0f",param);
+                    else return String.valueOf(param);
+                }else if (type.equals(Double.class)){
+                    return Double.valueOf(String.valueOf(param));
+                }else if (type.equals(Long.class)){
+                    return Long.valueOf(String.valueOf(param));
+                }else if (type.equals(Integer.class)){
+                    return Integer.valueOf(String.valueOf(param));
+                }
+            }else {
+                return type.cast(param);
+            }
+            return null;
         }
     }
 

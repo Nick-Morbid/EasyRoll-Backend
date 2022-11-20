@@ -12,6 +12,8 @@
 .idea/encodings.xml
 .idea
 Web/target
+resource
+Web/resource
 
 */target
 Api/src/main/resources/application-ssl.yml

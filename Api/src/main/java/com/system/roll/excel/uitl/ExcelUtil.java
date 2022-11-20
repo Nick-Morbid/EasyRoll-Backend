@@ -4,7 +4,6 @@ import com.system.roll.constant.CommonEnum;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 public interface ExcelUtil {
@@ -21,14 +20,15 @@ public interface ExcelUtil {
      * 导出为excel的方法
      * @param data 要导出的数据
      * @param type 要导出的excel文件的类型
+     * @return 返回临时文件的路径
      * */
-    <T> OutputStream exportExcel(List<T> data,ExcelType type);
+    <T> String exportExcel(Class<T>tClass,List<T> data,ExcelType type);
 
 
     @SuppressWarnings("all")
     enum ExcelType implements CommonEnum {
-        XLS("xls类型",0),
-        XLSX("xlsx类型",1)
+        XLS(".xls",0),
+        XLSX(".xlsx",1)
         ;
         private String msg;
         private Integer code;

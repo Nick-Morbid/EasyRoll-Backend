@@ -12,9 +12,11 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 
+import java.io.IOException;
+
 @SpringBootApplication
 public class EasyRollStarter {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         SpringApplication.run(EasyRollStarter.class,args);
         InitializingHandler initializingHandler = SpringContextUtil.getBean("InitializingHandler");
         initializingHandler.init();
