@@ -25,7 +25,27 @@ public class SupervisorBaseController {
     private SupervisorBaseService supervisorBaseService;
 
     @PostMapping("/course/upload")
-    public CourseVo uploadCourse(@RequestBody CourseDTO courseDTO){
+    public CourseVo uploadCourse(
+            @RequestParam(value = "courseName") String courseName,
+            @RequestParam(value = "professorName") String professorName,
+            @RequestParam(value = "classroomNo") Integer classroomNo,
+            @RequestParam(value = "startWeek") Integer startWeek,
+            @RequestParam(value = "endWeek") Integer endWeek,
+            @RequestParam(value = "grade") Integer grade,
+            @RequestParam(value = "courseArrangements") List<String> courseArrangements,
+            @RequestPart(value = "studentList") MultipartFile studentList
+
+    ){
+        CourseDTO courseDTO = new CourseDTO()
+                .setCourseName(courseName)
+                .setProfessorName(professorName)
+                .setClassroomNo(classroomNo)
+                .setStartWeek(startWeek)
+                .setEndWeek(endWeek)
+                .setGrade(grade)
+                .setCourseArrangements(courseArrangements)
+                .setStudentList(studentList);
+
         return supervisorBaseService.uploadCourse(courseDTO);
     }
 
@@ -63,19 +83,8 @@ public class SupervisorBaseController {
         private Integer startWeek;
         private Integer endWeek;
         private Integer grade;
-        private List<CourseArrangement> courseArrangements;
+        private List<String> courseArrangements;
         private MultipartFile studentList;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    @ToString
-    public static class CourseArrangement {
-        private Integer weekDay;
-        private Integer period;
-        private Integer mode;
     }
 
     @Data

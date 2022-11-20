@@ -19,7 +19,9 @@ public class ConfigAdapter implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/**")
-                .excludePathPatterns("/auth/**","/supervisor/roll/call/**");
+        registry.addInterceptor(loginInterceptor)
+                //.addPathPatterns("/**")
+                .excludePathPatterns("/auth/**","/supervisor/roll/call/**")
+                .excludePathPatterns("/**");
     }
 }

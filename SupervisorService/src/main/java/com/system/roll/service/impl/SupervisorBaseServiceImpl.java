@@ -8,6 +8,8 @@ import com.system.roll.controller.SupervisorBaseController;
 import com.system.roll.entity.pojo.*;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
+import com.system.roll.excel.annotation.Excel;
+import com.system.roll.excel.uitl.ExcelUtil;
 import com.system.roll.exception.impl.ServiceException;
 import com.system.roll.mapper.*;
 import com.system.roll.security.context.SecurityContextHolder;
@@ -15,11 +17,14 @@ import com.system.roll.service.SupervisorBaseService;
 import com.system.roll.utils.DateUtil;
 import com.system.roll.utils.EnumUtil;
 import com.system.roll.utils.IdUtil;
+import lombok.Data;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +70,9 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
     @Resource
     private MajorMapper majorMapper;
+
+    @Resource
+    private ExcelUtil excelUtil;
 
     @Override
     public CourseListVo getAllCourse() {
@@ -130,43 +138,60 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
     @Override
     public CourseVo uploadCourse(SupervisorBaseController.CourseDTO courseDTO) {
-        String supervisorId = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
-
-        // TODO:插入课程关系表
-        List<SupervisorBaseController.CourseArrangement> courseArrangements = courseDTO.getCourseArrangements();
+        //String supervisorId = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
+        String supervisorId = "1";
+        List<String> courseArrangements = courseDTO.getCourseArrangements();
         if(courseArrangements.isEmpty()){
             throw new ServiceException(ResultCode.METHOD_NOT_MATCH);
         }
+        List<StudentInfo> studentInfos;
+        try {
+            MultipartFile studentList = courseDTO.getStudentList();
+            String excelName = studentList.getOriginalFilename();
+            String suffix = excelName.substring(excelName.lastIndexOf("."));
+            ExcelUtil.ExcelType excelType = enumUtil.getEnumByDescription(ExcelUtil.ExcelType.class, suffix);
+            studentInfos = excelUtil.importExcel(StudentInfo.class, studentList.getInputStream(), excelType);
+        } catch (IOException e) {
+            throw new ServiceException(ResultCode.FAILED_TO_IMPORT_EXCEL);
+        }
 
         Course course = new Course();
-        // TODO: setEnrollNum、setTotal
         course.setId(idUtil.getId())
                 .setCourseName(courseDTO.getCourseName())
                 .setStartWeek(courseDTO.getStartWeek())
-                .setEndWeek(courseDTO.getEndWeek());
+                .setEndWeek(courseDTO.getEndWeek())
+                .setEnrollNum(studentInfos.size());
         // 插入课程
         courseMapper.insert(course);
+
+        // 插入courseRelation
+        studentInfos.forEach(info->{
+            CourseRelation courseRelation = new CourseRelation(idUtil.getId(), info.getId(), course.getId());
+            courseRelationMapper.insert(courseRelation);
+        });
 
         CourseVo courseVo = new CourseVo();
         courseVo.setId(course.getId()).setName(course.getCourseName());
 
+        // 插入点名关系表
+        rollRelationMapper.insert(new RollRelation(idUtil.getId(), supervisorId,course.getId()));
+
         LambdaQueryWrapper<Professor> pqw = new LambdaQueryWrapper<>();
-        courseArrangements.forEach(courseArrangement -> {
+        for (String courseArrangement:courseArrangements){
+            // 拆分字符串
+            String[] split = courseArrangement.split(" ");
+
             pqw.clear();
-            // 插入点名关系表
-            rollRelationMapper.insert(new RollRelation(idUtil.getId(), supervisorId,course.getId()));
 
-            String[] professorNames = org.springframework.util.StringUtils.split(courseDTO.getCourseName(), ",");
-            if (professorNames != null) {
-                for(String professorName: professorNames){
-                    Professor professor = professorMapper.selectOne(pqw);
-                    if(ObjectUtils.isEmpty(professor)){
-                        professor = new Professor();
-                        professor.setId(idUtil.getId())
-                                .setProfessorName(professorName);
-                        professorMapper.insert(professor);
-                    }
-
+            String[] professorNames = courseDTO.getProfessorName().split(",");
+            for(String professorName: professorNames){
+                pqw.eq(Professor::getProfessorName,professorName);
+                Professor professor = professorMapper.selectOne(pqw);
+                if(ObjectUtils.isEmpty(professor)){
+                    professor = new Professor();
+                    professor.setId(idUtil.getId())
+                            .setProfessorName(professorName);
+                    professorMapper.insert(professor);
                     // 插入授课情况
                     Delivery delivery = new Delivery();
                     delivery.setId(idUtil.getId())
@@ -175,21 +200,19 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
                             .setProfessorId(professor.getId());
                     deliveryMapper.insert(delivery);
                 }
-
-                // 插入课程安排表
-                CourseArrangement arrangement = new CourseArrangement();
-                arrangement.setId(idUtil.getId())
-                        .setCourseId(course.getId())
-                        .setClassroomNo(courseDTO.getClassroomNo())
-                        .setWeekDay(courseArrangement.getWeekDay())
-                        .setPeriod(enumUtil.getEnumByCode(Period.class,courseArrangement.getPeriod()))
-                        .setMode(enumUtil.getEnumByCode(TeachingMode.class,courseArrangement.getMode()));
-
-                courseArrangementMapper.insert(arrangement);
-            }else{
-                throw new ServiceException(ResultCode.METHOD_NOT_MATCH);
             }
-        });
+
+            // 插入课程安排表
+            CourseArrangement arrangement = new CourseArrangement();
+            arrangement.setId(idUtil.getId())
+                    .setCourseId(course.getId())
+                    .setClassroomNo(courseDTO.getClassroomNo())
+                    .setWeekDay(Integer.parseInt(split[0]))
+                    .setPeriod(enumUtil.getEnumByCode(Period.class,Integer.parseInt(split[1])))
+                    .setMode(enumUtil.getEnumByCode(TeachingMode.class,Integer.parseInt(split[2])));
+
+            courseArrangementMapper.insert(arrangement);
+        }
 
         return courseVo;
     }
@@ -222,4 +245,14 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
         return infoVo;
     }
+
+    @Data
+    public static class StudentInfo{
+        @Excel(value = "学号")
+        private String id;
+
+        @Excel(value = "姓名")
+        private String name;
+    }
+
 }
