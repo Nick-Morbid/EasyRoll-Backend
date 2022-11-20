@@ -1,7 +1,6 @@
 package com.system.roll;
 
 import com.system.roll.entity.pojo.CourseArrangement;
-import com.system.roll.entity.pojo.Student;
 import com.system.roll.mapper.CourseArrangementMapper;
 import com.system.roll.mapper.StudentMapper;
 import org.junit.jupiter.api.Test;
@@ -20,8 +19,8 @@ public class MapperTest {
 
     @Test
     void testInsert(){
-        Student student = new Student("1","陈宏侨","1","1",2020,6);
-        studentMapper.insert(student);
+//        Student student = new Student("1","陈宏侨","1","1",2020,6);
+//        studentMapper.insert(student);
     }
 
     @Test
