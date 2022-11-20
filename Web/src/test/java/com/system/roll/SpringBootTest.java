@@ -12,6 +12,9 @@ import com.system.roll.entity.pojo.User;
 import com.system.roll.entity.vo.Result;
 import com.system.roll.entity.vo.message.Message;
 import com.system.roll.entity.vo.message.supervisor.builder.MessageBuilder;
+import com.system.roll.excel.annotation.Excel;
+import com.system.roll.excel.uitl.ExcelUtil;
+import com.system.roll.excel.uitl.impl.ExcelUtilImpl;
 import com.system.roll.properites.AppletProperties;
 import com.system.roll.properites.CommonProperties;
 import com.system.roll.redis.RollDataRedis;
@@ -21,10 +24,15 @@ import com.system.roll.uitls.HttpRequestUtil;
 import com.system.roll.utils.DateUtil;
 import com.system.roll.utils.IdUtil;
 import com.system.roll.utils.JsonUtil;
+import com.system.roll.utils.PinyinUtil;
+import lombok.Data;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.apache.http.entity.StringEntity;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -217,5 +225,44 @@ public class SpringBootTest {
         List<User> users1 = new Gson().fromJson(new Gson().toJson(users), new TypeToken<List<User>>() {
         }.getType());
         users1.forEach(System.out::println);
+    }
+
+    @Resource
+    private PinyinUtil pinyinUtil;
+    @Test
+    public void testPinyinUtil() throws BadHanyuPinyinOutputFormatCombination {
+        for (String str : pinyinUtil.toPinyin("陈宏侨")) {
+            System.out.println(str);
+        }
+    }
+    @Resource(name = "ExcelUtil")
+    private ExcelUtil excelUtil;
+    @Test
+    public void testImportExcel() throws IOException {
+        String filePath = "F:\\软工大作业\\项目代码\\EasyRoll-Backend\\resource\\2022K结对编程分数汇总（个人得分）.xlsx";
+        System.out.println(filePath);
+        File file = new File(filePath);
+        FileInputStream fileInputStream = new FileInputStream(file);
+        List<ExcelUtilImpl.Test> tests = excelUtil.importExcel(ExcelUtilImpl.Test.class, fileInputStream, ExcelUtil.ExcelType.XLSX);
+        tests.forEach(System.out::println);
+        fileInputStream.close();
+    }
+
+    @Test
+    public void test01() throws IOException {
+        String filePath = "F:\\软工大作业\\项目代码\\EasyRoll-Backend\\resource\\2022K结对编程分数汇总（个人得分）.xlsx";
+        System.out.println(filePath);
+        File file = new File(filePath);
+        FileInputStream fileInputStream = new FileInputStream(file);
+        List<Student> students = excelUtil.importExcel(Student.class, fileInputStream, ExcelUtil.ExcelType.XLSX);
+        students.forEach(System.out::println);
+    }
+
+    @Data
+    public static class Student{
+        @Excel(value = "学号")
+        private String id;
+        @Excel(value = "姓名")
+        private String name;
     }
 }
