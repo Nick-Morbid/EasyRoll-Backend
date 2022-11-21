@@ -1,18 +1,23 @@
 package com.system.roll.service.supervisor.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.system.roll.context.security.SecurityContextHolder;
 import com.system.roll.entity.constant.impl.Period;
 import com.system.roll.entity.constant.impl.ResultCode;
+import com.system.roll.entity.constant.impl.Role;
 import com.system.roll.entity.constant.impl.TeachingMode;
+import com.system.roll.entity.dto.supervisor.InfoDto;
+import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.pojo.*;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
+import com.system.roll.entity.vo.supervisor.InfoVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
 import com.system.roll.excel.annotation.Excel;
 import com.system.roll.excel.uitl.ExcelUtil;
-import com.system.roll.entity.exception.impl.ServiceException;
+import com.system.roll.handler.mapstruct.StudentConvertor;
 import com.system.roll.mapper.*;
-import com.system.roll.context.security.SecurityContextHolder;
+import com.system.roll.service.auth.WxApiService;
 import com.system.roll.service.supervisor.SupervisorBaseService;
 import com.system.roll.utils.DateUtil;
 import com.system.roll.utils.EnumUtil;
@@ -20,6 +25,7 @@ import com.system.roll.utils.IdUtil;
 import lombok.Data;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -74,6 +80,12 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
     @Resource
     private ExcelUtil excelUtil;
 
+
+    @Resource(name = "WxApiService")
+    private WxApiService wxApiService;
+
+    @Resource
+    private StudentConvertor studentConvertor;
     @Override
     public SupervisorVo getSupervisorInfo(String openId) {
         return null;
@@ -228,30 +240,33 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
     }
 
     @Override
+    @Transactional
     public InfoVo register(InfoDto infoDto) {
-        Student student = new Student(idUtil.getId(),
-                infoDto.getName(),
-                infoDto.getDepartmentId(),
-                infoDto.getMajorId(),
-                infoDto.getGrade(),
-                infoDto.getClassNo(),
-                infoDto.getOpenId(),
-                infoDto.getRole());
+        /*获取用户的openId*/
+        String openId = wxApiService.jsCode2session(infoDto.getCode()).getOpenId();
+
+        /*检查用户是否为空*/
+        if (studentMapper.selectByOpenId(openId)!=null) throw new ServiceException(ResultCode.USER_ALREADY_EXISTS);
+        /*构造pojo对象*/
+        Student student = studentConvertor.infoDtoToStudent(infoDto);
+        /*查询院系id*/
+        String departmentId = departmentMapper.selectIdByNameAndGrade(infoDto.getDepartmentName(),infoDto.getGrade());
+        /*查询专业id*/
+        String majorId = majorMapper.selectIdByName(infoDto.getMajorName());
+
+        student.setOpenId(openId)
+                .setRole(Role.SUPERVISOR)
+                .setDepartmentId(departmentId)
+                .setMajorId(majorId);
 
         studentMapper.insert(student);
-        Department department = departmentMapper.selectById(infoDto.getDepartmentId());
-        Major major = majorMapper.selectById(infoDto.getMajorId());
+        /*组装视图对象*/
+        InfoVo infoVo = studentConvertor.studentToInfoVo(student);
+        infoVo.setDepartmentName(infoDto.getDepartmentName())
+                .setMajor(infoDto.getMajorName())
+                .setCurrentWeek(dateUtil.getWeek(new Date(System.currentTimeMillis())));
 
-        return new InfoVo(
-                student.getId(),
-                student.getStudentName(),
-                student.getDepartmentId(),
-                department.getDepartmentName(),
-                student.getMajorId(),
-                major.getMajorName(),
-                student.getGrade(),
-                student.getClassNo(),
-                dateUtil.getWeek(new Date(System.currentTimeMillis())));
+        return infoVo;
     }
 
     @Data

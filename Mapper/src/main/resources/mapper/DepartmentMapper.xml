@@ -7,8 +7,18 @@
     <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.Department">
         <id property="id" column="id" jdbcType="VARCHAR"/>
         <result property="departmentName" column="department_name" jdbcType="VARCHAR"/>
-        <result property="totalNum" column="total_num" jdbcType="INTEGER"/>
         <result property="grade" column="grade" jdbcType="INTEGER"/>
     </resultMap>
+    <select id="selectListByNameLike" resultType="String">
+        select DISTINCT department_name from department
+        <where>
+            <if test="departmentName!=''">
+                department_name like '%' #{departmentName} '%'
+            </if>
+        </where>;
+    </select>
+    <select id="selectIdByNameAndGrade" resultType="java.lang.String">
+        select id from department where department_name  = #{departmentName} and grade = #{grade};
+    </select>
 
 </mapper>

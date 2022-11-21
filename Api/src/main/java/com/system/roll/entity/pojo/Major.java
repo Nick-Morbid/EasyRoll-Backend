@@ -22,6 +22,4 @@ public class Major {
     @TableField(value = "major_name")
     private String majorName;
 
-    @TableField(value = "total_num")
-    private String totalNum;
 }

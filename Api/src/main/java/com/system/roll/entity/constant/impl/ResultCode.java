@@ -15,7 +15,7 @@ public enum  ResultCode implements CommonEnum {
     TOKEN_VOID("token无效",305),
     CODE_VOID("code无效",306),
     ACCESS_TOKEN_VOID("access_token无效",307),
-
+    USER_ALREADY_EXISTS("用户已存在",308),
 
     BODY_NOT_MATCH("请求格式异常",400),
     METHOD_NOT_MATCH("请求方法异常",401),

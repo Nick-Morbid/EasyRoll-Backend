@@ -1,6 +1,7 @@
 package com.system.roll.service.student.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.system.roll.entity.constant.impl.Role;
 import com.system.roll.entity.constant.impl.TeachingMode;
 import com.system.roll.entity.pojo.*;
 import com.system.roll.entity.vo.course.CourseListVo;
@@ -10,6 +11,7 @@ import com.system.roll.mapper.*;
 import com.system.roll.context.security.SecurityContextHolder;
 import com.system.roll.service.student.StudentBaseService;
 import com.system.roll.utils.DateUtil;
+import com.system.roll.utils.EnumUtil;
 import com.system.roll.utils.IdUtil;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.stereotype.Component;
@@ -48,6 +50,9 @@ public class StudentBaseServiceImpl implements StudentBaseService {
 
     @Resource
     private MajorMapper majorMapper;
+
+    @Resource
+    private EnumUtil enumUtil;
 
     @Override
     public StudentVo getStudentInfo(String openId) {
@@ -115,7 +120,8 @@ public class StudentBaseServiceImpl implements StudentBaseService {
                 infoDto.getGrade(),
                 infoDto.getClassNo(),
                 infoDto.getOpenId(),
-                infoDto.getRole());
+                enumUtil.getEnumByCode(Role.class,infoDto.getRole())
+                );
 
         studentMapper.insert(student);
         Department department = departmentMapper.selectById(infoDto.getDepartmentId());

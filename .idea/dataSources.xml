@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="腾讯云" uuid="95d0b341-0591-447a-9a63-8a8a7fced37c">
+    <data-source source="LOCAL" name="我的腾讯云" uuid="76cb0742-aa68-4802-a7fd-19045ce83682">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>

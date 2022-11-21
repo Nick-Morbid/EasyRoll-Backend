@@ -7,7 +7,17 @@
     <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.Major">
         <id property="id" column="id" jdbcType="VARCHAR"/>
         <result property="majorName" column="major_name" jdbcType="VARCHAR"/>
-        <result property="totalNum" column="total_num" jdbcType="INTEGER"/>
     </resultMap>
+    <select id="selectListByNameLike" resultType="java.lang.String">
+        select DISTINCT major_name from major
+        <where>
+            <if test="majorName!=''">
+                major_name like '%' #{majorName} '%'
+            </if>
+        </where>;
+    </select>
+    <select id="selectIdByName" resultType="java.lang.String">
+        select id from major where major_name = #{majorName};
+    </select>
 
 </mapper>

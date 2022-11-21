@@ -1,7 +1,9 @@
 package com.system.roll.service.supervisor;
 
+import com.system.roll.entity.dto.supervisor.InfoDto;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
+import com.system.roll.entity.vo.supervisor.InfoVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,33 +48,4 @@ public interface SupervisorBaseService {
         private MultipartFile studentList;
     }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    class InfoVo{
-        private String id;
-        private String name;
-        private String departmentId;
-        private String departmentName;
-        private String majorId;
-        private String major;
-        private Integer grade;
-        private Integer classNo;
-        private Integer currentWeek;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    class InfoDto{
-        private String name;
-        private String departmentId;
-        private String majorId;
-        private Integer role;
-        private String openId;
-        private Integer grade;
-        private Integer classNo;
-    }
 }

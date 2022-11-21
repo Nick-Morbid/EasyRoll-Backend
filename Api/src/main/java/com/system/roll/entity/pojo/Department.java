@@ -22,8 +22,5 @@ public class Department {
     @TableField(value = "department_name")
     private String departmentName;
 
-    @TableField(value = "total_num")
-    private Integer totalNum;
-
     private Integer grade;
 }
