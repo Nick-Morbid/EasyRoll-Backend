@@ -34,7 +34,7 @@ mybatis-plus:
   # 扫描java bean的包，这样，在xml文件就可以直接使用类的名称作为类的别名了！
   type-aliases-package: com.system.roll.entity.pojo
   # 枚举类所在包扫描（该配置+枚举类中的注解，可以实现枚举类的自动映射）
-  type-enums-package: com.system.roll.constant.impl
+  type-enums-package: com.system.roll.entity.constant.impl
   # 自定义类型处理器包扫描
-  type-handlers-package: com.system.roll.typehandler
+  type-handlers-package: com.system.roll.handler.typehandler
 

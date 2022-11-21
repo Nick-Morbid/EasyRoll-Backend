@@ -20,7 +20,9 @@ public interface StudentConvertor {
     })
     StudentRollListVo.StudentRollVo studentToStudentRollVo(Student student);
 
-
+    @Mappings({
+            @Mapping(source = "studentName",target = "name")
+    })
     InfoVo studentToInfoVo(Student student);
     @Mappings({
             @Mapping(source = "id",target = "id"),
