@@ -45,8 +45,28 @@ public class SupervisorBaseController {
     }
 
     @PutMapping("/course/update")
-    public void updateCourse(){
-
+    public void updateCourse(
+            @RequestParam(value = "courseId") String courseId,
+            @RequestParam(value = "courseName") String courseName,
+            @RequestParam(value = "professorName") String professorName,
+            @RequestParam(value = "classroomNo") Integer classroomNo,
+            @RequestParam(value = "startWeek") Integer startWeek,
+            @RequestParam(value = "endWeek") Integer endWeek,
+            @RequestParam(value = "grade") Integer grade,
+            @RequestParam(value = "courseArrangements") List<String> courseArrangements,
+            @RequestPart(value = "studentList") MultipartFile studentList
+    ){
+        SupervisorBaseService.CourseDTO courseDTO = new SupervisorBaseService.CourseDTO()
+                .setId(courseId)
+                .setCourseName(courseName)
+                .setProfessorName(professorName)
+                .setClassroomNo(classroomNo)
+                .setStartWeek(startWeek)
+                .setEndWeek(endWeek)
+                .setGrade(grade)
+                .setCourseArrangements(courseArrangements)
+                .setStudentList(studentList);
+        supervisorBaseService.updateCourse(courseDTO);
     }
 
     @DeleteMapping("/course/delete")

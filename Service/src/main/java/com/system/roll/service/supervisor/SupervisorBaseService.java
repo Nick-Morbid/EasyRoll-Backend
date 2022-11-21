@@ -36,6 +36,7 @@ public interface SupervisorBaseService {
     @Accessors(chain = true)
     @ToString
     class CourseDTO{
+        private String id;
         private String courseName;
         private String professorName;
         private Integer classroomNo;

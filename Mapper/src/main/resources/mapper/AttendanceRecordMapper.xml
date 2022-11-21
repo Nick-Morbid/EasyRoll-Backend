@@ -13,6 +13,7 @@
         <result property="state" column="state" jdbcType="INTEGER"/>
         <result property="created" column="created" jdbcType="TIMESTAMP"/>
         <result property="supervisorId" column="supervisor_id" jdbcType="VARCHAR"/>
+        <result property="courseId" column="course_id" jdbcType="VARCHAR"/>
 
     </resultMap>
 

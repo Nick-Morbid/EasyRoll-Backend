@@ -143,8 +143,8 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
     @Override
     public CourseVo uploadCourse(CourseDTO courseDTO) {
-        //String supervisorId = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
-        String supervisorId = "1";
+        String supervisorId = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
+        //String supervisorId = "1";
         List<String> courseArrangements = courseDTO.getCourseArrangements();
         if(courseArrangements.isEmpty()){
             throw new ServiceException(ResultCode.METHOD_NOT_MATCH);
@@ -159,9 +159,10 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         } catch (IOException e) {
             throw new ServiceException(ResultCode.FAILED_TO_IMPORT_EXCEL);
         }
+        String courseId = org.springframework.util.StringUtils.hasText(courseDTO.getId())?courseDTO.getId():idUtil.getId();
 
         Course course = new Course();
-        course.setId(idUtil.getId())
+        course.setId(courseId)
                 .setCourseName(courseDTO.getCourseName())
                 .setStartWeek(courseDTO.getStartWeek())
                 .setEndWeek(courseDTO.getEndWeek())
@@ -171,7 +172,10 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
         // 插入courseRelation
         studentInfos.forEach(info->{
-            CourseRelation courseRelation = new CourseRelation(idUtil.getId(), info.getId(), course.getId());
+            CourseRelation courseRelation = new CourseRelation()
+                    .setId(idUtil.getId())
+                    .setStudentId(info.getId())
+                    .setCourseId(course.getId());
             courseRelationMapper.insert(courseRelation);
         });
 
@@ -224,7 +228,8 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
     @Override
     public void updateCourse(CourseDTO courseDTO) {
-
+        deleteCourse(courseDTO.getId());
+        uploadCourse(courseDTO);
     }
 
     @Override

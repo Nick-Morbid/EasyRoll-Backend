@@ -14,4 +14,5 @@
         <result property="openId" column="open_id" jdbcType="VARCHAR"/>
         <result property="role" column="role" jdbcType="INTEGER"/>
     </resultMap>
+    <select id="selectListByCourseId" resultType="com.system.roll.entity.pojo.Student"></select>
 </mapper>

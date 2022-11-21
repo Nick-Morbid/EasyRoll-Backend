@@ -43,4 +43,7 @@ public class AttendanceRecord {
 
     @TableField(value = "transactor_id")
     private String supervisorId;
+
+    @TableField("course_id")
+    private String courseId;
 }
