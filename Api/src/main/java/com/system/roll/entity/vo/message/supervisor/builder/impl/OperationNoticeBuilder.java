@@ -1,6 +1,6 @@
 package com.system.roll.entity.vo.message.supervisor.builder.impl;
 
-import com.system.roll.constant.impl.MsgType;
+import com.system.roll.entity.constant.impl.MsgType;
 import com.system.roll.entity.vo.message.supervisor.builder.MessageBuilder;
 import com.system.roll.entity.vo.message.Message;
 import com.system.roll.entity.vo.message.supervisor.OperationNotice;

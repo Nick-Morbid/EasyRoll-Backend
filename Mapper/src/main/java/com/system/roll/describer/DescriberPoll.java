@@ -1,6 +1,6 @@
 package com.system.roll.describer;
 
-import com.system.roll.constant.impl.OperationType;
+import com.system.roll.entity.constant.impl.OperationType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

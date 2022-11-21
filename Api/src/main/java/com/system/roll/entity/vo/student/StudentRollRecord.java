@@ -1,6 +1,6 @@
 package com.system.roll.entity.vo.student;
 
-import com.system.roll.constant.impl.Period;
+import com.system.roll.entity.constant.impl.Period;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

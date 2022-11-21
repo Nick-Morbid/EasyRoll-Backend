@@ -1,10 +1,10 @@
 package com.system.roll.flink.sink;
 
-import com.system.roll.constant.impl.TimeUnit;
+import com.system.roll.entity.constant.impl.TimeUnit;
 import com.system.roll.entity.pojo.RollData;
 import com.system.roll.flink.context.FlinkContext;
-import com.system.roll.properites.CommonProperties;
-import com.system.roll.properites.RabbitProperties;
+import com.system.roll.entity.properites.CommonProperties;
+import com.system.roll.entity.properites.RabbitProperties;
 import com.system.roll.rabbit.utils.RabbitUtil;
 import com.system.roll.redis.RollDataRedis;
 import com.system.roll.utils.JsonUtil;

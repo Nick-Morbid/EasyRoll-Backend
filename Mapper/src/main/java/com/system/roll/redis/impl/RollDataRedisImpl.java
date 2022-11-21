@@ -1,9 +1,9 @@
 package com.system.roll.redis.impl;
 
 import com.google.gson.reflect.TypeToken;
-import com.system.roll.constant.impl.TimeUnit;
+import com.system.roll.entity.constant.impl.TimeUnit;
 import com.system.roll.entity.pojo.RollData;
-import com.system.roll.properites.CommonProperties;
+import com.system.roll.entity.properites.CommonProperties;
 import com.system.roll.redis.RollDataRedis;
 import com.system.roll.redis.uitls.RedisUtil;
 import com.system.roll.utils.JsonUtil;

@@ -1,7 +1,7 @@
 package com.system.roll.entity.vo;
 
-import com.system.roll.constant.impl.ResultCode;
-import com.system.roll.exception.CommonException;
+import com.system.roll.entity.constant.impl.ResultCode;
+import com.system.roll.entity.exception.CommonException;
 import lombok.Data;
 import lombok.ToString;
 

@@ -1,7 +1,7 @@
 package com.system.roll.controller.professor;
 
 import com.system.roll.entity.vo.course.CourseListVo;
-import com.system.roll.professor.ProfessorBaseService;
+import com.system.roll.service.professor.ProfessorBaseService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

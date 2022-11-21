@@ -1,5 +1,5 @@
 package com.system.roll.describer.annotation;
-import com.system.roll.constant.impl.OperationType;
+import com.system.roll.entity.constant.impl.OperationType;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Inherited;

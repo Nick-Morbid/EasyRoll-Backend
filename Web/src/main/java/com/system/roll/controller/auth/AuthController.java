@@ -1,18 +1,14 @@
 package com.system.roll.controller.auth;
 
-import com.system.roll.constant.impl.ResultCode;
-import com.system.roll.constant.impl.Role;
+import com.system.roll.service.auth.AuthService;
+import com.system.roll.entity.constant.impl.ResultCode;
+import com.system.roll.entity.constant.impl.Role;
+import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.vo.professor.ProfessorVo;
 import com.system.roll.entity.vo.student.StudentVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
-import com.system.roll.exception.impl.ServiceException;
 import com.system.roll.security.jwt.JwtSecurityHandler;
-import com.system.roll.service.AuthService;
 import com.system.roll.utils.IdUtil;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +37,7 @@ public class AuthController {
      * 学生端微信小程序登录
      * */
     @PostMapping(value = "/login/student")
-    public StudentVo studentLogin(@RequestBody LoginFormDto data, HttpServletResponse response){
+    public StudentVo studentLogin(@RequestBody AuthService.LoginFormDto data, HttpServletResponse response){
         /*获取信息*/
         StudentVo studentVo = authService.studentLogin(data.getCode());
         /*生成token*/
@@ -56,7 +52,7 @@ public class AuthController {
      * 督导队员端微信小程序登录
      * */
     @PostMapping(value = "/login/supervisor")
-    public SupervisorVo supervisorLogin(@RequestBody LoginFormDto data,HttpServletResponse response){
+    public SupervisorVo supervisorLogin(@RequestBody AuthService.LoginFormDto data, HttpServletResponse response){
         /*获取信息*/
         SupervisorVo supervisorVo = authService.supervisorLogin(data.getCode());
         /*生成token*/
@@ -71,7 +67,7 @@ public class AuthController {
      * 督导队员端小程序对web端登录进行第三方授权（由督导队员调用）
      * */
     @PostMapping(value = "/login/professor")
-    public ProfessorVo professorLogin(@RequestBody LoginFormDto data,HttpServletResponse response){
+    public ProfessorVo professorLogin(@RequestBody AuthService.LoginFormDto data, HttpServletResponse response){
         /*获取信息*/
         ProfessorVo professorVo = authService.professorLogin(data.getSocketId(),data.getCode());
         /*生成token*/
@@ -113,7 +109,7 @@ public class AuthController {
      * 学生端小程序注册（注册后直接完成登录）
      * */
     @PostMapping(value = "/register/student")
-    public StudentVo studentRegister(@RequestBody RegisterFormDto data){
+    public StudentVo studentRegister(@RequestBody AuthService.RegisterFormDto data){
 
         return null;
     }
@@ -122,7 +118,7 @@ public class AuthController {
      * 督导队员端小程序注册（注册后直接完成登录）
      * */
     @PostMapping(value = "/register/supervisor")
-    public SupervisorVo supervisorRegister(@RequestBody RegisterFormDto data){
+    public SupervisorVo supervisorRegister(@RequestBody AuthService.RegisterFormDto data){
         return null;
     }
 
@@ -130,27 +126,8 @@ public class AuthController {
      * 网页端注册（在督导队员端小程序完成注册，注册后直接完成登录）
      * */
     @PostMapping(value = "/register/professor")
-    public ProfessorVo webRegister(@RequestBody RegisterFormDto data){
+    public ProfessorVo webRegister(@RequestBody AuthService.RegisterFormDto data){
         return null;
     }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    public static class LoginFormDto{
-        private String  socketId;
-        private String code;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    public static class RegisterFormDto{
-        private String id;
-        private String name;
-        private String departmentName;
-        private Integer role;//0：学生，1：督导队员，2：教师，3：辅导员
-    }
 }

@@ -1,10 +1,10 @@
 package com.system.roll.controller.supervisor;
 
-import com.system.roll.constant.impl.ResultCode;
+import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
-import com.system.roll.exception.impl.ServiceException;
-import com.system.roll.supervisor.SupervisorBaseService;
+import com.system.roll.entity.exception.impl.ServiceException;
+import com.system.roll.service.supervisor.SupervisorBaseService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

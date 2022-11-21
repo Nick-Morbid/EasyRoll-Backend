@@ -1,15 +1,17 @@
 package com.system.roll.mapstruct;
 
-import com.system.roll.constant.impl.Role;
+import com.system.roll.entity.constant.impl.Role;
 import com.system.roll.entity.pojo.User;
 import com.system.roll.entity.vo.UserVo;
 import javax.annotation.processing.Generated;
+
+import com.system.roll.handler.mapstruct.UserConvertor;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-11-20T20:55:50+0800",
-    comments = "version: 1.4.1.Final, compiler: javac, environment: Java 11.0.16.1 (Oracle Corporation)"
+    date = "2022-11-21T12:13:36+0800",
+    comments = "version: 1.4.1.Final, compiler: javac, environment: Java 11.0.17 (Amazon.com Inc.)"
 )
 @Component
 public class UserConvertorImpl implements UserConvertor {

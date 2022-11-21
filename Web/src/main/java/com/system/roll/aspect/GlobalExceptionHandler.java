@@ -1,9 +1,9 @@
 package com.system.roll.aspect;
 
-import com.system.roll.constant.impl.ResultCode;
+import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.vo.Result;
-import com.system.roll.exception.impl.AuthException;
-import com.system.roll.exception.impl.ServiceException;
+import com.system.roll.entity.exception.impl.AuthException;
+import com.system.roll.entity.exception.impl.ServiceException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

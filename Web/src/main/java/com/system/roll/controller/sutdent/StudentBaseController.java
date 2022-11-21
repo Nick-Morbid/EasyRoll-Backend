@@ -1,7 +1,7 @@
 package com.system.roll.controller.sutdent;
 
 import com.system.roll.entity.vo.course.CourseListVo;
-import com.system.roll.student.StudentBaseService;
+import com.system.roll.service.student.StudentBaseService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

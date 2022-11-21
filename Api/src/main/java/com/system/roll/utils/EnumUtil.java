@@ -1,6 +1,6 @@
 package com.system.roll.utils;
 
-import com.system.roll.constant.CommonEnum;
+import com.system.roll.entity.constant.CommonEnum;
 import org.springframework.stereotype.Component;
 
 /*

@@ -3,7 +3,7 @@ package com.system.roll.flink.task;
 import com.system.roll.entity.pojo.RollData;
 import com.system.roll.flink.sink.RollDataSink;
 import com.system.roll.flink.source.RabbitSource;
-import com.system.roll.properites.RabbitProperties;
+import com.system.roll.entity.properites.RabbitProperties;
 import com.system.roll.utils.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.functions.MapFunction;

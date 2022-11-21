@@ -1,6 +1,6 @@
 package com.system.roll.describer;
 
-import com.system.roll.constant.impl.OperationType;
+import com.system.roll.entity.constant.impl.OperationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

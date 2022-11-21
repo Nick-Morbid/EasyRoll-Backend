@@ -1,6 +1,6 @@
 package com.system.roll.controller.professor;
 
-import com.system.roll.professor.ProfessorRollService;
+import com.system.roll.service.professor.ProfessorRollService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

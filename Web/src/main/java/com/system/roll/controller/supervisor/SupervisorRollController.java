@@ -2,7 +2,7 @@ package com.system.roll.controller.supervisor;
 
 import com.system.roll.entity.vo.message.MessageListVo;
 import com.system.roll.entity.vo.student.StudentRollListVo;
-import com.system.roll.supervisor.SupervisorRollService;
+import com.system.roll.service.supervisor.SupervisorRollService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

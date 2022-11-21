@@ -1,7 +1,7 @@
 package com.system.roll.handler;
 
-import com.system.roll.common.context.CommonContext;
-import com.system.roll.properites.RabbitProperties;
+import com.system.roll.context.common.CommonContext;
+import com.system.roll.entity.properites.RabbitProperties;
 import com.system.roll.rabbit.utils.RabbitUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
