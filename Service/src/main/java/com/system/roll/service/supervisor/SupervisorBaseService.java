@@ -1,9 +1,9 @@
 package com.system.roll.service.supervisor;
 
-import com.system.roll.entity.dto.supervisor.InfoDto;
+import com.system.roll.entity.dto.InfoDto;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
-import com.system.roll.entity.vo.supervisor.InfoVo;
+import com.system.roll.entity.vo.InfoVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;

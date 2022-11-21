@@ -19,5 +19,8 @@
     <select id="selectIdByName" resultType="java.lang.String">
         select id from major where major_name = #{majorName};
     </select>
+    <select id="selectNameById" resultType="java.lang.String">
+        select major_name from major where id = #{majorId};
+    </select>
 
 </mapper>

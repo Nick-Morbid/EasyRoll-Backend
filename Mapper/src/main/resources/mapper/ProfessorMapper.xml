@@ -12,5 +12,8 @@
         <result property="role" column="role" jdbcType="INTEGER"/>
         <result property="grade" column="grade" jdbcType="INTEGER"/>
     </resultMap>
+    <select id="selectByOpenId" resultType="com.system.roll.entity.pojo.Professor">
+        select * from professor where open_id = #{openId};
+    </select>
 
 </mapper>

@@ -6,16 +6,17 @@ import com.system.roll.entity.constant.impl.Period;
 import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.Role;
 import com.system.roll.entity.constant.impl.TeachingMode;
-import com.system.roll.entity.dto.supervisor.InfoDto;
+import com.system.roll.entity.dto.InfoDto;
 import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.pojo.*;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
-import com.system.roll.entity.vo.supervisor.InfoVo;
+import com.system.roll.entity.vo.InfoVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
 import com.system.roll.excel.annotation.Excel;
 import com.system.roll.excel.uitl.ExcelUtil;
 import com.system.roll.handler.mapstruct.StudentConvertor;
+import com.system.roll.handler.mapstruct.SupervisorConvertor;
 import com.system.roll.mapper.*;
 import com.system.roll.service.auth.WxApiService;
 import com.system.roll.service.supervisor.SupervisorBaseService;
@@ -80,15 +81,36 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
     @Resource
     private ExcelUtil excelUtil;
 
+    @Resource
+    private SupervisorConvertor supervisorConvertor;
+
 
     @Resource(name = "WxApiService")
     private WxApiService wxApiService;
 
     @Resource
     private StudentConvertor studentConvertor;
+
     @Override
     public SupervisorVo getSupervisorInfo(String openId) {
-        return null;
+        /*先到学生表中查询*/
+        Student student = studentMapper.selectByOpenId(openId);
+        /*不在学生表中*/
+        SupervisorVo supervisorVo;
+        if (student==null){
+            /*到教师表中查询*/
+            Professor professor = professorMapper.selectByOpenId(openId);
+            if (professor==null) return null;
+            supervisorVo = supervisorConvertor.professorToSupervisorVo(professor);
+        }else {
+            /*更新角色*/
+            if (student.getRole().equals(Role.STUDENT)) studentMapper.updateRole(student.getId(),Role.SUPERVISOR);
+            supervisorVo = supervisorConvertor.studentToSupervisorVo(student);
+        }
+        supervisorVo
+                .setCurrentWeek(dateUtil.getWeek(new Date(System.currentTimeMillis())))
+                .setDepartmentName(departmentMapper.selectNameById(supervisorVo.getDepartmentId()));
+        return supervisorVo;
     }
 
     @Override
@@ -268,7 +290,7 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         /*组装视图对象*/
         InfoVo infoVo = studentConvertor.studentToInfoVo(student);
         infoVo.setDepartmentName(infoDto.getDepartmentName())
-                .setMajor(infoDto.getMajorName())
+                .setMajorName(infoDto.getMajorName())
                 .setCurrentWeek(dateUtil.getWeek(new Date(System.currentTimeMillis())));
 
         return infoVo;

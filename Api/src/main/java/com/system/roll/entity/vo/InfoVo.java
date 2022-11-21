@@ -1,4 +1,4 @@
-package com.system.roll.entity.vo.supervisor;
+package com.system.roll.entity.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ public class InfoVo{
     private String departmentId;
     private String departmentName;
     private String majorId;
-    private String major;
+    private String majorName;
     private Integer grade;
     private Integer classNo;
     private Integer currentWeek;

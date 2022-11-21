@@ -19,4 +19,9 @@ public interface DepartmentMapper extends BaseMapper<Department> {
      * 根据名称和年级查询院系的id
      * */
     String selectIdByNameAndGrade(@Param(value = "departmentName") String departmentName,@Param(value = "grade") Integer grade);
+
+    /**
+     * 根据id查询学院的名称
+     * */
+    String selectNameById(@Param(value = "departmentId") String departmentId);
 }

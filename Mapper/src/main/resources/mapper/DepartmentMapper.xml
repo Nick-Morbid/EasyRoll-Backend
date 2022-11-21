@@ -20,5 +20,8 @@
     <select id="selectIdByNameAndGrade" resultType="java.lang.String">
         select id from department where department_name  = #{departmentName} and grade = #{grade};
     </select>
+    <select id="selectNameById" resultType="java.lang.String">
+        select department_name from department where id = #{departmentId};
+    </select>
 
 </mapper>

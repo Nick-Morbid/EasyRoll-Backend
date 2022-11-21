@@ -19,4 +19,9 @@ public interface MajorMapper extends BaseMapper<Major> {
      * 根据名称查询专业id
      * */
     String selectIdByName(@Param(value = "majorName")String majorName);
+
+    /**
+     * 根据id查询专业的名称
+     * */
+    String selectNameById(@Param(value = "majorId") String majorId);
 }

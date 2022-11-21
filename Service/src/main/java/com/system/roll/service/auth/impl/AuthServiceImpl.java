@@ -1,17 +1,17 @@
 package com.system.roll.service.auth.impl;
 
-import com.system.roll.service.auth.AuthService;
-import com.system.roll.service.auth.WxApiService;
 import com.system.roll.entity.bo.JsCode2sessionBo;
 import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.Role;
 import com.system.roll.entity.exception.impl.ServiceException;
+import com.system.roll.entity.vo.InfoVo;
 import com.system.roll.entity.vo.professor.ProfessorVo;
-import com.system.roll.entity.vo.student.StudentVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
+import com.system.roll.service.auth.AuthService;
+import com.system.roll.service.auth.WxApiService;
 import com.system.roll.service.professor.ProfessorBaseService;
-import com.system.roll.service.supervisor.SupervisorBaseService;
 import com.system.roll.service.student.StudentBaseService;
+import com.system.roll.service.supervisor.SupervisorBaseService;
 import com.system.roll.webSocket.context.SocketContextHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,14 +33,14 @@ public class AuthServiceImpl implements AuthService {
     private ProfessorBaseService professorBaseService;
 
     @Override
-    public StudentVo studentLogin(String code) {
+    public InfoVo studentLogin(String code) {
         /*根据code获取用户唯一标识*/
         JsCode2sessionBo jsCode2sessionBo = wxApiService.jsCode2session(code);
         String openId = jsCode2sessionBo.getOpenId();
         /*根据openId获取学生信息*/
-        StudentVo studentInfo = studentBaseService.getStudentInfo(openId);
-        if (studentInfo==null) throw new ServiceException(ResultCode.NOT_REGISTER);
-        return studentInfo;
+        InfoVo infoVo = studentBaseService.getStudentInfo(openId);
+        if (infoVo==null) throw new ServiceException(ResultCode.NOT_REGISTER);
+        return infoVo;
     }
 
     @Override
@@ -49,8 +49,7 @@ public class AuthServiceImpl implements AuthService {
         JsCode2sessionBo jsCode2sessionBo = wxApiService.jsCode2session(code);
         String openId = jsCode2sessionBo.getOpenId();
         /*根据openId获取督导人员信息*/
-//        SupervisorVo supervisorInfo = supervisorInfoService.getSupervisorInfo(openId);
-        SupervisorVo supervisorInfo = new SupervisorVo().setId(openId).setName("nick").setRole(Role.STUDENT.getCode()).setDepartmentId("123456789").setDepartmentName("计算机与大数据学院");
+        SupervisorVo supervisorInfo = supervisorBaseService.getSupervisorInfo(openId);
         if (supervisorInfo==null) throw new ServiceException(ResultCode.NOT_REGISTER);
         return supervisorInfo;
     }

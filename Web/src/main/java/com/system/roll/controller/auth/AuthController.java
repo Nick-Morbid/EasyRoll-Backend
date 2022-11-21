@@ -1,5 +1,6 @@
 package com.system.roll.controller.auth;
 
+import com.system.roll.entity.vo.InfoVo;
 import com.system.roll.service.auth.AuthService;
 import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.Role;
@@ -37,15 +38,15 @@ public class AuthController {
      * 学生端微信小程序登录
      * */
     @PostMapping(value = "/login/student")
-    public StudentVo studentLogin(@RequestBody AuthService.LoginFormDto data, HttpServletResponse response){
+    public InfoVo studentLogin(@RequestBody AuthService.LoginFormDto data, HttpServletResponse response){
         /*获取信息*/
-        StudentVo studentVo = authService.studentLogin(data.getCode());
+        InfoVo infoVo = authService.studentLogin(data.getCode());
         /*生成token*/
-        String token = jwtSecurityHandler.getToken(studentVo.getId(),studentVo.getName(), Role.STUDENT.getCode(), studentVo.getDepartmentId());
+        String token = jwtSecurityHandler.getToken(infoVo.getId(),infoVo.getName(), Role.STUDENT.getCode(), infoVo.getDepartmentId());
         /*写入token*/
         response.setHeader("Authorization",token);
         /*返回信息*/
-        return studentVo;
+        return infoVo;
     }
 
     /**

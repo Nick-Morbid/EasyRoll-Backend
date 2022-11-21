@@ -1,20 +1,26 @@
 package com.system.roll.service.student.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.system.roll.context.security.SecurityContextHolder;
+import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.Role;
 import com.system.roll.entity.constant.impl.TeachingMode;
+import com.system.roll.entity.dto.InfoDto;
+import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.pojo.*;
+import com.system.roll.entity.vo.InfoVo;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
-import com.system.roll.entity.vo.student.StudentVo;
+import com.system.roll.handler.mapstruct.StudentConvertor;
 import com.system.roll.mapper.*;
-import com.system.roll.context.security.SecurityContextHolder;
+import com.system.roll.service.auth.WxApiService;
 import com.system.roll.service.student.StudentBaseService;
 import com.system.roll.utils.DateUtil;
 import com.system.roll.utils.EnumUtil;
 import com.system.roll.utils.IdUtil;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Date;
@@ -54,9 +60,20 @@ public class StudentBaseServiceImpl implements StudentBaseService {
     @Resource
     private EnumUtil enumUtil;
 
+    @Resource(name = "WxApiService")
+    private WxApiService wxApiService;
+
+    @Resource
+    private StudentConvertor studentConvertor;
+
     @Override
-    public StudentVo getStudentInfo(String openId) {
-        return null;
+    public InfoVo getStudentInfo(String openId) {
+        Student student = studentMapper.selectByOpenId(openId);
+        if (student==null) return null;
+        InfoVo infoVo = studentConvertor.studentToInfoVo(student);
+        String departmentName = departmentMapper.selectNameById(student.getDepartmentId());
+        String majorName = majorMapper.selectNameById(student.getMajorId());
+        return infoVo.setDepartmentName(departmentName).setMajorName(majorName).setCurrentWeek(dateUtil.getWeek(new Date(System.currentTimeMillis())));
     }
 
     @Override
@@ -112,30 +129,32 @@ public class StudentBaseServiceImpl implements StudentBaseService {
     }
 
     @Override
+    @Transactional
     public InfoVo register(InfoDto infoDto) {
-        Student student = new Student(idUtil.getId(),
-                infoDto.getName(),
-                infoDto.getDepartmentId(),
-                infoDto.getMajorId(),
-                infoDto.getGrade(),
-                infoDto.getClassNo(),
-                infoDto.getOpenId(),
-                enumUtil.getEnumByCode(Role.class,infoDto.getRole())
-                );
+        /*获取用户的openId*/
+        String openId = wxApiService.jsCode2session(infoDto.getCode()).getOpenId();
+
+        /*检查用户是否为空*/
+        if (studentMapper.selectByOpenId(openId)!=null) throw new ServiceException(ResultCode.USER_ALREADY_EXISTS);
+        /*构造pojo对象*/
+        Student student = studentConvertor.infoDtoToStudent(infoDto);
+        /*查询院系id*/
+        String departmentId = departmentMapper.selectIdByNameAndGrade(infoDto.getDepartmentName(),infoDto.getGrade());
+        /*查询专业id*/
+        String majorId = majorMapper.selectIdByName(infoDto.getMajorName());
+
+        student.setOpenId(openId)
+                .setRole(Role.STUDENT)
+                .setDepartmentId(departmentId)
+                .setMajorId(majorId);
 
         studentMapper.insert(student);
-        Department department = departmentMapper.selectById(infoDto.getDepartmentId());
-        Major major = majorMapper.selectById(infoDto.getMajorId());
+        /*组装视图对象*/
+        InfoVo infoVo = studentConvertor.studentToInfoVo(student);
+        infoVo.setDepartmentName(infoDto.getDepartmentName())
+                .setMajorName(infoDto.getMajorName())
+                .setCurrentWeek(dateUtil.getWeek(new Date(System.currentTimeMillis())));
 
-        return new InfoVo(
-                student.getId(),
-                student.getStudentName(),
-                student.getDepartmentId(),
-                department.getDepartmentName(),
-                student.getMajorId(),
-                major.getMajorName(),
-                student.getGrade(),
-                student.getClassNo(),
-                dateUtil.getWeek(new Date(System.currentTimeMillis())));
+        return infoVo;
     }
 }

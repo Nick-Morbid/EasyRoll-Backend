@@ -1,4 +1,4 @@
-package com.system.roll.entity.dto.supervisor;
+package com.system.roll.entity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

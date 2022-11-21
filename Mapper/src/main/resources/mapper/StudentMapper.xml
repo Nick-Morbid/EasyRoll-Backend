@@ -14,6 +14,9 @@
         <result property="openId" column="open_id" jdbcType="VARCHAR"/>
         <result property="role" column="role" jdbcType="INTEGER"/>
     </resultMap>
+    <update id="updateRole">
+        update student set role = #{role}  where id = #{id};
+    </update>
 
     <select id="selectListByCourseId" resultType="com.system.roll.entity.pojo.Student">
 

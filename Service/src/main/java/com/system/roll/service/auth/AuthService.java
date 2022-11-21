@@ -1,7 +1,7 @@
 package com.system.roll.service.auth;
 
+import com.system.roll.entity.vo.InfoVo;
 import com.system.roll.entity.vo.professor.ProfessorVo;
-import com.system.roll.entity.vo.student.StudentVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ public interface AuthService {
     /**
      * 学生端授权登录
      * */
-    StudentVo studentLogin(String code);
+    InfoVo studentLogin(String code);
 
     /**
      * 督导队员端授权登录
