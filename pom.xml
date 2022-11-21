@@ -25,10 +25,8 @@
         <module>Api</module>
         <module>Mapper</module>
         <module>Web</module>
-        <module>ProfessorService</module>
-        <module>SupervisorService</module>
-        <module>StudentService</module>
         <module>DataStore</module>
+        <module>Service</module>
     </modules>
     <dependencyManagement>
         <dependencies>

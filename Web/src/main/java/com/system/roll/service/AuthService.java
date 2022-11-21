@@ -1,6 +1,6 @@
 package com.system.roll.service;
 
-import com.system.roll.controller.AuthController;
+import com.system.roll.controller.auth.AuthController;
 import com.system.roll.entity.vo.professor.ProfessorVo;
 import com.system.roll.entity.vo.student.StudentVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;

@@ -7,7 +7,7 @@ import com.system.roll.exception.impl.ServiceException;
 import com.system.roll.properites.RabbitProperties;
 import com.system.roll.rabbit.utils.RabbitUtil;
 import com.system.roll.security.interceptor.LoginInterceptor;
-import com.system.roll.service.SupervisorRollService;
+import com.system.roll.supervisor.SupervisorRollService;
 import com.system.roll.utils.SpringContextUtil;
 import com.system.roll.webSocket.context.SocketContext;
 import com.system.roll.webSocket.context.SocketContextHandler;

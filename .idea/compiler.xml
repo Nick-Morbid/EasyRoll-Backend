@@ -11,11 +11,14 @@
         <module name="Applet" />
         <module name="Web" />
         <module name="DataStore" />
-        <module name="StudentService" />
+        <module name="Service" />
         <module name="Api" />
-        <module name="SupervisorService" />
-        <module name="ProfessorService" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ProfessorService" target="11" />
+      <module name="StudentService" target="11" />
+      <module name="SupervisorService" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -2,19 +2,18 @@ package com.system.roll.service.impl;
 
 import com.system.roll.constant.impl.ResultCode;
 import com.system.roll.constant.impl.Role;
-import com.system.roll.controller.AuthController;
+import com.system.roll.controller.auth.AuthController;
 import com.system.roll.entity.bo.JsCode2sessionBo;
 import com.system.roll.entity.pojo.Student;
 import com.system.roll.entity.vo.professor.ProfessorVo;
 import com.system.roll.entity.vo.student.StudentVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
 import com.system.roll.exception.impl.ServiceException;
+import com.system.roll.professor.ProfessorBaseService;
 import com.system.roll.service.AuthService;
-import com.system.roll.service.StudentInfoService;
-import com.system.roll.service.SupervisorInfoService;
 import com.system.roll.service.WxApiService;
-import com.system.roll.service.professor.ProfessorInfoService;
-import com.system.roll.utils.IdUtil;
+import com.system.roll.student.StudentBaseService;
+import com.system.roll.supervisor.SupervisorBaseService;
 import com.system.roll.webSocket.context.SocketContextHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,14 +27,12 @@ import java.io.IOException;
 public class AuthServiceImpl implements AuthService {
     @Resource(name = "WxApiService")
     private WxApiService wxApiService;
-    @Resource(name = "StudentInfoService")
-    private StudentInfoService studentInfoService;
-    @Resource(name = "SupervisorInfoService")
-    private SupervisorInfoService supervisorInfoService;
-    @Resource(name = "ProfessorInfoService")
-    private ProfessorInfoService professorInfoService;
-    @Resource
-    private IdUtil idUtil;
+    @Resource(name = "StudentBaseService")
+    private StudentBaseService studentBaseService;
+    @Resource(name = "SupervisorBaseService")
+    private SupervisorBaseService supervisorBaseService;
+    @Resource(name = "ProfessorBaseService")
+    private ProfessorBaseService professorBaseService;
 
     @Override
     public StudentVo studentLogin(String code) {
@@ -43,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
         JsCode2sessionBo jsCode2sessionBo = wxApiService.jsCode2session(code);
         String openId = jsCode2sessionBo.getOpenId();
         /*根据openId获取学生信息*/
-        StudentVo studentInfo = studentInfoService.getStudentInfo(openId);
+        StudentVo studentInfo = studentBaseService.getStudentInfo(openId);
         if (studentInfo==null) throw new ServiceException(ResultCode.NOT_REGISTER);
         return studentInfo;
     }

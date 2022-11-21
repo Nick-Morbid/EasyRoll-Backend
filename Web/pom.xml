@@ -18,17 +18,7 @@
         </dependency>
         <dependency>
             <groupId>org.example</groupId>
-            <artifactId>StudentService</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>SupervisorService</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>ProfessorService</artifactId>
+            <artifactId>Service</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
