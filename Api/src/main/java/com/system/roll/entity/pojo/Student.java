@@ -3,6 +3,8 @@ package com.system.roll.entity.pojo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.system.roll.entity.constant.impl.Role;
+import com.system.roll.handler.typehandler.AutoGenericEnumTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,5 +39,6 @@ public class Student {
     @TableField(value = "open_id")
     private String openId;
 
-    private Integer role;
+    @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
+    private Role role;
 }

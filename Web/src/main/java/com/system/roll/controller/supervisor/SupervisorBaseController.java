@@ -1,9 +1,11 @@
 package com.system.roll.controller.supervisor;
 
 import com.system.roll.entity.constant.impl.ResultCode;
+import com.system.roll.entity.dto.supervisor.InfoDto;
+import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
-import com.system.roll.entity.exception.impl.ServiceException;
+import com.system.roll.entity.vo.supervisor.InfoVo;
 import com.system.roll.service.supervisor.SupervisorBaseService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -82,7 +84,7 @@ public class SupervisorBaseController {
     }
 
     @PostMapping("/register")
-    public SupervisorBaseService.InfoVo register(SupervisorBaseService.InfoDto infoDto){
+    public InfoVo register(@RequestBody InfoDto infoDto){
         return supervisorBaseService.register(infoDto);
     }
 

@@ -3,6 +3,7 @@ package com.system.roll.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.system.roll.entity.pojo.Student;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ public interface StudentMapper extends BaseMapper<Student> {
      * 根据courseId查询出学生列表
      * */
     List<Student> selectListByCourseId(String courseId);
+
+    Student selectByOpenId(@Param(value = "openId")String openId);
 }

@@ -38,7 +38,7 @@ public class HttpRequestUtil {
         StringBuffer urlBuilder = new StringBuffer(url);
         /*构造完整路径，设置url路径参数*/
         final int[] count = {0};
-        params.keySet().forEach(key-> urlBuilder.append(count[0]++==0?'?':'&').append(key).append('=').append(params.get(key)));
+        if (params!=null) params.keySet().forEach(key-> urlBuilder.append(count[0]++==0?'?':'&').append(key).append('=').append(params.get(key)));
         url = urlBuilder.toString();
         log.info("httpGet:{}",url);
         /*创建HttpGet对象*/
@@ -48,11 +48,19 @@ public class HttpRequestUtil {
         /*封装响应结果*/
         StatusLine statusLine = response.getStatusLine();
         HttpEntity entity = response.getEntity();
-        Map<String,Object> data = null;
+        Object data = null;
         if (entity!=null){
-            String json = EntityUtils.toString(entity);
-            log.info("httpGet status:{},message:{},data:{}",statusLine.getStatusCode(),statusLine.getReasonPhrase(),json);
-            data = JsonUtil.toObject(json, HashMap.class);
+            String responseData = EntityUtils.toString(entity);
+            String header = response.getFirstHeader("Content-Type").toString();
+            System.out.println(header);
+            if (header.contains("text/html")){
+                data = responseData;
+            }else if (header.contains("application/json")||header.contains("text/plain")){
+                log.info("httpGet status:{},message:{},data:{}",statusLine.getStatusCode(),statusLine.getReasonPhrase(),responseData);
+                data = (Map<String,Object>)JsonUtil.toObject(responseData, HashMap.class);
+            }else {
+                log.warn("暂不支持该类型的返回结果");
+            }
         }
         /*释放资源*/
         client.close();

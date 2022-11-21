@@ -30,7 +30,7 @@ public class WxApiServiceImpl implements WxApiService {
     public JsCode2sessionBo jsCode2session(String code) {
         Result<?> result;
         try {
-             result = httpRequestUtil.httpGet(appletProperties.getJsCode2session(),
+            result = httpRequestUtil.httpGet(appletProperties.getJsCode2session(),
                     Map.of("appid", appletProperties.getAppId(),
                             "secret", appletProperties.getSecret(),
                             "grant_type", "authorization_code",

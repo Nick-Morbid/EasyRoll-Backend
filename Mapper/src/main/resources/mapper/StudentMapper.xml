@@ -14,5 +14,11 @@
         <result property="openId" column="open_id" jdbcType="VARCHAR"/>
         <result property="role" column="role" jdbcType="INTEGER"/>
     </resultMap>
-    <select id="selectListByCourseId" resultType="com.system.roll.entity.pojo.Student"></select>
+
+    <select id="selectListByCourseId" resultType="com.system.roll.entity.pojo.Student">
+
+    </select>
+    <select id="selectByOpenId" resultType="com.system.roll.entity.pojo.Student">
+        select * from student where open_id = #{openId};
+    </select>
 </mapper>
