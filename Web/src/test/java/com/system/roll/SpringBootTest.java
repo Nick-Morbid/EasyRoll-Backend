@@ -6,6 +6,8 @@ import com.system.roll.excel.annotation.Excel;
 import com.system.roll.excel.uitl.ExcelUtil;
 import com.system.roll.mapper.DepartmentMapper;
 import com.system.roll.mapper.MajorMapper;
+import com.system.roll.oss.OssHandler;
+import com.system.roll.oss.OssResource;
 import com.system.roll.utils.HttpRequestUtil;
 import com.system.roll.utils.IdUtil;
 import lombok.AllArgsConstructor;
@@ -18,7 +20,9 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -105,5 +109,19 @@ public class SpringBootTest {
     public static class Major{
         @Excel("专业名称")
         private String majorName;
+    }
+
+    @Resource
+    private OssHandler ossHandler;
+    @Test
+    public void testOssUpload(){
+        File file = new File(commonContext.getResourceDir() + "福州大学专业信息.xlsx");
+        String excel = ossHandler.postFile(file, "excel");
+        System.out.println(excel);
+    }
+    @Test
+    public void testOssDownload() throws IOException {
+        OssResource file = ossHandler.getFile("excel/53610122.xlsx");
+        ossHandler.postFile(file.getInputStream(),"excel/111111111.xlsx");
     }
 }

@@ -8,8 +8,6 @@
         <id property="id" column="id" jdbcType="VARCHAR"/>
         <result property="courseName" column="course_name" jdbcType="VARCHAR"/>
         <result property="enrollNum" column="enroll_num" jdbcType="INTEGER"/>
-        <result property="period" column="period" jdbcType="INTEGER"/>
-        <result property="total" column="total" jdbcType="INTEGER"/>
         <result property="startWeek" column="start_week" jdbcType="INTEGER"/>
         <result property="endWeek" column="end_week" jdbcType="INTEGER"/>
     </resultMap>

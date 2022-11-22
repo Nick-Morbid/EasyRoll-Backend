@@ -1,6 +1,8 @@
 package com.system.roll.service.professor;
 
+import com.system.roll.entity.dto.professor.InfoDto;
 import com.system.roll.entity.vo.course.CourseListVo;
+import com.system.roll.entity.vo.professor.InfoVo;
 import com.system.roll.entity.vo.professor.ProfessorVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,30 +46,5 @@ public interface ProfessorBaseService {
         private Integer endWeek;
         private Integer grade;
         private List<CourseArrangementDto> courseArrangements;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    class InfoVo{
-        private String id;
-        private String name;
-        private String departmentId;
-        private Integer role;
-        private Integer currentWeek;
-        private Integer grade;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    class InfoDto{
-        private String name;
-        private String departmentId;
-        private Integer role;
-        private String openId;
-        private Integer grade;
     }
 }

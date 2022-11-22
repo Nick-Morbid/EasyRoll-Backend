@@ -1,18 +1,11 @@
 package com.system.roll.service.supervisor;
 
-import com.system.roll.entity.dto.InfoDto;
+import com.system.roll.entity.dto.student.CourseDto;
+import com.system.roll.entity.dto.student.InfoDto;
+import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
-import com.system.roll.entity.vo.InfoVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 public interface SupervisorBaseService {
     /**
@@ -24,29 +17,12 @@ public interface SupervisorBaseService {
 
     CourseListVo getAllCourse();
 
-    CourseVo uploadCourse(CourseDTO courseDTO);
+    CourseVo uploadCourse(CourseDto courseDto);
 
-    void updateCourse(CourseDTO courseDTO);
+    CourseVo updateCourse(CourseDto courseDto);
 
     void deleteCourse(String courseId);
 
     InfoVo register(InfoDto infoDto);
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    @ToString
-    class CourseDTO{
-        private String id;
-        private String courseName;
-        private String professorName;
-        private Integer classroomNo;
-        private Integer startWeek;
-        private Integer endWeek;
-        private Integer grade;
-        private List<String> courseArrangements;
-        private MultipartFile studentList;
-    }
 
 }

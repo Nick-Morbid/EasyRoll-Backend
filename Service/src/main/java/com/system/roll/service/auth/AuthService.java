@@ -1,6 +1,6 @@
 package com.system.roll.service.auth;
 
-import com.system.roll.entity.vo.InfoVo;
+import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.entity.vo.professor.ProfessorVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
 import lombok.AllArgsConstructor;

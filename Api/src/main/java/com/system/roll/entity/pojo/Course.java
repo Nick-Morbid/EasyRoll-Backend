@@ -32,5 +32,4 @@ public class Course {
     @TableField(value = "end_week")
     private Integer endWeek;
 
-    private Integer total;
 }

@@ -1,9 +1,9 @@
 package com.system.roll.handler.mapstruct;
 
-import com.system.roll.entity.dto.InfoDto;
+import com.system.roll.entity.dto.student.InfoDto;
 import com.system.roll.entity.pojo.Student;
 import com.system.roll.entity.vo.student.StudentRollListVo;
-import com.system.roll.entity.vo.InfoVo;
+import com.system.roll.entity.vo.student.InfoVo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

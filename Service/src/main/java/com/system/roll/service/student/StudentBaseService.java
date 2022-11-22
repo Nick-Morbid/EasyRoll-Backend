@@ -1,7 +1,7 @@
 package com.system.roll.service.student;
 
-import com.system.roll.entity.dto.InfoDto;
-import com.system.roll.entity.vo.InfoVo;
+import com.system.roll.entity.dto.student.InfoDto;
+import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.entity.vo.course.CourseListVo;
 
 public interface StudentBaseService {

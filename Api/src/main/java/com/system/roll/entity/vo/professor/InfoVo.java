@@ -1,4 +1,4 @@
-package com.system.roll.entity.dto;
+package com.system.roll.entity.vo.professor;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,12 +9,11 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class InfoDto{
+public class InfoVo{
     private String id;
     private String name;
+    private String departmentId;
     private String departmentName;
-    private String majorName;
-    private String code;
-    private Integer grade;
-    private Integer classNo;
+    private Integer role;
+    private Integer currentWeek;
 }

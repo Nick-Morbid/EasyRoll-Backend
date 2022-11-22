@@ -29,6 +29,4 @@ public class Professor {
     private String departmentId;
 
     private Role role;
-
-    private Integer grade;
 }

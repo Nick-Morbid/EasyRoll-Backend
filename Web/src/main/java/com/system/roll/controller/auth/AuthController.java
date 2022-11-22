@@ -1,6 +1,6 @@
 package com.system.roll.controller.auth;
 
-import com.system.roll.entity.vo.InfoVo;
+import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.service.auth.AuthService;
 import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.Role;

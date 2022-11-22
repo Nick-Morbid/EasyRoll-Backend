@@ -1,18 +1,16 @@
 package com.system.roll.controller.supervisor;
 
-import com.system.roll.entity.constant.impl.ResultCode;
-import com.system.roll.entity.dto.InfoDto;
-import com.system.roll.entity.exception.impl.ServiceException;
+import com.system.roll.entity.dto.student.CourseDto;
+import com.system.roll.entity.dto.student.InfoDto;
+import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
-import com.system.roll.entity.vo.InfoVo;
 import com.system.roll.service.supervisor.SupervisorBaseService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/supervisor/base")
@@ -31,9 +29,8 @@ public class SupervisorBaseController {
             @RequestParam(value = "grade") Integer grade,
             @RequestParam(value = "courseArrangements") List<String> courseArrangements,
             @RequestPart(value = "studentList") MultipartFile studentList
-
     ){
-        SupervisorBaseService.CourseDTO courseDTO = new SupervisorBaseService.CourseDTO()
+        CourseDto courseDto = new CourseDto()
                 .setCourseName(courseName)
                 .setProfessorName(professorName)
                 .setClassroomNo(classroomNo)
@@ -42,12 +39,11 @@ public class SupervisorBaseController {
                 .setGrade(grade)
                 .setCourseArrangements(courseArrangements)
                 .setStudentList(studentList);
-
-        return supervisorBaseService.uploadCourse(courseDTO);
+        return supervisorBaseService.uploadCourse(courseDto);
     }
 
     @PutMapping("/course/update")
-    public void updateCourse(
+    public CourseVo updateCourse(
             @RequestParam(value = "courseId") String courseId,
             @RequestParam(value = "courseName") String courseName,
             @RequestParam(value = "professorName") String professorName,
@@ -56,9 +52,9 @@ public class SupervisorBaseController {
             @RequestParam(value = "endWeek") Integer endWeek,
             @RequestParam(value = "grade") Integer grade,
             @RequestParam(value = "courseArrangements") List<String> courseArrangements,
-            @RequestPart(value = "studentList") MultipartFile studentList
+            @RequestPart(value = "studentList",required = false) MultipartFile studentList
     ){
-        SupervisorBaseService.CourseDTO courseDTO = new SupervisorBaseService.CourseDTO()
+        CourseDto courseDTO = new CourseDto()
                 .setId(courseId)
                 .setCourseName(courseName)
                 .setProfessorName(professorName)
@@ -68,13 +64,11 @@ public class SupervisorBaseController {
                 .setGrade(grade)
                 .setCourseArrangements(courseArrangements)
                 .setStudentList(studentList);
-        supervisorBaseService.updateCourse(courseDTO);
+        return supervisorBaseService.updateCourse(courseDTO);
     }
 
     @DeleteMapping("/course/delete")
-    public void deleteCourse(@RequestBody Map<String,Object> data){
-        if(!data.containsKey("courseId")) throw new ServiceException(ResultCode.BODY_NOT_MATCH);
-        String courseId = String.valueOf(data.get("courseId"));
+    public void deleteCourse(@RequestParam(value = "courseId")String courseId){
         supervisorBaseService.deleteCourse(courseId);
     }
 

@@ -21,7 +21,7 @@ public class ConfigAdapter implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
                 //.addPathPatterns("/**")
-                .excludePathPatterns("/auth/**","/supervisor/roll/call/**")
-                .excludePathPatterns("/**");
+                .excludePathPatterns("/auth/**","/supervisor/roll/call/**");
+//                .excludePathPatterns("/**");
     }
 }

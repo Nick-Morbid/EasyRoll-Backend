@@ -10,5 +10,8 @@
         <result property="professorName" column="professor_name" jdbcType="VARCHAR"/>
         <result property="courseId" column="course_id" jdbcType="VARCHAR"/>
     </resultMap>
+    <update id="updateProfessorId">
+        update delivery set professor_id = #{id2}  where professor_id = #{id1};
+    </update>
 
 </mapper>

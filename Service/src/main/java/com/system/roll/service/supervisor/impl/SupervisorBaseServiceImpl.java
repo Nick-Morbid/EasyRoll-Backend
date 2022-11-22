@@ -6,24 +6,31 @@ import com.system.roll.entity.constant.impl.Period;
 import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.Role;
 import com.system.roll.entity.constant.impl.TeachingMode;
-import com.system.roll.entity.dto.InfoDto;
+import com.system.roll.entity.dto.student.CourseDto;
+import com.system.roll.entity.dto.student.InfoDto;
 import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.pojo.*;
+import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
-import com.system.roll.entity.vo.InfoVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
 import com.system.roll.excel.annotation.Excel;
 import com.system.roll.excel.uitl.ExcelUtil;
 import com.system.roll.handler.mapstruct.StudentConvertor;
 import com.system.roll.handler.mapstruct.SupervisorConvertor;
 import com.system.roll.mapper.*;
+import com.system.roll.oss.OssHandler;
+import com.system.roll.redis.StudentRedis;
 import com.system.roll.service.auth.WxApiService;
 import com.system.roll.service.supervisor.SupervisorBaseService;
 import com.system.roll.utils.DateUtil;
 import com.system.roll.utils.EnumUtil;
+import com.system.roll.utils.FileUtil;
 import com.system.roll.utils.IdUtil;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,11 +39,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component(value = "SupervisorBaseService")
@@ -84,12 +89,21 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
     @Resource
     private SupervisorConvertor supervisorConvertor;
 
+    @Resource(name = "StudentRedis")
+    private StudentRedis studentRedis;
+
 
     @Resource(name = "WxApiService")
     private WxApiService wxApiService;
 
     @Resource
+    private OssHandler ossHandler;
+
+    @Resource
     private StudentConvertor studentConvertor;
+
+    @Resource
+    private FileUtil fileUtil;
 
     @Override
     public SupervisorVo getSupervisorInfo(String openId) {
@@ -167,103 +181,129 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
     @Override
     public void deleteCourse(String courseId) {
+        if (courseMapper.selectById(courseId)==null) throw new ServiceException(ResultCode.RESOURCE_NOT_FOUND);
         courseMapper.deleteById(courseId);
         Map<String, Object> map = new HashMap<>();
         map.put("course_id",courseId);
         courseArrangementMapper.deleteByMap(map);
         deliveryMapper.deleteByMap(map);
-        rollRelationMapper.deleteByMap(map);
+        LambdaQueryWrapper<CourseRelation> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(CourseRelation::getCourseId,courseId);
+        CourseRelation courseRelation = courseRelationMapper.selectOne(wrapper);
+        ossHandler.deleteFile(courseRelation.getAttachment());
+        courseRelationMapper.deleteByMap(map);
     }
 
     @Override
-    public CourseVo uploadCourse(CourseDTO courseDTO) {
+    @Transactional
+    public CourseVo uploadCourse(CourseDto courseDto) {
+        /*获取督导人员的id*/
         String supervisorId = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
         //String supervisorId = "1";
-        List<String> courseArrangements = courseDTO.getCourseArrangements();
+        /*参数检查*/
+        List<String> courseArrangements = courseDto.getCourseArrangements();
         if(courseArrangements.isEmpty()){
-            throw new ServiceException(ResultCode.METHOD_NOT_MATCH);
+            throw new ServiceException(ResultCode.PARAM_NOT_MATCH);
         }
+        /*导入学生信息*/
         List<StudentInfo> studentInfos;
         try {
-            MultipartFile studentList = courseDTO.getStudentList();
+            MultipartFile studentList = courseDto.getStudentList();
             String excelName = studentList.getOriginalFilename();
-            String suffix = excelName.substring(excelName.lastIndexOf("."));
+            String suffix = Objects.requireNonNull(excelName).substring(excelName.lastIndexOf("."));
             ExcelUtil.ExcelType excelType = enumUtil.getEnumByDescription(ExcelUtil.ExcelType.class, suffix);
             studentInfos = excelUtil.importExcel(StudentInfo.class, studentList.getInputStream(), excelType);
         } catch (IOException e) {
             throw new ServiceException(ResultCode.FAILED_TO_IMPORT_EXCEL);
         }
-        String courseId = org.springframework.util.StringUtils.hasText(courseDTO.getId())?courseDTO.getId():idUtil.getId();
+        /*分配课程id*/
+        String courseId = idUtil.getId();
+//        String courseId = org.springframework.util.StringUtils.hasText(courseDto.getId())?courseDto.getId():idUtil.getId();
 
+        /*组装pojo对象*/
         Course course = new Course();
         course.setId(courseId)
-                .setCourseName(courseDTO.getCourseName())
-                .setStartWeek(courseDTO.getStartWeek())
-                .setEndWeek(courseDTO.getEndWeek())
+                .setCourseName(courseDto.getCourseName())
+                .setStartWeek(courseDto.getStartWeek())
+                .setEndWeek(courseDto.getEndWeek())
                 .setEnrollNum(studentInfos.size());
         // 插入课程
         courseMapper.insert(course);
 
-        // 插入courseRelation
-        studentInfos.forEach(info->{
-            CourseRelation courseRelation = new CourseRelation()
-                    .setId(idUtil.getId())
-                    .setStudentId(info.getId())
-                    .setCourseId(course.getId());
+        /*保存点名表单*/
+        if (courseDto.getStudentList()!=null){
+            String attachment = ossHandler.postFile(courseDto.getStudentList(), "excel", courseId);
+            CourseRelation courseRelation = new CourseRelation().setId(idUtil.getId()).setCourseId(courseId).setAttachment(attachment);
             courseRelationMapper.insert(courseRelation);
-        });
-
-        CourseVo courseVo = new CourseVo();
-        courseVo.setId(course.getId()).setName(course.getCourseName());
-
+        }
         // 插入点名关系表
-        rollRelationMapper.insert(new RollRelation(idUtil.getId(), supervisorId,course.getId()));
+        rollRelationMapper.insert(new RollRelation()
+                .setId(idUtil.getId())
+                .setSupervisorId(supervisorId)
+                .setCourseId(course.getId()));
 
+        /*导入授课关系*/
         LambdaQueryWrapper<Professor> pqw = new LambdaQueryWrapper<>();
+        pqw.clear();
+        String[] professorNames = courseDto.getProfessorName().split(",");
+        for(String professorName: professorNames){
+            pqw.eq(Professor::getProfessorName,professorName);
+            Professor professor = professorMapper.selectOne(pqw);
+            /*若暂无教授的记录，则系统临时分配一条记录*/
+            if(ObjectUtils.isEmpty(professor)){
+                professor = new Professor();
+                professor.setId(idUtil.getId())
+                        .setProfessorName(professorName)
+                        .setRole(Role.PROFESSOR);
+                professorMapper.insert(professor);
+            }
+            // 插入授课情况
+            Delivery delivery = new Delivery();
+            delivery.setId(idUtil.getId())
+                    .setCourseId(courseId)
+                    .setProfessorName(professorName)
+                    .setProfessorId(professor.getId());
+            deliveryMapper.insert(delivery);
+        }
+
+        /*导入课程安排*/
         for (String courseArrangement:courseArrangements){
             // 拆分字符串
             String[] split = courseArrangement.split(" ");
-
-            pqw.clear();
-
-            String[] professorNames = courseDTO.getProfessorName().split(",");
-            for(String professorName: professorNames){
-                pqw.eq(Professor::getProfessorName,professorName);
-                Professor professor = professorMapper.selectOne(pqw);
-                if(ObjectUtils.isEmpty(professor)){
-                    professor = new Professor();
-                    professor.setId(idUtil.getId())
-                            .setProfessorName(professorName);
-                    professorMapper.insert(professor);
-                    // 插入授课情况
-                    Delivery delivery = new Delivery();
-                    delivery.setId(idUtil.getId())
-                            .setCourseId(course.getId())
-                            .setProfessorName(professorName)
-                            .setProfessorId(professor.getId());
-                    deliveryMapper.insert(delivery);
-                }
-            }
-
             // 插入课程安排表
             CourseArrangement arrangement = new CourseArrangement();
             arrangement.setId(idUtil.getId())
                     .setCourseId(course.getId())
-                    .setClassroomNo(courseDTO.getClassroomNo())
+                    .setClassroomNo(courseDto.getClassroomNo())
                     .setWeekDay(Integer.parseInt(split[0]))
                     .setPeriod(enumUtil.getEnumByCode(Period.class,Integer.parseInt(split[1])))
                     .setMode(enumUtil.getEnumByCode(TeachingMode.class,Integer.parseInt(split[2])));
-
             courseArrangementMapper.insert(arrangement);
         }
-
+        /*封装返回结果*/
+        CourseVo courseVo = new CourseVo();
+        courseVo.setId(course.getId()).setName(course.getCourseName());
         return courseVo;
     }
 
     @Override
-    public void updateCourse(CourseDTO courseDTO) {
-        deleteCourse(courseDTO.getId());
-        uploadCourse(courseDTO);
+    public CourseVo updateCourse(CourseDto courseDto) {
+        String courseId = courseDto.getId();
+        if (courseMapper.selectById(courseId)==null) throw new ServiceException(ResultCode.RESOURCE_NOT_FOUND);
+        if (courseDto.getStudentList()==null){
+            try {
+                LambdaQueryWrapper<CourseRelation> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(CourseRelation::getCourseId,courseId);
+                CourseRelation courseRelation = courseRelationMapper.selectOne(wrapper);
+                InputStream inputStream = ossHandler.getFile(courseRelation.getAttachment()).getInputStream();
+                MultipartFile multipartFile = fileUtil.getMultipartFile(inputStream, courseRelation.getAttachment());
+                courseDto.setStudentList(multipartFile);
+            } catch (IOException e) {
+                throw new ServiceException(ResultCode.RESOURCE_NOT_FOUND);
+            }
+        }
+        deleteCourse(courseId);
+        return uploadCourse(courseDto);
     }
 
     @Override
@@ -297,6 +337,9 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
     }
 
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
     public static class StudentInfo{
         @Excel(value = "学号")
         private String id;

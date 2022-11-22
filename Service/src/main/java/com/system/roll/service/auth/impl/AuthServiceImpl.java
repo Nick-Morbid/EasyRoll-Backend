@@ -4,7 +4,7 @@ import com.system.roll.entity.bo.JsCode2sessionBo;
 import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.Role;
 import com.system.roll.entity.exception.impl.ServiceException;
-import com.system.roll.entity.vo.InfoVo;
+import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.entity.vo.professor.ProfessorVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
 import com.system.roll.service.auth.AuthService;

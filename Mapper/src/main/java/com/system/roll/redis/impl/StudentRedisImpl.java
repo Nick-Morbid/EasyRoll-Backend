@@ -24,6 +24,16 @@ public class StudentRedisImpl implements StudentRedis {
         return stringToArray(String.valueOf(res));
     }
 
+    @Override
+    public void saveName(String studentId, String studentName) {
+        redisUtil.hset(StudentName(),studentId,studentName);
+    }
+
+    @Override
+    public String getName(String studentId) {
+        return (String) redisUtil.hget(StudentName(),studentId);
+    }
+
     private String arrayToString(String [] array){
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < array.length; i++) {

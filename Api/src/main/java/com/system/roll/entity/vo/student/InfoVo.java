@@ -1,4 +1,4 @@
-package com.system.roll.entity.vo;
+package com.system.roll.entity.vo.student;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

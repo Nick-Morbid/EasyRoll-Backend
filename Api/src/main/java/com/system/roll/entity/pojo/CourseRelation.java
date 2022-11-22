@@ -19,9 +19,9 @@ public class CourseRelation {
     @TableId
     private String id;
 
-    @TableField(value = "student_id")
-    private String studentId;
-
     @TableField(value = "course_id")
     private String courseId;
+
+    @TableField(value = "attachment")
+    private String attachment;
 }
