@@ -1,13 +1,16 @@
 package com.system.roll;
 
 import com.system.roll.context.common.CommonContext;
+import com.system.roll.entity.pojo.Course;
 import com.system.roll.entity.vo.Result;
 import com.system.roll.excel.annotation.Excel;
 import com.system.roll.excel.uitl.ExcelUtil;
+import com.system.roll.mapper.CourseMapper;
 import com.system.roll.mapper.DepartmentMapper;
 import com.system.roll.mapper.MajorMapper;
 import com.system.roll.oss.OssHandler;
 import com.system.roll.oss.OssResource;
+import com.system.roll.redis.CourseRedis;
 import com.system.roll.utils.HttpRequestUtil;
 import com.system.roll.utils.IdUtil;
 import lombok.AllArgsConstructor;
@@ -123,5 +126,14 @@ public class SpringBootTest {
     public void testOssDownload() throws IOException {
         OssResource file = ossHandler.getFile("excel/53610122.xlsx");
         ossHandler.postFile(file.getInputStream(),"excel/111111111.xlsx");
+    }
+    @Resource
+    private CourseRedis courseRedis;
+    @Resource
+    private CourseMapper courseMapper;
+    @Test
+    public void insertCourseName(){
+        List<Course> courses = courseMapper.selectList(null);
+        courses.forEach(course -> courseRedis.saveCourseName(course.getId(),course.getCourseName()));
     }
 }

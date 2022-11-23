@@ -45,7 +45,7 @@ public class DataSocketHandler implements SocketHandler {
         LoginInterceptor loginInterceptor = SpringContextUtil.getBean("LoginInterceptor");
         try {loginInterceptor.preHandle(new CustomHttpServletRequest().setHeader("Authorization",token).setSession(session),new Response(),token);}
         catch (ServiceException e){
-            session.getBasicRemote().sendObject(Result.error(e));
+            session.getBasicRemote().sendText(JsonUtil.toJson(Result.error(e)));
             session.close();
         }
         /*将自己注册到context中*/

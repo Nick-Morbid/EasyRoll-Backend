@@ -5,6 +5,7 @@ import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.Role;
 import com.system.roll.entity.dto.professor.InfoDto;
 import com.system.roll.entity.exception.impl.ServiceException;
+import com.system.roll.entity.pojo.Delivery;
 import com.system.roll.entity.pojo.Professor;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.professor.InfoVo;
@@ -13,6 +14,7 @@ import com.system.roll.handler.mapstruct.ProfessorConvertor;
 import com.system.roll.mapper.DeliveryMapper;
 import com.system.roll.mapper.DepartmentMapper;
 import com.system.roll.mapper.ProfessorMapper;
+import com.system.roll.redis.CourseRedis;
 import com.system.roll.service.auth.WxApiService;
 import com.system.roll.service.professor.ProfessorBaseService;
 import com.system.roll.utils.DateUtil;
@@ -22,6 +24,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.sql.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component(value = "ProfessorBaseService")
 public class ProfessorBaseServiceImpl implements ProfessorBaseService {
@@ -44,9 +49,26 @@ public class ProfessorBaseServiceImpl implements ProfessorBaseService {
     @Resource
     private ProfessorConvertor professorConvertor;
 
+    @Resource(name = "CourseRedis")
+    private CourseRedis courseRedis;
+
     @Override
     public ProfessorVo getProfessorInfo(String openId) {
-        return null;
+        LambdaQueryWrapper<Professor> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Professor::getOpenId,openId);
+        Professor professor = professorMapper.selectOne(wrapper);
+        if (professor==null) throw new ServiceException(ResultCode.NOT_REGISTER);
+        ProfessorVo professorVo = professorConvertor
+                .professorToProfessorVo(professor)
+                .setDepartmentName(departmentMapper.selectNameById(professor.getDepartmentId()))
+                .setWeekDay(dateUtil.getWeekDay(new Date(System.currentTimeMillis())));
+        /*教授需要返回其有教学的课程信息*/
+        if (professor.getRole().equals(Role.PROFESSOR)){
+            List<Delivery> deliveries = deliveryMapper.selectByMap(Map.of("professor_id", professor.getId()));
+            List<ProfessorVo.CourseVo> courseVos = deliveries.stream().map(delivery -> new ProfessorVo.CourseVo().setId(delivery.getCourseId()).setName(courseRedis.getCourseName(delivery.getCourseId()))).collect(Collectors.toList());
+            professorVo.setCourses(courseVos);
+        }
+        return professorVo;
     }
 
     @Override

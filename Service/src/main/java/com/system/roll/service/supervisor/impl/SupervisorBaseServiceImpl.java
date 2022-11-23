@@ -20,6 +20,7 @@ import com.system.roll.handler.mapstruct.StudentConvertor;
 import com.system.roll.handler.mapstruct.SupervisorConvertor;
 import com.system.roll.mapper.*;
 import com.system.roll.oss.OssHandler;
+import com.system.roll.redis.CourseRedis;
 import com.system.roll.redis.StudentRedis;
 import com.system.roll.service.auth.WxApiService;
 import com.system.roll.service.supervisor.SupervisorBaseService;
@@ -105,6 +106,9 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
     @Resource
     private FileUtil fileUtil;
 
+    @Resource(name = "CourseRedis")
+    private CourseRedis courseRedis;
+
     @Override
     public SupervisorVo getSupervisorInfo(String openId) {
         /*先到学生表中查询*/
@@ -184,6 +188,7 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
     public void deleteCourse(String courseId) {
         if (courseMapper.selectById(courseId)==null) throw new ServiceException(ResultCode.RESOURCE_NOT_FOUND);
         courseMapper.deleteById(courseId);
+        courseRedis.deleteCourseName(courseId);
         Map<String, Object> map = new HashMap<>();
         map.put("course_id",courseId);
         courseArrangementMapper.deleteByMap(map);
@@ -231,6 +236,8 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
                 .setEnrollNum(studentInfos.size());
         // 插入课程
         courseMapper.insert(course);
+        /*记录courseId和courseName的映射*/
+        courseRedis.saveCourseName(course.getId(),course.getCourseName());
 
         /*保存点名表单*/
         if (courseDto.getStudentList()!=null){
@@ -328,6 +335,7 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
                 .setDepartmentId(departmentId)
                 .setMajorId(majorId);
 
+        studentRedis.saveName(student.getId(),student.getStudentName());
         studentMapper.insert(student);
         /*组装视图对象*/
         InfoVo infoVo = studentConvertor.studentToInfoVo(student);

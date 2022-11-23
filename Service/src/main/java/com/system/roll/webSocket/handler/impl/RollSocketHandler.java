@@ -8,6 +8,7 @@ import com.system.roll.entity.properites.RabbitProperties;
 import com.system.roll.rabbit.utils.RabbitUtil;
 import com.system.roll.security.interceptor.LoginInterceptor;
 import com.system.roll.service.supervisor.SupervisorRollService;
+import com.system.roll.utils.JsonUtil;
 import com.system.roll.utils.SpringContextUtil;
 import com.system.roll.webSocket.context.SocketContext;
 import com.system.roll.webSocket.context.SocketContextHandler;
@@ -53,7 +54,7 @@ public class RollSocketHandler implements SocketHandler {
         LoginInterceptor loginInterceptor = SpringContextUtil.getBean("LoginInterceptor");
         try {loginInterceptor.preHandle(new CustomHttpServletRequest().setHeader("Authorization",token).setSession(session),new Response(),token);}
         catch (ServiceException e){
-            session.getBasicRemote().sendObject(Result.error(e));
+            session.getBasicRemote().sendText(JsonUtil.toJson(Result.error(e)));
             session.close();
         }
         /*手动注入组件*/

@@ -9,6 +9,7 @@ import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.handler.mapstruct.StudentConvertor;
 import com.system.roll.mapper.*;
+import com.system.roll.redis.StudentRedis;
 import com.system.roll.service.auth.WxApiService;
 import com.system.roll.service.student.StudentBaseService;
 import com.system.roll.utils.DateUtil;
@@ -57,6 +58,9 @@ public class StudentBaseServiceImpl implements StudentBaseService {
 
     @Resource
     private StudentConvertor studentConvertor;
+
+    @Resource
+    private StudentRedis studentRedis;
 
     @Override
     public InfoVo getStudentInfo(String openId) {
@@ -141,6 +145,7 @@ public class StudentBaseServiceImpl implements StudentBaseService {
                 .setDepartmentId(departmentId)
                 .setMajorId(majorId);
 
+        studentRedis.saveName(student.getId(),student.getStudentName());
         studentMapper.insert(student);
         /*组装视图对象*/
         InfoVo infoVo = studentConvertor.studentToInfoVo(student);
