@@ -24,14 +24,12 @@ import com.system.roll.redis.CourseRedis;
 import com.system.roll.redis.StudentRedis;
 import com.system.roll.service.auth.WxApiService;
 import com.system.roll.service.supervisor.SupervisorBaseService;
-import com.system.roll.utils.DateUtil;
-import com.system.roll.utils.EnumUtil;
-import com.system.roll.utils.FileUtil;
-import com.system.roll.utils.IdUtil;
+import com.system.roll.utils.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +43,7 @@ import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component(value = "SupervisorBaseService")
 public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
@@ -108,6 +107,9 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
     @Resource(name = "CourseRedis")
     private CourseRedis courseRedis;
+
+    @Resource
+    private PinyinUtil pinyinUtil;
 
     @Override
     public SupervisorVo getSupervisorInfo(String openId) {
@@ -187,18 +189,16 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
     @Override
     public void deleteCourse(String courseId) {
         if (courseMapper.selectById(courseId)==null) throw new ServiceException(ResultCode.RESOURCE_NOT_FOUND);
-        courseMapper.deleteById(courseId);
         courseRedis.deleteCourseName(courseId);
         Map<String, Object> map = new HashMap<>();
         map.put("course_id",courseId);
         courseArrangementMapper.deleteByMap(map);
         deliveryMapper.deleteByMap(map);
-        LambdaQueryWrapper<CourseRelation> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(CourseRelation::getCourseId,courseId);
-        CourseRelation courseRelation = courseRelationMapper.selectOne(wrapper);
-        ossHandler.deleteFile(courseRelation.getAttachment());
+        Course course = courseMapper.selectById(courseId);
+        ossHandler.deleteFile(course.getAttachment());
         courseRelationMapper.deleteByMap(map);
         rollRelationMapper.deleteByMap(map);
+        courseMapper.deleteById(courseId);
     }
 
     @Override
@@ -223,14 +223,20 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         } catch (IOException e) {
             throw new ServiceException(ResultCode.FAILED_TO_IMPORT_EXCEL);
         }
+
         /*分配课程id*/
         String courseId = idUtil.getId();
 //        String courseId = org.springframework.util.StringUtils.hasText(courseDto.getId())?courseDto.getId():idUtil.getId();
+        Course course = new Course().setId(courseId);
+
+        /*保存点名表单*/
+        if (courseDto.getStudentList()!=null){
+            String attachment = ossHandler.postFile(courseDto.getStudentList(), "excel", courseId);
+            course.setAttachment(attachment);
+        }
 
         /*组装pojo对象*/
-        Course course = new Course();
-        course.setId(courseId)
-                .setCourseName(courseDto.getCourseName())
+        course.setCourseName(courseDto.getCourseName())
                 .setStartWeek(courseDto.getStartWeek())
                 .setEndWeek(courseDto.getEndWeek())
                 .setEnrollNum(studentInfos.size());
@@ -239,12 +245,21 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         /*记录courseId和courseName的映射*/
         courseRedis.saveCourseName(course.getId(),course.getCourseName());
 
-        /*保存点名表单*/
-        if (courseDto.getStudentList()!=null){
-            String attachment = ossHandler.postFile(courseDto.getStudentList(), "excel", courseId);
-            CourseRelation courseRelation = new CourseRelation().setId(idUtil.getId()).setCourseId(courseId).setAttachment(attachment);
-            courseRelationMapper.insert(courseRelation);
+        /*遍历学生信息，插入学生关系表*/
+        for (StudentInfo studentInfo : studentInfos){
+            /*根据学生姓名生成拼音，并进行保存*/
+            if (studentInfo.getId()==null||studentInfo.getId().equals("")||studentInfo.getName()==null||studentInfo.getName().equals("")){
+                log.warn("有异常的学生关系项：{}",studentInfo.toString());
+                continue;
+            }
+            /*将学号补上前导0*/
+            studentInfo.setId(String.format("%9s",studentInfo.getId()));
+            System.out.println(studentInfo);
+            studentRedis.savePinYin(studentInfo.getId(), pinyinUtil.toPinyin(studentInfo.getName()));
+            /*插入学生关系表*/
+            courseRelationMapper.insert(new CourseRelation().setId(idUtil.getId()).setCourseId(courseId).setStudentId(studentInfo.getId()));
         }
+
         // 插入点名关系表
         rollRelationMapper.insert(new RollRelation()
                 .setId(idUtil.getId())
@@ -301,11 +316,9 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         if (courseMapper.selectById(courseId)==null) throw new ServiceException(ResultCode.RESOURCE_NOT_FOUND);
         if (courseDto.getStudentList()==null){
             try {
-                LambdaQueryWrapper<CourseRelation> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(CourseRelation::getCourseId,courseId);
-                CourseRelation courseRelation = courseRelationMapper.selectOne(wrapper);
-                InputStream inputStream = ossHandler.getFile(courseRelation.getAttachment()).getInputStream();
-                MultipartFile multipartFile = fileUtil.getMultipartFile(inputStream, courseRelation.getAttachment());
+                Course course = courseMapper.selectById(courseId);
+                InputStream inputStream = ossHandler.getFile(course.getAttachment()).getInputStream();
+                MultipartFile multipartFile = fileUtil.getMultipartFile(inputStream, course.getAttachment());
                 courseDto.setStudentList(multipartFile);
             } catch (IOException e) {
                 throw new ServiceException(ResultCode.RESOURCE_NOT_FOUND);

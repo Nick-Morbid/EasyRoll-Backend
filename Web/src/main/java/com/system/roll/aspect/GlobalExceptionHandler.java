@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
     /*
     处理其他异常
      */
-    @ExceptionHandler(value = Exception.class)
+//    @ExceptionHandler(value = Exception.class)
     public Result<?> ExceptionHandler(Exception e){
         System.out.println("未知异常！原因是："+e);
         return Result.error(ResultCode.UNKNOWN);

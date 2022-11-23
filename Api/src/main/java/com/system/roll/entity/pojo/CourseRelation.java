@@ -22,6 +22,6 @@ public class CourseRelation {
     @TableField(value = "course_id")
     private String courseId;
 
-    @TableField(value = "attachment")
-    private String attachment;
+    @TableField(value = "student_id")
+    private String studentId;
 }

@@ -31,12 +31,10 @@ public class PinyinUtil {
         for (char aChar : chars) {
                 try {
                     if (String.valueOf(aChar).matches("[\u4e00-\u9fa5]+")){
-                        /*没使用中文则不转换*/
-                        list.add(PinyinHelper.toHanyuPinyinStringArray(aChar,format)[0]);
-                    }else {
                         /*有使用中文则进行转换*/
                         list.add(PinyinHelper.toHanyuPinyinStringArray(aChar,format)[0]);
                     }
+                    /*没使用中文则不转换*/
                 } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
                     badHanyuPinyinOutputFormatCombination.printStackTrace();
                 }

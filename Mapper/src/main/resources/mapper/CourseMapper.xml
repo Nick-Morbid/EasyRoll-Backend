@@ -10,6 +10,7 @@
         <result property="enrollNum" column="enroll_num" jdbcType="INTEGER"/>
         <result property="startWeek" column="start_week" jdbcType="INTEGER"/>
         <result property="endWeek" column="end_week" jdbcType="INTEGER"/>
+        <result property="attachment" column="attachment" jdbcType="VARCHAR"/>
     </resultMap>
 
 </mapper>
