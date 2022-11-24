@@ -150,9 +150,10 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
     @Override
     public TotalRollStatisticVo getStatistic(Long courseId, Integer sortRole) {
         TotalRollStatisticVo totalRollStatisticVo = new TotalRollStatisticVo();
-        Course course = courseMapper.selectById(courseId);
-        Integer enrollNum = course.getEnrollNum();
-        totalRollStatisticVo.setEnrollNum(enrollNum);
+
+        LambdaQueryWrapper<RollStatistics> rsqw = new LambdaQueryWrapper<>();
+        rsqw.eq(RollStatistics::getCourseId,courseId);
+
 
 
         return null;
