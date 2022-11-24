@@ -36,7 +36,6 @@ public class DescriberAspect {
     @Around(value = "@annotation(com.system.roll.describer.annotation.Operation)")
     public Object saveOperationLog(ProceedingJoinPoint pjp) throws Throwable {
         /*用户的信息*/
-        System.out.println("3:"+Thread.currentThread().getId());
         String id = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
         String name = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "name");
         Role role = SecurityContextHolder.getContext().getAuthorization().getInfo(Role.class, "role");

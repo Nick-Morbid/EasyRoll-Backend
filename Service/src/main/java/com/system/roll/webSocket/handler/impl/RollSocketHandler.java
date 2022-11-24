@@ -90,7 +90,6 @@ public class RollSocketHandler implements SocketHandler {
         if (Objects.equals(this.count, this.enrollNum)){
             /*更新环境类的映射（在需要使用到环境类的线程中，需要更新一下环境类的映射）*/
             SecurityContextHolder.setContext(securityContext);
-            System.out.println("1:"+Thread.currentThread().getId());
             /*调用业务方法，获取统计数据*/
             try {
                 SupervisorRollService supervisorRollService = SpringContextUtil.getBean("SupervisorRollService");
