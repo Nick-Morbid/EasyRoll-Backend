@@ -2,12 +2,15 @@ package com.system.roll.service.supervisor;
 
 import com.system.roll.entity.vo.message.MessageListVo;
 import com.system.roll.entity.vo.roll.SingleRollStatisticVo;
+import com.system.roll.entity.vo.roll.statistics.StatisticDetailVo;
+import com.system.roll.entity.vo.roll.statistics.StatisticsVo;
 import com.system.roll.entity.vo.student.StudentRollListVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public interface SupervisorRollService {
@@ -46,6 +49,10 @@ public interface SupervisorRollService {
      * 导出为text
      * */
     void outputText(Long courseId);
+
+    StatisticsVo getStatistics(Date weekDay);
+
+    StatisticDetailVo getStatisticDetail(String statisticsId);
 
     @Data
     @AllArgsConstructor
