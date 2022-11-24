@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 /*
 * 枚举工具类，可以通过枚举类中的属性来获取对应的枚举类实例！
 * */
-@Component
+@Component(value = "EnumUtil")
 @SuppressWarnings("all")
 public class EnumUtil {
     /*
