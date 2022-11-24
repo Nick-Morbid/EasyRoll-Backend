@@ -5,17 +5,16 @@ import com.system.roll.entity.constant.CommonEnum;
 
 public enum SortRole implements CommonEnum {
 
-    DELIVERY_TIME("上课时间",0),
-    STUDENT_ID("学号",1),
-    ABSENT_NUM("缺课人数",2),
-    ATTENDANCE_RATE("到课比例",3);
+    STUDENT_ID("学号",0),
+    ABSENT_NUM("缺课人数",1),
+    ATTENDANCE_RATE("到课比例",2);
 
 
     private final String msg;
     @EnumValue
     private final Integer code;
 
-    private SortRole(String msg,Integer code){
+    SortRole(String msg,Integer code){
         this.msg = msg;
         this.code = code;
     }
