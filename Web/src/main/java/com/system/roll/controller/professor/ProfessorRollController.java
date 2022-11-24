@@ -2,6 +2,7 @@ package com.system.roll.controller.professor;
 
 import com.system.roll.entity.vo.roll.RollDataVo;
 import com.system.roll.entity.vo.roll.TotalRollStatisticVo;
+import com.system.roll.entity.vo.student.StudentRollDataListVo;
 import com.system.roll.entity.vo.student.StudentRollRecord;
 import com.system.roll.service.professor.ProfessorRollService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,15 +25,15 @@ public class ProfessorRollController {
     }
 
     @GetMapping("/roll/classMembers/getAll")
-    public void getClassMembers(@RequestParam("courseId")   Long courseId,
-                                @RequestParam("sortRole")   Integer sortRole){
-
+    public StudentRollDataListVo getClassMembers(@RequestParam("courseId")   Long courseId,
+                                                 @RequestParam("sortRule")   Integer sortRule){
+        return professorRollService.getClassMembers(courseId,sortRule);
     }
 
     @GetMapping("/classMembers/query")
     public StudentRollRecord getOneClassMember(@RequestParam("courseId")     Long courseId,
                                                @RequestParam("studentId")    Long studentId){
-        return professorRollService.getClassMembers(courseId,studentId);
+        return professorRollService.getOneClassMember(courseId,studentId);
     }
 
     @GetMapping("/rollData/statistic")

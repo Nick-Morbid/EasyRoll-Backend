@@ -5,11 +5,17 @@ import com.system.roll.entity.constant.impl.RollState;
 import com.system.roll.entity.constant.impl.SortRole;
 import com.system.roll.entity.pojo.AttendanceRecord;
 import com.system.roll.entity.pojo.Course;
+import com.system.roll.entity.pojo.CourseRelation;
+import com.system.roll.entity.pojo.RollStatistics;
 import com.system.roll.entity.vo.roll.RollDataVo;
 import com.system.roll.entity.vo.roll.TotalRollStatisticVo;
+import com.system.roll.entity.vo.student.StudentRollDataListVo;
 import com.system.roll.entity.vo.student.StudentRollRecord;
 import com.system.roll.mapper.AttendanceRecordMapper;
 import com.system.roll.mapper.CourseMapper;
+import com.system.roll.mapper.CourseRelationMapper;
+import com.system.roll.mapper.RollStatisticsMapper;
+import com.system.roll.redis.CourseRedis;
 import com.system.roll.service.professor.ProfessorRollService;
 import com.system.roll.utils.DateUtil;
 import com.system.roll.utils.EnumUtil;
@@ -17,7 +23,10 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Component(value = "ProfessorRollService")
 public class ProfessorRollServiceImpl implements ProfessorRollService {
@@ -33,15 +42,61 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
     @Resource
     private EnumUtil enumUtil;
 
+    @Resource
+    private RollStatisticsMapper rollStatisticsMapper;
+
+    @Resource
+    private CourseRelationMapper courseRelationMapper;
+
+    @Resource
+    private CourseRedis courseRedis;
+
     @Override
     public RollDataVo getRollData(Long courseId) {
-        LambdaQueryWrapper<AttendanceRecord> aqw = new LambdaQueryWrapper<>();
+        RollDataVo rollDataVo = new RollDataVo();
 
-        return null;
+        LambdaQueryWrapper<RollStatistics> rsqw = new LambdaQueryWrapper<>();
+        rsqw.eq(RollStatistics::getCourseId,courseId).orderByDesc(RollStatistics::getDate);
+
+        // 查出该课程的考勤统计数据
+        RollStatistics rollStatistics = rollStatisticsMapper.selectOne(rsqw);
+        if(rollStatistics == null) return rollDataVo;
+
+        List<RollDataVo.Record> absenceList = new ArrayList<>();
+        List<RollDataVo.Record> leaveList = new ArrayList<>();
+
+        // 封装部分视图属性
+        rollDataVo.setAbsenceNum(rollStatistics.getAbsenceNum())
+                .setCourseId(rollDataVo.getCourseId())
+                .setEnrollNum(rollStatistics.getEnrollNum())
+                .setCourseName(courseRedis.getCourseName(rollStatistics.getCourseId()))
+                .setLeaveNum(rollStatistics.getLeaveNum())
+                .setCurrentNum(rollDataVo.getEnrollNum())
+                .setAttendanceNum(rollStatistics.getAttendanceNum())
+                .setDate(rollStatistics.getDate());
+
+        LambdaQueryWrapper<AttendanceRecord> aqw = new LambdaQueryWrapper<>();
+        aqw.eq(AttendanceRecord::getCourseId,rollStatistics.getCourseId())
+                .eq(AttendanceRecord::getDate,rollStatistics.getDate());
+
+        List<AttendanceRecord> records = attendanceRecordMapper.selectList(aqw);
+        records.forEach(record->{
+            RollDataVo.Record student = new RollDataVo.Record(record.getStudentId(),record.getStudentName());
+            switch (record.getState()){
+                case ABSENCE: absenceList.add(student);break;
+                case LEAVE: leaveList.add(student);break;
+                default:break;
+            }
+        });
+        rollDataVo.setAbsenceList(absenceList);
+        rollDataVo.setLeaveList(leaveList);
+
+
+        return rollDataVo;
     }
 
     @Override
-    public StudentRollRecord getClassMembers(Long courseId, Long studentId) {
+    public StudentRollRecord getOneClassMember(Long courseId, Long studentId) {
         LambdaQueryWrapper<AttendanceRecord> aqw = new LambdaQueryWrapper<>();
 
         aqw.eq(AttendanceRecord::getCourseId,courseId)
@@ -101,5 +156,66 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
 
 
         return null;
+    }
+
+    @Override
+    public StudentRollDataListVo getClassMembers(Long courseId, Integer sortRule) {
+        StudentRollDataListVo studentRollDataListVo = new StudentRollDataListVo();
+        studentRollDataListVo.setTotal(0);
+        List<StudentRollDataListVo.StudentRollData> students = new ArrayList<>();
+
+        LambdaQueryWrapper<RollStatistics> rsqw = new LambdaQueryWrapper<>();
+        rsqw.eq(RollStatistics::getCourseId,courseId);
+        // 查询该课程共上了几次
+        int totalNum = Math.toIntExact(rollStatisticsMapper.selectCount(rsqw));
+        if (totalNum == 0) return studentRollDataListVo;
+
+        // 查询该课程全部学生
+        LambdaQueryWrapper<CourseRelation> crqw = new LambdaQueryWrapper<>();
+        crqw.eq(CourseRelation::getCourseId,courseId);
+        List<CourseRelation> relations = courseRelationMapper.selectList(crqw);
+
+        // 所处考勤情况并封装vo
+        relations.forEach(relation->{
+            StudentRollDataListVo.StudentRollData studentRollData = new StudentRollDataListVo.StudentRollData();
+            String studentId = relation.getStudentId();
+            studentRollData.setStudentId(studentId)
+                            .setName(relation.getStudentName());
+            Integer absenceNum = selectCount(RollState.ABSENCE, studentId);
+            Integer leaveNum = selectCount(RollState.LEAVE, studentId);
+            Integer lateNum = selectCount(RollState.LATE, studentId);
+            Integer attendanceNum = totalNum - absenceNum - leaveNum - lateNum;
+
+            studentRollData.setAbsenceNum(absenceNum)
+                    .setAttendanceNum(attendanceNum)
+                    .setLeaveNum(leaveNum)
+                    .setLateNum(lateNum);
+            students.add(studentRollData);
+        });
+        List<StudentRollDataListVo.StudentRollData> sortedStudents = sortByRule(sortRule, students);
+
+        // 进行排序
+        studentRollDataListVo.setStudents(sortedStudents);
+        studentRollDataListVo.setTotal(sortedStudents.size());
+
+        return studentRollDataListVo;
+
+    }
+    private List<StudentRollDataListVo.StudentRollData> sortByRule(Integer sortRule,List<StudentRollDataListVo.StudentRollData> students){
+        switch (sortRule){
+            case 0:students.sort(Comparator.comparing(StudentRollDataListVo.StudentRollData::getStudentId));break;
+            case 1:students.sort(Comparator.comparing(StudentRollDataListVo.StudentRollData::getAbsenceNum));break;
+            case 2:students.sort(Comparator.comparing(StudentRollDataListVo.StudentRollData::getAttendanceNum));break;
+            default:break;
+        }
+
+        return students;
+    }
+
+    private Integer selectCount(RollState rollState,String studentId){
+        LambdaQueryWrapper<AttendanceRecord> aqw = new LambdaQueryWrapper<>();
+        aqw.eq(AttendanceRecord::getStudentId,studentId)
+                .eq(AttendanceRecord::getState,rollState);
+        return Math.toIntExact(attendanceRecordMapper.selectCount(aqw));
     }
 }
