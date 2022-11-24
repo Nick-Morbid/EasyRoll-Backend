@@ -11,8 +11,10 @@ import com.system.roll.mapper.MajorMapper;
 import com.system.roll.oss.OssHandler;
 import com.system.roll.oss.OssResource;
 import com.system.roll.redis.CourseRedis;
+import com.system.roll.redis.StudentRedis;
 import com.system.roll.utils.HttpRequestUtil;
 import com.system.roll.utils.IdUtil;
+import com.system.roll.utils.PinyinUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -135,5 +137,15 @@ public class SpringBootTest {
     public void insertCourseName(){
         List<Course> courses = courseMapper.selectList(null);
         courses.forEach(course -> courseRedis.saveCourseName(course.getId(),course.getCourseName()));
+    }
+    @Resource
+    private PinyinUtil pinyinUtil;
+    @Resource(name = "StudentRedis")
+    private StudentRedis studentRedis;
+    @Test
+    public void testInsertRedisHash(){
+        studentRedis.savePinYin("032002601",pinyinUtil.toPinyin("陈宏侨"));
+        studentRedis.savePinYin("032002601",pinyinUtil.toPinyin("陈宏侨"));
+
     }
 }

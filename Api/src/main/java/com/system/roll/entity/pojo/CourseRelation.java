@@ -24,4 +24,7 @@ public class CourseRelation {
 
     @TableField(value = "student_id")
     private String studentId;
+
+    @TableField(value = "student_name")
+    private String studentName;
 }

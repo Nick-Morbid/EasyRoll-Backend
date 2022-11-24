@@ -253,11 +253,11 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
                 continue;
             }
             /*将学号补上前导0*/
-            studentInfo.setId(String.format("%9s",studentInfo.getId()));
+            studentInfo.setId(String.format("%9s",studentInfo.getId()).replace(" ","0"));
             System.out.println(studentInfo);
             studentRedis.savePinYin(studentInfo.getId(), pinyinUtil.toPinyin(studentInfo.getName()));
             /*插入学生关系表*/
-            courseRelationMapper.insert(new CourseRelation().setId(idUtil.getId()).setCourseId(courseId).setStudentId(studentInfo.getId()));
+            courseRelationMapper.insert(new CourseRelation().setId(idUtil.getId()).setStudentName(studentInfo.getName()).setCourseId(courseId).setStudentId(studentInfo.getId()));
         }
 
         // 插入点名关系表

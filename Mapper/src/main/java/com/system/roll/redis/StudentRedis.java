@@ -2,9 +2,9 @@ package com.system.roll.redis;
 
 public interface StudentRedis {
 
-    default String PinYin(){return "pinYinCollection";}
+    default String PinYin(){return "PinYinCollection";}
 
-    default String StudentName(){return "studentName";}
+    default String StudentName(){return "StudentName";}
 
     /**
      * 保存拼音信息
