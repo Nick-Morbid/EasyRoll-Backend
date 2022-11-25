@@ -3,8 +3,10 @@ package com.system.roll;
 import com.system.roll.context.common.CommonContext;
 import com.system.roll.entity.pojo.Course;
 import com.system.roll.entity.vo.Result;
+import com.system.roll.entity.vo.student.StudentRollListVo;
 import com.system.roll.excel.annotation.Excel;
 import com.system.roll.excel.uitl.ExcelUtil;
+import com.system.roll.formBuilder.FormBuilder;
 import com.system.roll.mapper.CourseMapper;
 import com.system.roll.mapper.DepartmentMapper;
 import com.system.roll.mapper.MajorMapper;
@@ -148,4 +150,13 @@ public class SpringBootTest {
         studentRedis.savePinYin("032002601",pinyinUtil.toPinyin("陈宏侨"));
 
     }
+    @Resource(name = "FormBuilder")
+    private FormBuilder formBuilder;
+    @Test
+    public void testGetForm(){
+        StudentRollListVo form = formBuilder.getForm("55521624");
+        form.getStudents().forEach(System.out::println);
+        System.out.println(form.getTotal());
+    }
+
 }

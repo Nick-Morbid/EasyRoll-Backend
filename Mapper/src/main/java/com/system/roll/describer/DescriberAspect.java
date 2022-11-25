@@ -1,8 +1,8 @@
 package com.system.roll.describer;
 
-import com.system.roll.entity.constant.impl.Role;
-import com.system.roll.describer.annotation.Operation;
 import com.system.roll.context.security.SecurityContextHolder;
+import com.system.roll.describer.annotation.Operation;
+import com.system.roll.entity.constant.impl.Role;
 import com.system.roll.utils.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

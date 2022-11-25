@@ -3,7 +3,6 @@ package com.system.roll.service.supervisor.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.context.security.SecurityContextHolder;
 import com.system.roll.entity.constant.impl.OperationType;
-import com.system.roll.entity.constant.impl.Period;
 import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.RollState;
 import com.system.roll.describer.annotation.Operation;
@@ -47,7 +46,6 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
     private StudentRedis studentRedis;
     @Resource
     private PinyinUtil pinyinUtil;
-
     @Resource
     private RollStatisticsMapper rollStatisticsMapper;
 
@@ -71,6 +69,9 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
 
     @Resource
     private DeliveryMapper deliveryMapper;
+
+    @Resource(name = "FormBuilder")
+    private FormBuilder formBuilder;
 
     @Override
     public void publishRoll(RollDto data) {
@@ -101,30 +102,16 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
     @Operation(type = OperationType.TAKE_A_ROLL)
     public SingleRollStatisticVo getRollDataStatistic(String courseId) throws InterruptedException {
         /*获取redis中的记录*/
+        SingleRollStatisticVo statistics = null;
         int count = 1000;
+        Date date = new Date(System.currentTimeMillis());
         while (!(count-- <= 0)){
-            if (rollDataRedis.listIsExist(courseId)) break;
+            statistics = rollDataRedis.getRollDataStatistics(courseId);
+            if (statistics.getDate().getTime()-date.getTime()< 3600*24) break;
             Thread.sleep(100);
         }
-        if (!rollDataRedis.listIsExist(courseId)) throw new ServiceException(ResultCode.SERVER_ERROR);
-        SingleRollStatisticVo singleRollStatisticVo = new SingleRollStatisticVo();
-        List<RollData> rollDataList = rollDataRedis.getRollDataList(courseId);
-        rollDataList.forEach(rollData -> {
-            RollState rollState = enumUtil.getEnumByCode(RollState.class, rollData.getState());
-            switch (rollState){
-                case ATTENDANCE:
-                    singleRollStatisticVo.setAttendanceNum(singleRollStatisticVo.getAttendanceNum()+1);break;
-                case LEAVE:
-                    singleRollStatisticVo.setLeaveNum(singleRollStatisticVo.getLeaveNum()+1);break;
-                case LATE:
-                    singleRollStatisticVo.setLateNum(singleRollStatisticVo.getLateNum()+1);
-                    singleRollStatisticVo.setAttendanceNum(singleRollStatisticVo.getAttendanceNum()+1);break;
-                case ABSENCE:
-                    singleRollStatisticVo.setAbsenceNum(singleRollStatisticVo.getAbsenceNum()+1);break;
-            }
-        });
-        singleRollStatisticVo.setEnrollNum(rollDataList.size());
-        return singleRollStatisticVo;
+        if (statistics.getDate().getTime()-date.getTime()>= 3600*24) throw new ServiceException(ResultCode.SERVER_ERROR);
+        return statistics;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.system.roll.entity.constant.impl.TimeUnit;
 import com.system.roll.entity.pojo.RollData;
 import com.system.roll.entity.properites.CommonProperties;
+import com.system.roll.entity.vo.roll.SingleRollStatisticVo;
 import com.system.roll.redis.RollDataRedis;
 import com.system.roll.redis.uitls.RedisUtil;
 import com.system.roll.utils.JsonUtil;
@@ -37,5 +38,18 @@ public class RollDataRedisImpl implements RollDataRedis {
         if (listIsExist(courseId)) return JsonUtil.getGson().fromJson((String) redisUtil.get(rollDataList(courseId)),new TypeToken<List<RollData>>(){}.getType());
         return new ArrayList<>();
 //        return new Gson().fromJson((String) redisUtil.get(rollDataList(courseId)),new TypeToken<List<RollData>>(){}.getType());
+    }
+
+    @Override
+    public void saveRollDataStatistics(String courseId, SingleRollStatisticVo statistic) {
+        redisUtil.hset(RollDataStatistics(),courseId,JsonUtil.toJson(statistic));
+    }
+
+    @Override
+    public SingleRollStatisticVo getRollDataStatistics(String courseId) {
+        Object item = redisUtil.hget(RollDataStatistics(), courseId);
+        if (item==null) return null;
+        String json = String.valueOf(item);
+        return JsonUtil.toObject(json,SingleRollStatisticVo.class);
     }
 }

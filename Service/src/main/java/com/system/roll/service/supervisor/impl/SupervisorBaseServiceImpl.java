@@ -2,10 +2,8 @@ package com.system.roll.service.supervisor.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.context.security.SecurityContextHolder;
-import com.system.roll.entity.constant.impl.Period;
-import com.system.roll.entity.constant.impl.ResultCode;
-import com.system.roll.entity.constant.impl.Role;
-import com.system.roll.entity.constant.impl.TeachingMode;
+import com.system.roll.describer.annotation.Operation;
+import com.system.roll.entity.constant.impl.*;
 import com.system.roll.entity.dto.student.CourseDto;
 import com.system.roll.entity.dto.student.InfoDto;
 import com.system.roll.entity.exception.impl.ServiceException;
@@ -187,6 +185,8 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
     }
 
     @Override
+    @Transactional
+    @Operation(type = OperationType.DELETE_COURSE)
     public void deleteCourse(String courseId) {
         if (courseMapper.selectById(courseId)==null) throw new ServiceException(ResultCode.RESOURCE_NOT_FOUND);
         courseRedis.deleteCourseName(courseId);
@@ -203,6 +203,7 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
     @Override
     @Transactional
+    @Operation(type = OperationType.UPLOAD_COURSE)
     public CourseVo uploadCourse(CourseDto courseDto) {
         /*获取督导人员的id*/
         String supervisorId = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
@@ -311,6 +312,7 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
     }
 
     @Override
+    @Operation(type = OperationType.UPDATE_COURSE)
     public CourseVo updateCourse(CourseDto courseDto) {
         String courseId = courseDto.getId();
         if (courseMapper.selectById(courseId)==null) throw new ServiceException(ResultCode.RESOURCE_NOT_FOUND);

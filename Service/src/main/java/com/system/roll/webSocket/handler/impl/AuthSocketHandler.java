@@ -34,6 +34,11 @@ public class AuthSocketHandler implements SocketHandler {
 
     }
 
+    @Override
+    public void open(Session session, String param1, String param2, String token) throws IOException, EncodeException {
+
+    }
+
     @OnMessage
     @Override
     public void onMessage(String data) {
