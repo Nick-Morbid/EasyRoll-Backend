@@ -78,7 +78,7 @@ public class RollDataSink extends RichSinkFunction<RollData> {
             }
             /*保存到redis中*/
             rollDataRedis.saveRollDataStatistics(courseId,statistic);
-            /*保存到mysql中*/
+            /*todo 保存到mysql中*/
 
             rollDataContext.remove(courseId);
             rollDataContext.listRemove(courseId);
