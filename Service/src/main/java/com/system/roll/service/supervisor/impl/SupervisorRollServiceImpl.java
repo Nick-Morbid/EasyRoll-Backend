@@ -2,19 +2,19 @@ package com.system.roll.service.supervisor.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.context.security.SecurityContextHolder;
+import com.system.roll.describer.annotation.Operation;
 import com.system.roll.entity.constant.impl.OperationType;
 import com.system.roll.entity.constant.impl.ResultCode;
-import com.system.roll.entity.constant.impl.RollState;
-import com.system.roll.describer.annotation.Operation;
+import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.pojo.*;
 import com.system.roll.entity.vo.message.MessageListVo;
 import com.system.roll.entity.vo.roll.SingleRollStatisticVo;
 import com.system.roll.entity.vo.roll.statistics.StatisticDetailVo;
 import com.system.roll.entity.vo.roll.statistics.StatisticsVo;
 import com.system.roll.entity.vo.student.StudentRollListVo;
-import com.system.roll.entity.exception.impl.ServiceException;
-import com.system.roll.mapper.*;
+import com.system.roll.formBuilder.FormBuilder;
 import com.system.roll.handler.mapstruct.StudentConvertor;
+import com.system.roll.mapper.*;
 import com.system.roll.redis.CourseRedis;
 import com.system.roll.redis.RollDataRedis;
 import com.system.roll.redis.StudentRedis;
@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,22 +79,7 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
 
     @Override
     public StudentRollListVo getForm(String courseId) {
-        StudentRollListVo studentRollListVo = new StudentRollListVo();
-        /*先暂定为获取所有的学生*/
-        List<Student> studentList = studentMapper.selectListByCourseId(courseId);
-        /*进行数据组装*/
-        List<StudentRollListVo.StudentRollVo> studentList1 = studentList.stream().map(studentConvertor::studentToStudentRollVo).peek(studentRollVo -> {
-            /*获取拼音*/
-            String[] pinYin = studentRedis.getPinYin(studentRollVo.getId());
-            if (pinYin.length == 0) {
-                pinYin = pinyinUtil.toPinyin(studentRollVo.getName());
-                studentRedis.savePinYin(studentRollVo.getId(), pinYin);
-            }
-            studentRollVo.setPinyin(Arrays.asList(pinYin));
-        }).collect(Collectors.toList());
-        studentRollListVo.setStudents(studentList1);
-        studentRollListVo.setTotal(studentList1.size());
-        return studentRollListVo;
+        return formBuilder.getForm(courseId);
     }
 
     @Override
