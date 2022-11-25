@@ -32,6 +32,7 @@ public enum  ResultCode implements CommonEnum {
     FAILED_TO_GET_ELEMENT_FROM_MAP("map中无对应的元素",504),
     RESOURCE_NOT_FOUND("资源未找到",505),
     UPLOAD_FAILURE("文件上传失败",506),
+    PROFILE_ERROR("配置文件无效",507),
 
     WEBSOCKET_NOT_BUILT("长连接未建立",601),
     WEBSOCKET_SEND_FAILED("长连接消息发送失败",602),

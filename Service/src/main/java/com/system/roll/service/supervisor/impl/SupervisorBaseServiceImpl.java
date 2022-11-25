@@ -257,6 +257,7 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
             studentInfo.setId(String.format("%9s",studentInfo.getId()).replace(" ","0"));
             System.out.println(studentInfo);
             studentRedis.savePinYin(studentInfo.getId(), pinyinUtil.toPinyin(studentInfo.getName()));
+            studentRedis.saveName(studentInfo.getId(),studentInfo.getName());
             /*插入学生关系表*/
             courseRelationMapper.insert(new CourseRelation().setId(idUtil.getId()).setStudentName(studentInfo.getName()).setCourseId(courseId).setStudentId(studentInfo.getId()));
         }

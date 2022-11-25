@@ -1,9 +1,9 @@
 package com.system.roll.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.system.roll.entity.pojo.Leave;
+import com.system.roll.entity.pojo.LeaveRelation;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface LeaveMapper extends BaseMapper<Leave> {
+public interface LeaveRelationMapper extends BaseMapper<LeaveRelation> {
 }

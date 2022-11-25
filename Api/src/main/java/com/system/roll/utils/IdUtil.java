@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-@Component
+@Component(value = "IdUtil")
 public class IdUtil {
     public String getId(){
         Calendar c=Calendar.getInstance();

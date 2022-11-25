@@ -93,7 +93,7 @@ public class RollSocketHandler implements SocketHandler {
             /*调用业务方法，获取统计数据*/
             try {
                 SupervisorRollService supervisorRollService = SpringContextUtil.getBean("SupervisorRollService");
-                SingleRollStatisticVo rollDataStatistic = supervisorRollService.getRollDataStatistic(this.courseId);
+                SingleRollStatisticVo rollDataStatistic = supervisorRollService.getRollDataStatistic(this.enrollNum,this.courseId);
                 SocketContextHandler.getContext("roll:"+courseId).sendMessage(ResultCode.SUCCESS,rollDataStatistic);
             }catch (Exception e){
                 e.printStackTrace();

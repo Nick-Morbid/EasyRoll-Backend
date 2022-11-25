@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Data
@@ -16,8 +17,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Accessors(chain = true)
 @ToString
-@TableName(value = "leave")
-public class Leave {
+@TableName(value = "leave_relation")
+public class LeaveRelation {
     @TableId
     private String id;
 
@@ -25,10 +26,10 @@ public class Leave {
     private String studentId;
 
     @TableField(value = "start_time")
-    private Timestamp startTime;
+    private Date startTime;
 
     @TableField(value = "end_time")
-    private Timestamp endTime;
+    private Date endTime;
 
     private String excuse;
 

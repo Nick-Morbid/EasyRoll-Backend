@@ -1,10 +1,10 @@
 package com.system.roll.service.student.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.system.roll.entity.pojo.Leave;
+import com.system.roll.entity.pojo.LeaveRelation;
 import com.system.roll.entity.vo.leave.LeaveListVo;
 import com.system.roll.entity.vo.leave.LeaveVo;
-import com.system.roll.mapper.LeaveMapper;
+import com.system.roll.mapper.LeaveRelationMapper;
 import com.system.roll.handler.mapstruct.LeaveConvertor;
 import com.system.roll.context.security.SecurityContextHolder;
 import com.system.roll.service.student.StudentRollService;
@@ -17,17 +17,17 @@ import java.util.List;
 @Component(value = "studentRollService")
 public class StudentRollServiceImpl implements StudentRollService {
     @Resource
-    private LeaveMapper leaveMapper;
+    private LeaveRelationMapper leaveRelationMapper;
 
     @Override
     public LeaveListVo getAllLeave() {
 
         String studentId = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
-        LambdaQueryWrapper<Leave> leaveQueryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<LeaveRelation> leaveQueryWrapper = new LambdaQueryWrapper<>();
 
         // 获取该学生的所有请假记录
-        leaveQueryWrapper.eq(Leave::getStudentId,studentId);
-        List<Leave> leaves = leaveMapper.selectList(leaveQueryWrapper);
+        leaveQueryWrapper.eq(LeaveRelation::getStudentId,studentId);
+        List<LeaveRelation> leaves = leaveRelationMapper.selectList(leaveQueryWrapper);
         LeaveListVo leaveRecords = new LeaveListVo();
         leaveRecords.setTotal(leaves.size());
 
@@ -40,8 +40,8 @@ public class StudentRollServiceImpl implements StudentRollService {
 
     @Override
     public LeaveVo leaveQuery(String leaveId) {
-        Leave leave = leaveMapper.selectById(leaveId);
-        return LeaveConvertor.INSTANCE.LeaveToLeaveVo(leave);
+        LeaveRelation leaveRelation = leaveRelationMapper.selectById(leaveId);
+        return LeaveConvertor.INSTANCE.LeaveToLeaveVo(leaveRelation);
     }
 
     @Override

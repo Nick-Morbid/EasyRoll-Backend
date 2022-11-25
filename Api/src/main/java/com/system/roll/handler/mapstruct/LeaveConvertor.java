@@ -1,6 +1,6 @@
 package com.system.roll.handler.mapstruct;
 
-import com.system.roll.entity.pojo.Leave;
+import com.system.roll.entity.pojo.LeaveRelation;
 import com.system.roll.entity.vo.leave.LeaveVo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,5 +18,5 @@ public interface LeaveConvertor {
             @Mapping(source = "endTime",target = "endTime"),
             @Mapping(source = "result",target = "result")
     })
-    LeaveVo LeaveToLeaveVo(Leave leave);
+    LeaveVo LeaveToLeaveVo(LeaveRelation leaveRelation);
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 @Data
 @AllArgsConstructor
@@ -14,8 +14,8 @@ import java.sql.Timestamp;
 public class LeaveVo {
     private String id;
     private String name;
-    private Timestamp startTime;
-    private Timestamp endTime;
+    private Date startTime;
+    private Date endTime;
     private String excuse;
     private Integer result;
     private String transactor;

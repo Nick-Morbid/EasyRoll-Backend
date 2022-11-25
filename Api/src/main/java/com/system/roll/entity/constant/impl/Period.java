@@ -11,7 +11,8 @@ public enum  Period implements CommonEnum {
     TEN_TO_TWELVE("3-4节",2),
     FOURTEEN_TO_SIXTEEN("5-6节",3),
     SIXTEEN_TO_EIGHTEEN("7-8节",4),
-    NINETEEN_TO_TWENTY_ONE("9-10节",5);
+    NINETEEN_TO_TWENTY_ONE("9-10节",5),
+    NOT_IN_CLASS_TIME("不在教学时间",6);
 
     private final String msg;
     @EnumValue
