@@ -116,7 +116,10 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
         /*生成课程时段信息*/
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        Period period = commonProperties.getPeriod(calendar.get(Calendar.HOUR),calendar.get(Calendar.MINUTE));
+        Period period = commonProperties.getPeriod(calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE));
+        if (period.equals(Period.NOT_IN_CLASS_TIME)){
+            throw new ServiceException(ResultCode.INVALID_ROLL);
+        }
         /*计算统计结果*/
         List<RollData> rollDataList = rollDataRedis.getRollDataList(courseId);
         for (RollData rollData : rollDataList) {
@@ -169,7 +172,9 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
         RollStatistics rollStatistics = rollDataConvertor
                 .SingleRollStatisticVoToRollStatistics(statistics)
                 .setId(idUtil.getId())
-                .setCourseId(courseId);
+                .setCourseId(courseId)
+                .setDate(new Date(System.currentTimeMillis()))
+                .setPeriod(period);
         rollStatisticsMapper.insert(rollStatistics);
         /*保存统计结果到redis中*/
         rollDataRedis.saveRollDataStatistics(courseId,statistics);

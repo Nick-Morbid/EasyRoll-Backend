@@ -2,6 +2,7 @@ package com.system.roll;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.context.common.CommonContext;
+import com.system.roll.entity.constant.impl.Period;
 import com.system.roll.entity.constant.impl.TimeUnit;
 import com.system.roll.entity.pojo.Course;
 import com.system.roll.entity.pojo.CourseArrangement;
@@ -263,5 +264,15 @@ public class SpringBootTest {
 //        leaveRelationMapper.insert(leaveRelation);
     }
 
+    @Test
+    public void testGetPeriod1(){
+        /*生成课程时段信息*/
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        Period period = commonProperties.getPeriod(calendar.get(Calendar.HOUR),calendar.get(Calendar.MINUTE));
+        System.out.println(calendar.get(Calendar.HOUR_OF_DAY));
+        System.out.println(calendar.get(Calendar.MINUTE));
+        System.out.println(period);
+    }
 
 }

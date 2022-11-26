@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
         return Result.error(ResultCode.METHOD_NOT_MATCH);
     }
 
-    @ExceptionHandler(value = ClassCastException.class)
+//    @ExceptionHandler(value = ClassCastException.class)
     public Result<?> ClassCastExceptionHandler(ClassCastException e){
         System.out.println("请求路径异常！原因是："+e);
         return Result.error(ResultCode.PATH_NOT_MATCH);

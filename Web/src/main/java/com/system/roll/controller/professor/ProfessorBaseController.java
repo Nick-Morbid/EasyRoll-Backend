@@ -2,7 +2,7 @@ package com.system.roll.controller.professor;
 
 import com.system.roll.entity.dto.professor.InfoDto;
 import com.system.roll.entity.vo.course.CourseListVo;
-import com.system.roll.entity.vo.professor.InfoVo;
+import com.system.roll.entity.vo.professor.ProfessorVo;
 import com.system.roll.service.professor.ProfessorBaseService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class ProfessorBaseController {
      * 上传课程信息
      * */
     @PostMapping("/register")
-    public InfoVo register(@RequestBody InfoDto infoDto) {
+    public ProfessorVo register(@RequestBody InfoDto infoDto) {
         return professorBaseService.register(infoDto);
     }
 

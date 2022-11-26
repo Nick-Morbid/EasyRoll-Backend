@@ -2,7 +2,6 @@ package com.system.roll.service.professor;
 
 import com.system.roll.entity.dto.professor.InfoDto;
 import com.system.roll.entity.vo.course.CourseListVo;
-import com.system.roll.entity.vo.professor.InfoVo;
 import com.system.roll.entity.vo.professor.ProfessorVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +21,7 @@ public interface ProfessorBaseService {
 
     CourseListVo getCourseList(String courseId);
 
-    InfoVo register(InfoDto infoDto);
+    ProfessorVo register(InfoDto infoDto);
 
     @Data
     @AllArgsConstructor

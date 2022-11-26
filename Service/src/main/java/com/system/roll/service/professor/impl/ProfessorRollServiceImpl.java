@@ -2,9 +2,7 @@ package com.system.roll.service.professor.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.entity.constant.impl.RollState;
-import com.system.roll.entity.constant.impl.SortRole;
 import com.system.roll.entity.pojo.AttendanceRecord;
-import com.system.roll.entity.pojo.Course;
 import com.system.roll.entity.pojo.CourseRelation;
 import com.system.roll.entity.pojo.RollStatistics;
 import com.system.roll.entity.vo.roll.RollDataVo;
@@ -23,10 +21,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Component(value = "ProfessorRollService")
 public class ProfessorRollServiceImpl implements ProfessorRollService {
@@ -52,7 +48,7 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
     private CourseRedis courseRedis;
 
     @Override
-    public RollDataVo getRollData(Long courseId) {
+    public RollDataVo getRollData(String courseId) {
         RollDataVo rollDataVo = new RollDataVo();
 
         LambdaQueryWrapper<RollStatistics> rsqw = new LambdaQueryWrapper<>();
@@ -66,8 +62,9 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
         List<RollDataVo.Record> leaveList = new ArrayList<>();
 
         // 封装部分视图属性
-        rollDataVo.setAbsenceNum(rollStatistics.getAbsenceNum())
-                .setCourseId(rollDataVo.getCourseId())
+        rollDataVo
+                .setAbsenceNum(rollStatistics.getAbsenceNum())
+                .setCourseId(rollStatistics.getCourseId())
                 .setEnrollNum(rollStatistics.getEnrollNum())
                 .setCourseName(courseRedis.getCourseName(rollStatistics.getCourseId()))
                 .setLeaveNum(rollStatistics.getLeaveNum())
@@ -77,7 +74,8 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
 
         LambdaQueryWrapper<AttendanceRecord> aqw = new LambdaQueryWrapper<>();
         aqw.eq(AttendanceRecord::getCourseId,rollStatistics.getCourseId())
-                .eq(AttendanceRecord::getDate,rollStatistics.getDate());
+                .eq(AttendanceRecord::getDate,rollStatistics.getDate())
+                .eq(AttendanceRecord::getPeriod,rollStatistics.getPeriod());
 
         List<AttendanceRecord> records = attendanceRecordMapper.selectList(aqw);
         records.forEach(record->{
@@ -96,7 +94,7 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
     }
 
     @Override
-    public StudentRollRecord getOneClassMember(Long courseId, Long studentId) {
+    public StudentRollRecord getOneClassMember(String courseId, String studentId) {
         LambdaQueryWrapper<AttendanceRecord> aqw = new LambdaQueryWrapper<>();
 
         aqw.eq(AttendanceRecord::getCourseId,courseId)
@@ -123,7 +121,7 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
         studentRollRecord.setLeaveRecords(new ArrayList<>());
         leaveRecords.forEach(leaveRecord->{
             StudentRollRecord.Record leftRecord = new StudentRollRecord.Record();
-            leftRecord.setPeriod(leftRecord.getPeriod())
+            leftRecord.setPeriod(leaveRecord.getPeriod())
                     .setWeekDay(dateUtil.getWeekDay(leaveRecord.getDate()))
                     .setWeekNo(dateUtil.getWeek(leaveRecord.getDate()));
             studentRollRecord.getLeaveRecords().add(leftRecord);
@@ -148,7 +146,7 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
     }
 
     @Override
-    public TotalRollStatisticVo getStatistic(Long courseId, Integer sortRole) {
+    public TotalRollStatisticVo getStatistic(String courseId, Integer sortRole) {
         TotalRollStatisticVo totalRollStatisticVo = new TotalRollStatisticVo();
         List<TotalRollStatisticVo.Record> records = new ArrayList<>();
         totalRollStatisticVo.setTotal(0);
@@ -168,7 +166,7 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
                     .setAbsenceNum(roll.getAbsenceNum())
                     .setLeaveNum(roll.getLeaveNum())
                     .setLateNum(roll.getLateNum())
-                    .setAttendanceRate((double)roll.getAbsenceNum()/roll.getAttendanceNum());
+                    .setAttendanceRate((double)roll.getAttendanceNum()/roll.getEnrollNum());
             records.add(record);
         });
         sortByRole(sortRole,records);
@@ -178,7 +176,7 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
     }
 
     @Override
-    public StudentRollDataListVo getClassMembers(Long courseId, Integer sortRule) {
+    public StudentRollDataListVo getClassMembers(String courseId, Integer sortRule) {
         StudentRollDataListVo studentRollDataListVo = new StudentRollDataListVo();
         studentRollDataListVo.setTotal(0);
         List<StudentRollDataListVo.StudentRollData> students = new ArrayList<>();
@@ -203,7 +201,7 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
             Integer absenceNum = selectCount(RollState.ABSENCE, studentId);
             Integer leaveNum = selectCount(RollState.LEAVE, studentId);
             Integer lateNum = selectCount(RollState.LATE, studentId);
-            Integer attendanceNum = totalNum - absenceNum - leaveNum - lateNum;
+            Integer attendanceNum = totalNum - absenceNum - leaveNum;
 
             studentRollData.setAbsenceNum(absenceNum)
                     .setAttendanceNum(attendanceNum)

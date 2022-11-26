@@ -358,7 +358,6 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         infoVo.setDepartmentName(infoDto.getDepartmentName())
                 .setMajorName(infoDto.getMajorName())
                 .setCurrentWeek(dateUtil.getWeek(new Date(System.currentTimeMillis())));
-
         return infoVo;
     }
 

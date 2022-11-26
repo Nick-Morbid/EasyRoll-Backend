@@ -20,9 +20,13 @@ import com.system.roll.service.professor.ProfessorBaseService;
 import com.system.roll.utils.DateUtil;
 import com.system.roll.utils.EnumUtil;
 import com.system.roll.utils.IdUtil;
+import com.system.roll.webSocket.context.SocketContextHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.websocket.EncodeException;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +87,8 @@ public class ProfessorBaseServiceImpl implements ProfessorBaseService {
     private DeliveryMapper deliveryMapper;
 
     @Override
-    public InfoVo register(InfoDto infoDto) {
+    @Transactional
+    public ProfessorVo register(InfoDto infoDto) {
         /*获取用户的openId*/
         String openId = wxApiService.jsCode2session(infoDto.getCode()).getOpenId();
         /*查询是否已经注册过*/
@@ -110,8 +115,18 @@ public class ProfessorBaseServiceImpl implements ProfessorBaseService {
             /*修改授课表中的记录*/
             deliveryMapper.updateProfessorId(professor2.getId(),professor.getId());
         }
-        return professorConvertor.professorToInfoVo(professor)
+        ProfessorVo professorVo = professorConvertor.professorToProfessorVo(professor)
                 .setCurrentWeek(dateUtil.getWeek(new Date(System.currentTimeMillis())))
                 .setDepartmentName(departmentMapper.selectNameById(professor.getDepartmentId()));
+        /*判断是否为从授权端拉起的注册业务*/
+        if (infoDto.getSocketId()!=null){
+            /*通知前端已完成注册*/
+            try {
+                SocketContextHandler.getContext(infoDto.getSocketId()).sendMessage(ResultCode.SUCCESS,professorVo);
+            } catch (IOException | EncodeException e) {
+                throw new ServiceException(ResultCode.FAILED_TO_SEND_MESSAGE);
+            }
+        }
+        return professorVo;
     }
 }

@@ -21,6 +21,6 @@ public class IdUtil {
      * 生成长连接的id
      * */
     public String getWebSocketId(){
-        return "ws:"+getId();
+        return "ws"+getId();
     }
 }
