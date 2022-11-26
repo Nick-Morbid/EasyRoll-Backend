@@ -4,10 +4,12 @@ import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.vo.leave.LeaveListVo;
 import com.system.roll.entity.vo.leave.LeaveVo;
 import com.system.roll.entity.exception.impl.ServiceException;
+import com.system.roll.entity.vo.student.RollHistoryVo;
 import com.system.roll.service.student.StudentRollService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.sql.Date;
 import java.util.Map;
 
 @RestController
@@ -44,6 +46,11 @@ public class StudentRollController {
     @PostMapping("/message/getAll")
     public void getAllMessage(){
 
+    }
+
+    @GetMapping("/history")
+    public RollHistoryVo getHistory(@RequestParam("date")Date date){
+        return studentRollService.getHistory(date);
     }
 
 

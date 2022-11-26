@@ -12,6 +12,7 @@
         <result property="attendanceNum" column="attendanceNum" jdbcType="INTEGER"/>
         <result property="leaveNum" column="leaveNum" jdbcType="INTEGER"/>
         <result property="lateNum" column="lateNum" jdbcType="INTEGER"/>
+        <result property="period" column="period" jdbcType="INTEGER"/>
         <result property="date" column="date" jdbcType="DATE"/>
     </resultMap>
 

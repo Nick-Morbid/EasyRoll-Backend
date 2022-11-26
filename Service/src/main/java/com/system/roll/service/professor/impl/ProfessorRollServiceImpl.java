@@ -150,13 +150,31 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
     @Override
     public TotalRollStatisticVo getStatistic(Long courseId, Integer sortRole) {
         TotalRollStatisticVo totalRollStatisticVo = new TotalRollStatisticVo();
-
+        List<TotalRollStatisticVo.Record> records = new ArrayList<>();
+        totalRollStatisticVo.setTotal(0);
         LambdaQueryWrapper<RollStatistics> rsqw = new LambdaQueryWrapper<>();
         rsqw.eq(RollStatistics::getCourseId,courseId);
 
-
-
-        return null;
+        // 查出该课程考勤数据
+        List<RollStatistics> rollStatistics = rollStatisticsMapper.selectList(rsqw);
+        totalRollStatisticVo.setEnrollNum(rollStatistics.get(0).getEnrollNum());
+        rollStatistics.forEach(roll->{
+            TotalRollStatisticVo.Record record = new TotalRollStatisticVo.Record();
+            record.setStatisticId(roll.getId())
+                    .setWeekNo(dateUtil.getWeek(roll.getDate()))
+                    .setWeekDay(dateUtil.getWeekDay(roll.getDate()))
+                    .setPeriod(roll.getPeriod())
+                    .setAttendanceNum(roll.getAttendanceNum())
+                    .setAbsenceNum(roll.getAbsenceNum())
+                    .setLeaveNum(roll.getLeaveNum())
+                    .setLateNum(roll.getLateNum())
+                    .setAttendanceRate((double)roll.getAbsenceNum()/roll.getAttendanceNum());
+            records.add(record);
+        });
+        sortByRole(sortRole,records);
+        totalRollStatisticVo.setStatisticsRecords(records);
+        totalRollStatisticVo.setTotal(records.size());
+        return totalRollStatisticVo;
     }
 
     @Override
@@ -202,6 +220,16 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
         return studentRollDataListVo;
 
     }
+
+    private void sortByRole(Integer sortRule,List<TotalRollStatisticVo.Record> students){
+        switch (sortRule){
+            case 1:students.sort(Comparator.comparing(TotalRollStatisticVo.Record::getAbsenceNum));break;
+            case 2:students.sort(Comparator.comparing(TotalRollStatisticVo.Record::getAttendanceRate));break;
+            default:break;
+        }
+    }
+
+
     private List<StudentRollDataListVo.StudentRollData> sortByRule(Integer sortRule,List<StudentRollDataListVo.StudentRollData> students){
         switch (sortRule){
             case 0:students.sort(Comparator.comparing(StudentRollDataListVo.StudentRollData::getStudentId));break;

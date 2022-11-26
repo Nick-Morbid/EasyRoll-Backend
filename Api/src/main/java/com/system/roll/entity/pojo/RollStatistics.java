@@ -3,6 +3,8 @@ package com.system.roll.entity.pojo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.system.roll.entity.constant.impl.Period;
+import com.system.roll.handler.typehandler.AutoGenericEnumTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,4 +31,7 @@ public class RollStatistics {
     private Integer leaveNum;
     private Integer lateNum;
     private Date date;
+
+    @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
+    private Period period;
 }
