@@ -18,7 +18,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class TotalRollStatisticVo {
     private Integer enrollNum;
-    private List<Record> rollRecords;
+    private List<Record> statisticsRecords;
     private Integer total;
 
     @Data
@@ -26,6 +26,7 @@ public class TotalRollStatisticVo {
     @NoArgsConstructor
     @Accessors(chain = true)
     public static class Record{
+        private String statisticId;
         private Integer weekNo;
         private Integer weekDay;
         private Period period;
