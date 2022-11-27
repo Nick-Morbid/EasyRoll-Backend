@@ -8,7 +8,7 @@ import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.pojo.*;
 import com.system.roll.entity.properites.CommonProperties;
 import com.system.roll.entity.vo.message.MessageListVo;
-import com.system.roll.entity.vo.roll.SingleRollStatisticVo;
+import com.system.roll.entity.vo.roll.RollDataVo;
 import com.system.roll.entity.vo.roll.statistics.StatisticDetailVo;
 import com.system.roll.entity.vo.roll.statistics.StatisticsVo;
 import com.system.roll.entity.vo.student.StudentRollListVo;
@@ -102,11 +102,11 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
     @Override
     @Transactional
     @Operation(type = OperationType.TAKE_A_ROLL)
-    public SingleRollStatisticVo getRollDataStatistic(Integer enrollNum,String courseId) throws InterruptedException {
+    public RollDataVo getRollDataStatistic(Integer enrollNum, String courseId) throws InterruptedException {
         String id = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
         String name = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "name");
         /*获取redis中的记录*/
-        SingleRollStatisticVo statistics = new SingleRollStatisticVo().setEnrollNum(enrollNum);
+        RollDataVo statistics = new RollDataVo().setEnrollNum(enrollNum);
         int count = 5000;
         for (int i = 0; i < count; i++) {
             if (rollDataRedis.listIsExist(courseId)) break;
@@ -123,17 +123,19 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
         /*计算统计结果*/
         List<RollData> rollDataList = rollDataRedis.getRollDataList(courseId);
         for (RollData rollData : rollDataList) {
+            rollData.setStudentName(studentRedis.getName(rollData.getStudentId()));
             RollState rollState = enumUtil.getEnumByCode(RollState.class, rollData.getState());
             switch (rollState) {
                 case ATTENDANCE:
                     statistics.incrAttendanceNum();
                     break;
                 case ABSENCE:
-                    statistics.incrAbsenceNum();
+                    statistics.addAbsence(rollData.getStudentId(),rollData.getStudentName());
+                    /*todo 通知对应的学生*/
                     break;
                 case LATE:
-                    statistics.incrLateNum();
-                    statistics.incrAttendanceNum();
+                    statistics.addLate(rollData.getStudentId(),rollData.getStudentName());
+                    /*todo 通知对应的学生*/
                     break;
                 case LEAVE:
                     /*生成请假记录*/
@@ -143,14 +145,14 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
                             .setTransactorName(name)
                             .setCreated(new Timestamp(System.currentTimeMillis()))
                             .setStudentId(rollData.getStudentId())
-                            .setStudentName(studentRedis.getName(rollData.getStudentId()))
+                            .setStudentName(rollData.getStudentName())
                             .setExcuse("督导队员标记为请假")
                             .setStartTime(new Date(System.currentTimeMillis()))
                             .setEndTime(new Date(System.currentTimeMillis()+commonProperties.ClassTime(TimeUnit.MINUTE)))
                             .setResult(1);
                     leaveRelationMapper.insert(leaveRelation);
                     /*todo 通知对应的学生*/
-                    statistics.incrLeaveNum();
+                    statistics.addLeave(rollData.getStudentId(),rollData.getStudentName());
                     break;
             }
             /*非正常出勤，则生成相应的记录*/
@@ -170,14 +172,13 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
         }
         /*保存统计结果到数据库中*/
         RollStatistics rollStatistics = rollDataConvertor
-                .SingleRollStatisticVoToRollStatistics(statistics)
+                .rollDataVoToRollStatistics(statistics)
                 .setId(idUtil.getId())
                 .setCourseId(courseId)
                 .setDate(new Date(System.currentTimeMillis()))
                 .setPeriod(period);
         rollStatisticsMapper.insert(rollStatistics);
-        /*保存统计结果到redis中*/
-        rollDataRedis.saveRollDataStatistics(courseId,statistics);
+
         return statistics;
     }
 

@@ -21,12 +21,14 @@ public class ConfigAdapter implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
                 //.addPathPatterns("/**")
-                .excludePathPatterns("/auth/**","/student/base/register",
+                .excludePathPatterns("/auth/**",
+                        "/student/base/register",
                         "/supervisor/base/register",
                         "/professor/base/register",
                         "/supervisor/roll/call/**",
                         "/department/query",
-                        "/major/query"
+                        "/major/query",
+                        "/test/**"
                         );
 //                .excludePathPatterns("/**");
     }

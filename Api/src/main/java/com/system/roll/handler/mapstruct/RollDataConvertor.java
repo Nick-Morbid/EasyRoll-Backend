@@ -1,7 +1,7 @@
 package com.system.roll.handler.mapstruct;
 
 import com.system.roll.entity.pojo.RollStatistics;
-import com.system.roll.entity.vo.roll.SingleRollStatisticVo;
+import com.system.roll.entity.vo.roll.RollDataVo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -17,5 +17,5 @@ public interface RollDataConvertor {
             @Mapping(source = "lateNum",target = "lateNum"),
             @Mapping(source = "date",target = "date")
     })
-    RollStatistics SingleRollStatisticVoToRollStatistics(SingleRollStatisticVo statisticVo);
+    RollStatistics rollDataVoToRollStatistics(RollDataVo rollDataVo);
 }

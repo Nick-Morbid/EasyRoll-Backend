@@ -55,11 +55,13 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
         rsqw.eq(RollStatistics::getCourseId,courseId).orderByDesc(RollStatistics::getDate);
 
         // 查出该课程的考勤统计数据
-        RollStatistics rollStatistics = rollStatisticsMapper.selectOne(rsqw);
-        if(rollStatistics == null) return rollDataVo;
+        List<RollStatistics> rollStatisticsList = rollStatisticsMapper.selectList(rsqw);
+        if(rollStatisticsList == null) return rollDataVo;
+        RollStatistics rollStatistics = rollStatisticsList.get(0);
 
         List<RollDataVo.Record> absenceList = new ArrayList<>();
         List<RollDataVo.Record> leaveList = new ArrayList<>();
+        List<RollDataVo.Record> lateList = new ArrayList<>();
 
         // 封装部分视图属性
         rollDataVo
@@ -68,6 +70,7 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
                 .setEnrollNum(rollStatistics.getEnrollNum())
                 .setCourseName(courseRedis.getCourseName(rollStatistics.getCourseId()))
                 .setLeaveNum(rollStatistics.getLeaveNum())
+                .setLateNum(rollStatistics.getLateNum())
                 .setCurrentNum(rollDataVo.getEnrollNum())
                 .setAttendanceNum(rollStatistics.getAttendanceNum())
                 .setDate(rollStatistics.getDate());
@@ -83,12 +86,13 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
             switch (record.getState()){
                 case ABSENCE: absenceList.add(student);break;
                 case LEAVE: leaveList.add(student);break;
+                case LATE:lateList.add(student);break;
                 default:break;
             }
         });
         rollDataVo.setAbsenceList(absenceList);
         rollDataVo.setLeaveList(leaveList);
-
+        rollDataVo.setLateList(lateList);
 
         return rollDataVo;
     }

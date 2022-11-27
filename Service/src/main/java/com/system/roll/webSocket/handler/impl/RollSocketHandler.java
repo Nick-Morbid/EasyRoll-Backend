@@ -6,7 +6,7 @@ import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.properites.RabbitProperties;
 import com.system.roll.entity.vo.Result;
-import com.system.roll.entity.vo.roll.SingleRollStatisticVo;
+import com.system.roll.entity.vo.roll.RollDataVo;
 import com.system.roll.rabbit.utils.RabbitUtil;
 import com.system.roll.security.interceptor.LoginInterceptor;
 import com.system.roll.service.supervisor.SupervisorRollService;
@@ -93,8 +93,8 @@ public class RollSocketHandler implements SocketHandler {
             /*调用业务方法，获取统计数据*/
             try {
                 SupervisorRollService supervisorRollService = SpringContextUtil.getBean("SupervisorRollService");
-                SingleRollStatisticVo rollDataStatistic = supervisorRollService.getRollDataStatistic(this.enrollNum,this.courseId);
-                SocketContextHandler.getContext("roll:"+courseId).sendMessage(ResultCode.SUCCESS,rollDataStatistic);
+                RollDataVo statistic = supervisorRollService.getRollDataStatistic(this.enrollNum,this.courseId);
+                SocketContextHandler.getContext("roll:"+courseId).sendMessage(ResultCode.SUCCESS,statistic);
             }catch (Exception e){
                 e.printStackTrace();
                 SocketContextHandler.getContext("roll:"+courseId).sendMessage(ResultCode.SERVER_ERROR,null);

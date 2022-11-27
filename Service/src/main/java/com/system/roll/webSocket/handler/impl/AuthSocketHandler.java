@@ -8,6 +8,7 @@ import com.system.roll.utils.SpringContextUtil;
 import com.system.roll.webSocket.context.SocketContext;
 import com.system.roll.webSocket.context.SocketContextHandler;
 import com.system.roll.webSocket.handler.SocketHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -18,6 +19,7 @@ import java.io.IOException;
 /**
  * 网页端+微信小程序授权登录的长连接（由网页端发起）
  * */
+@Slf4j
 @Component
 @ServerEndpoint(value = "/auth/login/web/{socketId}")
 public class AuthSocketHandler implements SocketHandler {

@@ -236,21 +236,14 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
             course.setAttachment(attachment);
         }
 
-        /*组装pojo对象*/
-        course.setCourseName(courseDto.getCourseName())
-                .setStartWeek(courseDto.getStartWeek())
-                .setEndWeek(courseDto.getEndWeek())
-                .setEnrollNum(studentInfos.size());
-        // 插入课程
-        courseMapper.insert(course);
-        /*记录courseId和courseName的映射*/
-        courseRedis.saveCourseName(course.getId(),course.getCourseName());
-
         /*遍历学生信息，插入学生关系表*/
-        for (StudentInfo studentInfo : studentInfos){
+        Iterator<StudentInfo> iterator = studentInfos.iterator();
+        while (iterator.hasNext()){
+            StudentInfo studentInfo = iterator.next();
             /*根据学生姓名生成拼音，并进行保存*/
             if (studentInfo.getId()==null||studentInfo.getId().equals("")||studentInfo.getName()==null||studentInfo.getName().equals("")){
                 log.warn("有异常的学生关系项：{}",studentInfo.toString());
+                iterator.remove();
                 continue;
             }
             /*将学号补上前导0*/
@@ -261,6 +254,16 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
             /*插入学生关系表*/
             courseRelationMapper.insert(new CourseRelation().setId(idUtil.getId()).setStudentName(studentInfo.getName()).setCourseId(courseId).setStudentId(studentInfo.getId()));
         }
+
+        /*组装pojo对象*/
+        course.setCourseName(courseDto.getCourseName())
+                .setStartWeek(courseDto.getStartWeek())
+                .setEndWeek(courseDto.getEndWeek())
+                .setEnrollNum(studentInfos.size());
+        // 插入课程
+        courseMapper.insert(course);
+        /*记录courseId和courseName的映射*/
+        courseRedis.saveCourseName(course.getId(),course.getCourseName());
 
         // 插入点名关系表
         rollRelationMapper.insert(new RollRelation()
