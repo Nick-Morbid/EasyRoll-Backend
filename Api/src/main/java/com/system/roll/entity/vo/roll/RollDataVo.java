@@ -26,6 +26,7 @@ public class RollDataVo {
     private List<Record> absenceList;
     private List<Record> leaveList;
     private List<Record> lateList;
+    private Integer flag;//0表示统计数据，1表示单条考勤数据
 
     public RollDataVo(){
         this.absenceList = new ArrayList<>();

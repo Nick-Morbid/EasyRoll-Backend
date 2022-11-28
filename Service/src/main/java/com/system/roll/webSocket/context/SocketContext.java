@@ -20,7 +20,7 @@ import java.io.IOException;
 @Accessors(chain = true)
 public class SocketContext {
     private SocketHandler socketHandler;
-    private Session session;
+    private final Session session;
 
     public SocketContext(SocketHandler socketHandler,Session session){
         this.socketHandler = socketHandler;
@@ -35,7 +35,9 @@ public class SocketContext {
         /*组装消息*/
         Result<?> result = Result.success(state, processedData);
         /*发送消息*/
-        session.getBasicRemote().sendText(JsonUtil.toJson(result));
+        synchronized (this.session) {
+            session.getBasicRemote().sendText(JsonUtil.toJson(result));
+        }
     }
 
     /*销毁操作*/

@@ -4,11 +4,13 @@ import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.RollState;
 import com.system.roll.entity.constant.impl.TimeUnit;
 import com.system.roll.entity.exception.impl.ServiceException;
+import com.system.roll.entity.pojo.Course;
 import com.system.roll.entity.pojo.RollData;
 import com.system.roll.entity.properites.CommonProperties;
 import com.system.roll.entity.properites.RabbitProperties;
 import com.system.roll.entity.vo.Result;
 import com.system.roll.entity.vo.roll.RollDataVo;
+import com.system.roll.mapper.CourseMapper;
 import com.system.roll.rabbit.utils.RabbitUtil;
 import com.system.roll.redis.StudentRedis;
 import com.system.roll.security.interceptor.LoginInterceptor;
@@ -117,9 +119,11 @@ public class DataSocketHandler implements SocketHandler {
         public void run() {
             RabbitUtil rabbitUtil = SpringContextUtil.getBean("RabbitUtil");
             EnumUtil enumUtil = SpringContextUtil.getBean("EnumUtil");
+            CourseMapper courseMapper = SpringContextUtil.getBean("CourseMapper");
             StudentRedis studentRedis = SpringContextUtil.getBean("StudentRedis");
             SocketContext context = SocketContextHandler.getContext("data:" + courseId);
-            RollDataVo statistic = new RollDataVo().setDate(new Date(System.currentTimeMillis()));
+            Course course = courseMapper.selectById(courseId);
+            RollDataVo statistic = new RollDataVo().setDate(new Date(System.currentTimeMillis())).setEnrollNum(course.getEnrollNum()).setFlag(0);
 
             boolean flag = true;//标记是否为刚刚开始接收信号
             while (this.isRunning){
@@ -128,7 +132,7 @@ public class DataSocketHandler implements SocketHandler {
                 /*收到考勤数据，向前端发送*/
                 try {
                     if (data!=null){
-                        RollData rollData = JsonUtil.toObject(data,RollData.class);
+                        RollData rollData = JsonUtil.toObject(data,RollData.class).setFlag(1);
                         if (rollData.getEnrollNum()!=null) statistic.setEnrollNum(rollData.getEnrollNum());
                         rollData.setStudentName(studentRedis.getName(rollData.getStudentId()));
                         if (flag){

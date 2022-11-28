@@ -209,7 +209,7 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         String supervisorId = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
         //String supervisorId = "1";
         /*参数检查*/
-        List<String> courseArrangements = courseDto.getCourseArrangements();
+        List<String> courseArrangements = Arrays.asList(courseDto.getCourseArrangements().split(","));
         if(courseArrangements.isEmpty()){
             throw new ServiceException(ResultCode.PARAM_NOT_MATCH);
         }
@@ -299,6 +299,10 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         for (String courseArrangement:courseArrangements){
             // 拆分字符串
             String[] split = courseArrangement.split(" ");
+            System.out.println(split.length);
+            for (String s : split) {
+                System.out.println(s);
+            }
             // 插入课程安排表
             CourseArrangement arrangement = new CourseArrangement();
             arrangement.setId(idUtil.getId())

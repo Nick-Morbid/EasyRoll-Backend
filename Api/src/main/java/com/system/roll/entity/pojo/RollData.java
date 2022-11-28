@@ -28,4 +28,6 @@ public class RollData implements Serializable {
     private Integer enrollNum;
     /*点名时间*/
     private Timestamp time;
+
+    private Integer flag;//0表示统计数据，1表示单条考勤数据
 }
