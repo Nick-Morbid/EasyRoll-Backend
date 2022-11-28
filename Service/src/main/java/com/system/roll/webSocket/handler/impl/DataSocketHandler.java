@@ -41,6 +41,7 @@ import java.sql.Date;
 public class DataSocketHandler implements SocketHandler {
 
     private RollDataListener listener;
+    private String courseId;
 
     @Override
     public void open(Session session, String token) {
@@ -77,6 +78,7 @@ public class DataSocketHandler implements SocketHandler {
         /*注册监听器，循环读取内容*/
         this.listener = new RollDataListener(courseId, rabbitProperties.getRollDataQueuePrefix() + courseId);
         this.listener.run();
+        this.courseId = courseId;
     }
 
     @Override
@@ -87,7 +89,11 @@ public class DataSocketHandler implements SocketHandler {
     @OnMessage
     @Override
     public void onMessage(String data) {
-
+        try {
+            SocketContextHandler.getContext("data:"+courseId).sendMessage(ResultCode.SUCCESS,new RollData().setFlag(2));
+        } catch (IOException | EncodeException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClose
@@ -127,7 +133,7 @@ public class DataSocketHandler implements SocketHandler {
 
             boolean flag = true;//标记是否为刚刚开始接收信号
             while (this.isRunning){
-                String data = rabbitUtil.consume(queueName, 1000);
+                String data = rabbitUtil.consume(queueName, 500);
                 /*收到考勤数据，向前端发送*/
                 try {
                     if (data!=null){
@@ -160,7 +166,7 @@ public class DataSocketHandler implements SocketHandler {
                             flag = false;
                             context.sendMessage(ResultCode.SUCCESS,statistic);
                         }
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                     }
                 }catch (Exception e){
                     try {

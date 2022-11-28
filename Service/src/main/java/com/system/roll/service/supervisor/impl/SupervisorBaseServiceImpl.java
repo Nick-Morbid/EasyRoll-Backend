@@ -109,6 +109,9 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
     @Resource
     private PinyinUtil pinyinUtil;
 
+    @Resource
+    private CommonUtil commonUtil;
+
     @Override
     public SupervisorVo getSupervisorInfo(String openId) {
         /*先到学生表中查询*/
@@ -176,7 +179,8 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
                     .setPeriod(item.getPeriod().getMsg())
                     .setId(item.getCourseId())
                     .setName(course.getCourseName())
-                    .setProfessorName(StringUtils.join(professorNames,','));
+                    .setProfessorName(StringUtils.join(professorNames,','))
+                    .setClassroom(commonUtil.getClassroom(course.getClassroomNo()));
 
             courses.add(courseVo);
         }
@@ -259,7 +263,8 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         course.setCourseName(courseDto.getCourseName())
                 .setStartWeek(courseDto.getStartWeek())
                 .setEndWeek(courseDto.getEndWeek())
-                .setEnrollNum(studentInfos.size());
+                .setEnrollNum(studentInfos.size())
+                .setClassroomNo(courseDto.getClassroomNo());
         // 插入课程
         courseMapper.insert(course);
         /*记录courseId和courseName的映射*/
@@ -307,7 +312,7 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
             CourseArrangement arrangement = new CourseArrangement();
             arrangement.setId(idUtil.getId())
                     .setCourseId(course.getId())
-                    .setClassroomNo(courseDto.getClassroomNo())
+//                    .setClassroomNo(courseDto.getClassroomNo())
                     .setWeekDay(Integer.parseInt(split[0]))
                     .setPeriod(enumUtil.getEnumByCode(Period.class,Integer.parseInt(split[1])))
                     .setMode(enumUtil.getEnumByCode(TeachingMode.class,Integer.parseInt(split[2])));

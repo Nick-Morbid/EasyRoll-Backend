@@ -25,5 +25,5 @@ public class CourseVo {
 
     private String professorName;
 
-    private String roomNo;
+    private String classroom;
 }

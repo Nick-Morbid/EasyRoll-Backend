@@ -7,7 +7,7 @@
     <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.CourseArrangement">
         <id property="id" column="id" jdbcType="VARCHAR"/>
         <result property="courseId" column="course_id" jdbcType="VARCHAR"/>
-        <result property="classroomNo" column="classroom_no" jdbcType="VARCHAR"/>
+<!--        <result property="classroomNo" column="classroom_no" jdbcType="VARCHAR"/>-->
         <result property="period" column="period" jdbcType="INTEGER" javaType="com.system.roll.entity.constant.impl.Period"/>
         <result property="mode" column="mode" jdbcType="INTEGER"/>
         <result property="weekDay" column="week_day" jdbcType="INTEGER"/>

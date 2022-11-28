@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.context.common.CommonContext;
 import com.system.roll.entity.constant.impl.Period;
 import com.system.roll.entity.constant.impl.TimeUnit;
+import com.system.roll.entity.pojo.AttendanceRecord;
 import com.system.roll.entity.pojo.Course;
 import com.system.roll.entity.pojo.CourseArrangement;
 import com.system.roll.entity.pojo.LeaveRelation;
@@ -275,4 +276,52 @@ public class SpringBootTest {
         System.out.println(period);
     }
 
+    @Resource
+    private CommonUtil commonUtil;
+
+    @Test
+    public void testGetClassroom(){
+        System.out.println(commonUtil.getClassroom(7307));
+    }
+
+    @Resource
+    private AttendanceRecordMapper attendanceRecordMapper;
+
+    @Resource
+    private EnumUtil enumUtil;
+
+    @Test
+    public void testOutPut(){
+//        String courseId = "51206309";
+        String courseId = "37547599";
+
+        Period period = Period.EIGHT_TO_TEN;
+
+        LambdaQueryWrapper<AttendanceRecord> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AttendanceRecord::getCourseId,courseId);
+        wrapper.eq(AttendanceRecord::getPeriod,period);
+
+        List<AttendanceRecord> attendanceRecords = attendanceRecordMapper.selectList(wrapper);
+        List<ExcelItem> list = attendanceRecords.stream().map(attendanceRecord -> {
+            return new ExcelItem()
+                    .setStudentId(attendanceRecord.getStudentId())
+                    .setStudentName(attendanceRecord.getStudentName())
+                    .setState(attendanceRecord.getState().getMsg());
+        }).collect(Collectors.toList());
+        String s = excelUtil.exportExcel(ExcelItem.class, list, ExcelUtil.ExcelType.XLSX);
+        System.out.println(s);
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class ExcelItem{
+        @Excel(value = "学号")
+        private String studentId;
+        @Excel(value = "姓名")
+        private String studentName;
+        @Excel(value = "状态")
+        private String state;
+    }
 }

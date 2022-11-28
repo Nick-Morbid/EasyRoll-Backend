@@ -25,8 +25,8 @@ public class CourseArrangement {
     @TableField(value = "course_id")
     private String courseId;
 
-    @TableField(value = "classroom_no")
-    private Integer classroomNo;
+//    @TableField(value = "classroom_no")
+//    private Integer classroomNo;
 
     @TableField(typeHandler = AutoGenericEnumTypeHandler.class)
     private Period period;
