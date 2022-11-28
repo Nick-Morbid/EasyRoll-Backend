@@ -127,12 +127,12 @@ public class DataSocketHandler implements SocketHandler {
 
             boolean flag = true;//标记是否为刚刚开始接收信号
             while (this.isRunning){
-                String data = rabbitUtil.consume(queueName, 100);
-
+                String data = rabbitUtil.consume(queueName, 1000);
                 /*收到考勤数据，向前端发送*/
                 try {
                     if (data!=null){
                         RollData rollData = JsonUtil.toObject(data,RollData.class).setFlag(1);
+                        log.info("收到数据：{}",rollData);
                         if (rollData.getEnrollNum()!=null) statistic.setEnrollNum(rollData.getEnrollNum());
                         rollData.setStudentName(studentRedis.getName(rollData.getStudentId()));
                         if (flag){
@@ -160,7 +160,7 @@ public class DataSocketHandler implements SocketHandler {
                             flag = false;
                             context.sendMessage(ResultCode.SUCCESS,statistic);
                         }
-                        Thread.sleep(900);
+                        Thread.sleep(1000);
                     }
                 }catch (Exception e){
                     try {

@@ -11,6 +11,7 @@
         <result property="startWeek" column="start_week" jdbcType="INTEGER"/>
         <result property="endWeek" column="end_week" jdbcType="INTEGER"/>
         <result property="attachment" column="attachment" jdbcType="VARCHAR"/>
+        <result property="classroomNo" column="classroom_no" jdbcType="INTEGER"/>
     </resultMap>
 
 </mapper>

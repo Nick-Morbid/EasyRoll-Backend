@@ -8,7 +8,6 @@ import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.pojo.Delivery;
 import com.system.roll.entity.pojo.Professor;
 import com.system.roll.entity.vo.course.CourseListVo;
-import com.system.roll.entity.vo.professor.InfoVo;
 import com.system.roll.entity.vo.professor.ProfessorVo;
 import com.system.roll.handler.mapstruct.ProfessorConvertor;
 import com.system.roll.mapper.DeliveryMapper;
@@ -115,9 +114,12 @@ public class ProfessorBaseServiceImpl implements ProfessorBaseService {
             /*修改授课表中的记录*/
             deliveryMapper.updateProfessorId(professor2.getId(),professor.getId());
         }
-        ProfessorVo professorVo = professorConvertor.professorToProfessorVo(professor)
-                .setCurrentWeek(dateUtil.getWeek(new Date(System.currentTimeMillis())))
-                .setDepartmentName(departmentMapper.selectNameById(professor.getDepartmentId()));
+//        ProfessorVo professorVo = professorConvertor.professorToProfessorVo(professor)
+//                .setCurrentWeek(dateUtil.getWeek(new Date(System.currentTimeMillis())))
+//                .setDepartmentName(departmentMapper.selectNameById(professor.getDepartmentId()));
+        /*组装授课表*/
+        ProfessorVo professorVo = getProfessorInfo(openId);
+
         /*判断是否为从授权端拉起的注册业务*/
         if (infoDto.getSocketId()!=null){
             /*通知前端已完成注册*/
