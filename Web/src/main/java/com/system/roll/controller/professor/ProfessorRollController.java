@@ -20,24 +20,24 @@ public class ProfessorRollController {
     private ProfessorRollService professorRollService;
 
     @GetMapping("/rollData/getLatest")
-    public RollDataVo getRollData(@RequestParam("courseId") Long courseId){
+    public RollDataVo getRollData(@RequestParam("courseId") String courseId){
         return professorRollService.getRollData(courseId);
     }
 
     @GetMapping("/roll/classMembers/getAll")
-    public StudentRollDataListVo getClassMembers(@RequestParam("courseId")   Long courseId,
+    public StudentRollDataListVo getClassMembers(@RequestParam("courseId")   String courseId,
                                                  @RequestParam("sortRule")   Integer sortRule){
         return professorRollService.getClassMembers(courseId,sortRule);
     }
 
     @GetMapping("/classMembers/query")
-    public StudentRollRecord getOneClassMember(@RequestParam("courseId")     Long courseId,
-                                               @RequestParam("studentId")    Long studentId){
+    public StudentRollRecord getOneClassMember(@RequestParam("courseId")     String courseId,
+                                               @RequestParam("studentId")    String studentId){
         return professorRollService.getOneClassMember(courseId,studentId);
     }
 
     @GetMapping("/rollData/statistic")
-    public TotalRollStatisticVo getStatistic(@RequestParam("courseId")   Long courseId,
+    public TotalRollStatisticVo getStatistic(@RequestParam("courseId")   String courseId,
                                              @RequestParam("sortRole")   Integer sortRole){
         return professorRollService.getStatistic(courseId,sortRole);
     }

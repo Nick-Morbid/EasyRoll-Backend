@@ -25,7 +25,7 @@ public class SingleRollStatisticVo {
     private RollData rollData;//最近一次的考勤数据（考勤还未完成时有效）
 
     public void incrAbsenceNum(){
-        this.enrollNum++;
+        this.absenceNum++;
     }
     public void incrAttendanceNum(){
         this.attendanceNum++;

@@ -20,7 +20,7 @@ import java.io.IOException;
 @Accessors(chain = true)
 public class SocketContext {
     private SocketHandler socketHandler;
-    private Session session;
+    private final Session session;
 
     public SocketContext(SocketHandler socketHandler,Session session){
         this.socketHandler = socketHandler;
@@ -29,17 +29,19 @@ public class SocketContext {
     }
 
     /*发送消息（所有类型的socketHandler的消息发送操作都是一样，所以写在Context类中）*/
-    public void sendMessage(ResultCode state, Object data) throws IOException, EncodeException {
+    public synchronized void sendMessage(ResultCode state, Object data) throws IOException, EncodeException {
         /*对消息进行加工*/
         Object processedData = socketHandler.processMessage(data);
         /*组装消息*/
         Result<?> result = Result.success(state, processedData);
         /*发送消息*/
-        session.getBasicRemote().sendText(JsonUtil.toJson(result));
+        synchronized (this.session) {
+            session.getAsyncRemote().sendText(JsonUtil.toJson(result));
+        }
     }
 
     /*销毁操作*/
-    public void clear() throws IOException {
+    public synchronized void clear() throws IOException {
         this.session.close();
         log.info("[Thread:{}]a ws session closed,id is:{}",Thread.currentThread().getId(),session.getId());
     }

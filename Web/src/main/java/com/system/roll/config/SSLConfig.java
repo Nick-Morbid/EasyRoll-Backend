@@ -8,7 +8,7 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 
-//@org.springframework.context.annotation.Configuration
+@org.springframework.context.annotation.Configuration
 public class SSLConfig {
     @Bean
     public ServletWebServerFactory servletContainer() {

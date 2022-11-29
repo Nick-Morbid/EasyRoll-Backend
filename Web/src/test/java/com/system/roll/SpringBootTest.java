@@ -1,22 +1,25 @@
 package com.system.roll;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.context.common.CommonContext;
+import com.system.roll.entity.constant.impl.Period;
+import com.system.roll.entity.constant.impl.TimeUnit;
+import com.system.roll.entity.pojo.AttendanceRecord;
 import com.system.roll.entity.pojo.Course;
+import com.system.roll.entity.pojo.CourseArrangement;
+import com.system.roll.entity.pojo.LeaveRelation;
+import com.system.roll.entity.properites.CommonProperties;
 import com.system.roll.entity.vo.Result;
 import com.system.roll.entity.vo.student.StudentRollListVo;
 import com.system.roll.excel.annotation.Excel;
 import com.system.roll.excel.uitl.ExcelUtil;
 import com.system.roll.formBuilder.FormBuilder;
-import com.system.roll.mapper.CourseMapper;
-import com.system.roll.mapper.DepartmentMapper;
-import com.system.roll.mapper.MajorMapper;
+import com.system.roll.mapper.*;
 import com.system.roll.oss.OssHandler;
 import com.system.roll.oss.OssResource;
 import com.system.roll.redis.CourseRedis;
 import com.system.roll.redis.StudentRedis;
-import com.system.roll.utils.HttpRequestUtil;
-import com.system.roll.utils.IdUtil;
-import com.system.roll.utils.PinyinUtil;
+import com.system.roll.utils.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +30,9 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -158,5 +164,164 @@ public class SpringBootTest {
         form.getStudents().forEach(System.out::println);
         System.out.println(form.getTotal());
     }
+    @Test
+    public void testGetConvertor(){
+//        System.out.println(SpringContextUtil.getBean(RollDataConvertorImpl.class).SingleRollStatisticVoToRollStatistics(new SingleRollStatisticVo().setEnrollNum(10)));
+//        RollDataConvertor rollDataConvertor = SpringContextUtil.getBean(RollDataConvertorImpl.class);
+//        System.out.println(rollDataConvertor.getClass());
+        IdUtil idUtil = SpringContextUtil.getBean("IdUtil");
+        RollStatisticsMapper rollStatisticsMapper = SpringContextUtil.getBean("RollStatisticsMapper");
+    }
 
+    @Resource
+    private CommonProperties commonProperties;
+
+    @Test
+    public void testClassTime(){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis() + commonProperties.ClassTime(TimeUnit.MINUTE));
+        System.out.println(timestamp);
+    }
+
+    @Test
+    public void testPattern(){
+        String regex = "[0-9]{2}";
+        for (String s : commonProperties.getArrangement()) {
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(s);
+//            while (matcher.find()){
+//                System.out.println(matcher.group());
+//            }
+            System.out.println(matcher.group());
+            System.out.println(matcher.group());
+            System.out.println(matcher.group());
+            System.out.println(matcher.group());
+//            if (matcher.find()) System.out.println(matcher.group());
+//            if (matcher.find()) System.out.println(matcher.group());
+
+        }
+//        List<String> arrangement = commonProperties.getArrangement();
+//        String regex = "\\[[^0-9]{2}:[^0-9]{2}]";
+//        Pattern pattern = Pattern.compile(regex);
+//        for (String s : arrangement) {
+//            Matcher matcher = pattern.matcher(s);
+//            matcher.find();
+//            System.out.println(matcher.group());
+//        }
+    }
+    @Test
+    public void getDayTimeMap(){
+//        Map<CommonProperties.ClassTime, Period> dayTimeMap = commonProperties.DayTimeMap();
+//        for (CommonProperties.ClassTime classTime : dayTimeMap.keySet()) {
+//            System.out.println(classTime);
+//            System.out.println(dayTimeMap.get(classTime));
+//        }
+    }
+
+    @Test
+    public void testGetPeriod(){
+        int hour;
+        int minute;
+        for (hour = 8;hour<=21;++hour){
+            for (minute=0;minute<60;minute+=10) System.out.println(String.format("%02d:%02d 属于 %s", hour, minute, commonProperties.getPeriod(hour, minute).getMsg()));
+        }
+    }
+    @Resource
+    private CourseArrangementMapper courseArrangementMapper;
+    @Resource
+    private DateUtil dateUtil;
+    @Test
+    public void testSelectCourseArrangement(){
+        LambdaQueryWrapper<CourseArrangement> wrapper = new LambdaQueryWrapper<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        wrapper.eq(CourseArrangement::getCourseId,"55414535")
+                .eq(CourseArrangement::getPeriod,commonProperties.getPeriod(calendar.get(Calendar.HOUR),calendar.get(Calendar.MINUTE)))
+                .eq(CourseArrangement::getWeekDay,dateUtil.getWeekDay(new Date(System.currentTimeMillis())));
+        System.out.println(courseArrangementMapper.selectOne(wrapper));
+    }
+
+    @Resource
+    private LeaveRelationMapper leaveRelationMapper;
+    @Resource
+    private StudentMapper studentMapper;
+    @Test
+    public void testLeaveMapper(){
+        LeaveRelation leaveRelation = new LeaveRelation()
+                .setId(idUtil.getId())
+                .setTransactorId("id")
+                .setTransactorName("name")
+                .setCreated(new Timestamp(System.currentTimeMillis()))
+                .setStudentId("1")
+                .setStudentName("nick")
+                .setExcuse("督导队员标记为请假")
+                .setStartTime(new Date(System.currentTimeMillis()))
+                .setEndTime(new Date(System.currentTimeMillis()+commonProperties.ClassTime(TimeUnit.MINUTE)))
+                .setResult(1);
+        leaveRelationMapper.insert(leaveRelation);
+//        Student student = new Student().setId(idUtil.getId())
+//                .setStudentName("nick");
+//        studentMapper.insert(student);
+//        LeaveRelation leaveRelation = new LeaveRelation().setId(idUtil.getId()).setStudentId("100000001");
+//        leaveRelationMapper.insert(leaveRelation);
+    }
+
+    @Test
+    public void testGetPeriod1(){
+        /*生成课程时段信息*/
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        Period period = commonProperties.getPeriod(calendar.get(Calendar.HOUR),calendar.get(Calendar.MINUTE));
+        System.out.println(calendar.get(Calendar.HOUR_OF_DAY));
+        System.out.println(calendar.get(Calendar.MINUTE));
+        System.out.println(period);
+    }
+
+    @Resource
+    private CommonUtil commonUtil;
+
+    @Test
+    public void testGetClassroom(){
+        System.out.println(commonUtil.getClassroom(7307));
+    }
+
+    @Resource
+    private AttendanceRecordMapper attendanceRecordMapper;
+
+    @Resource
+    private EnumUtil enumUtil;
+
+    @Test
+    public void testOutPut(){
+//        String courseId = "51206309";
+        String courseId = "37547599";
+
+        Period period = Period.EIGHT_TO_TEN;
+
+        LambdaQueryWrapper<AttendanceRecord> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AttendanceRecord::getCourseId,courseId);
+        wrapper.eq(AttendanceRecord::getPeriod,period);
+
+        List<AttendanceRecord> attendanceRecords = attendanceRecordMapper.selectList(wrapper);
+        List<ExcelItem> list = attendanceRecords.stream().map(attendanceRecord -> {
+            return new ExcelItem()
+                    .setStudentId(attendanceRecord.getStudentId())
+                    .setStudentName(attendanceRecord.getStudentName())
+                    .setState(attendanceRecord.getState().getMsg());
+        }).collect(Collectors.toList());
+        String s = excelUtil.exportExcel(ExcelItem.class, list, ExcelUtil.ExcelType.XLSX);
+        System.out.println(s);
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class ExcelItem{
+        @Excel(value = "学号")
+        private String studentId;
+        @Excel(value = "姓名")
+        private String studentName;
+        @Excel(value = "状态")
+        private String state;
+    }
 }

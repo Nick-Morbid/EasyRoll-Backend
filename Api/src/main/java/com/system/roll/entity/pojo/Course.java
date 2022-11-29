@@ -34,4 +34,7 @@ public class Course {
 
     @TableField(value = "attachment")
     private String attachment;
+
+    @TableField(value = "classroom_no")
+    private Integer classroomNo;
 }

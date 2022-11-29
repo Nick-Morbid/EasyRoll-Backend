@@ -2,9 +2,9 @@ package com.system.roll.service.supervisor;
 
 import com.system.roll.entity.dto.student.CourseDto;
 import com.system.roll.entity.dto.student.InfoDto;
-import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.entity.vo.course.CourseListVo;
 import com.system.roll.entity.vo.course.CourseVo;
+import com.system.roll.entity.vo.student.InfoVo;
 import com.system.roll.entity.vo.supervisor.SupervisorVo;
 
 public interface SupervisorBaseService {

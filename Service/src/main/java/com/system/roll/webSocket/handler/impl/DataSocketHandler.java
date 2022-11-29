@@ -3,20 +3,22 @@ package com.system.roll.webSocket.handler.impl;
 import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.RollState;
 import com.system.roll.entity.constant.impl.TimeUnit;
-import com.system.roll.entity.vo.roll.SingleRollStatisticVo;
-import com.system.roll.redis.RollDataRedis;
-import com.system.roll.utils.EnumUtil;
-import com.system.roll.webSocket.context.SocketContext;
-import com.system.roll.webSocket.context.SocketContextHandler;
-import com.system.roll.entity.pojo.RollData;
-import com.system.roll.entity.vo.Result;
 import com.system.roll.entity.exception.impl.ServiceException;
+import com.system.roll.entity.pojo.Course;
+import com.system.roll.entity.pojo.RollData;
 import com.system.roll.entity.properites.CommonProperties;
 import com.system.roll.entity.properites.RabbitProperties;
+import com.system.roll.entity.vo.Result;
+import com.system.roll.entity.vo.roll.RollDataVo;
+import com.system.roll.mapper.CourseMapper;
 import com.system.roll.rabbit.utils.RabbitUtil;
+import com.system.roll.redis.StudentRedis;
 import com.system.roll.security.interceptor.LoginInterceptor;
+import com.system.roll.utils.EnumUtil;
 import com.system.roll.utils.JsonUtil;
 import com.system.roll.utils.SpringContextUtil;
+import com.system.roll.webSocket.context.SocketContext;
+import com.system.roll.webSocket.context.SocketContextHandler;
 import com.system.roll.webSocket.handler.CustomHttpServletRequest;
 import com.system.roll.webSocket.handler.SocketHandler;
 import lombok.Data;
@@ -39,6 +41,7 @@ import java.sql.Date;
 public class DataSocketHandler implements SocketHandler {
 
     private RollDataListener listener;
+    private String courseId;
 
     @Override
     public void open(Session session, String token) {
@@ -58,15 +61,15 @@ public class DataSocketHandler implements SocketHandler {
         /*将自己注册到context中*/
         SocketContextHandler.addContext("data:"+courseId,new SocketContext(this,session));
         /*从redis中读取最近一次的考勤统计数据*/
-        RollDataRedis rollDataRedis = SpringContextUtil.getBean("RollDataRedis");
-        SingleRollStatisticVo statistics = rollDataRedis.getRollDataStatistics(courseId);
-        if (statistics==null){
-            /*若无考勤数据，发送消息*/
-            session.getBasicRemote().sendText(JsonUtil.toJson(Result.error(ResultCode.RESOURCE_NOT_FOUND)));
-        }else {
-            /*发送最近一次考勤统计数据*/
-            session.getBasicRemote().sendText(JsonUtil.toJson(Result.success(statistics)));
-        }
+//        RollDataRedis rollDataRedis = SpringContextUtil.getBean("RollDataRedis");
+//        SingleRollStatisticVo statistics = rollDataRedis.getRollDataStatistics(courseId);
+//        if (statistics==null){
+//            /*若无考勤数据，发送消息*/
+//            session.getBasicRemote().sendText(JsonUtil.toJson(Result.error(ResultCode.RESOURCE_NOT_FOUND)));
+//        }else {
+//            /*发送最近一次考勤统计数据*/
+//            session.getBasicRemote().sendText(JsonUtil.toJson(Result.success(statistics)));
+//        }
         /*创建队列*/
         RabbitUtil rabbitUtil = SpringContextUtil.getBean("RabbitUtil");
         RabbitProperties rabbitProperties = SpringContextUtil.getBean("RabbitProperties");
@@ -75,6 +78,7 @@ public class DataSocketHandler implements SocketHandler {
         /*注册监听器，循环读取内容*/
         this.listener = new RollDataListener(courseId, rabbitProperties.getRollDataQueuePrefix() + courseId);
         this.listener.run();
+        this.courseId = courseId;
     }
 
     @Override
@@ -85,7 +89,11 @@ public class DataSocketHandler implements SocketHandler {
     @OnMessage
     @Override
     public void onMessage(String data) {
-
+        try {
+            SocketContextHandler.getContext("data:"+courseId).sendMessage(ResultCode.SUCCESS,new RollData().setFlag(2));
+        } catch (IOException | EncodeException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClose
@@ -101,13 +109,11 @@ public class DataSocketHandler implements SocketHandler {
         private String courseId;
         private String queueName;
         private boolean isRunning;
-        private SingleRollStatisticVo statistic;
 
         public RollDataListener(String courseId,String queueName){
             this.courseId = courseId;
             this.queueName = queueName;
             this.isRunning = true;
-            this.statistic = new SingleRollStatisticVo().setDate(new Date(System.currentTimeMillis()));
         }
 
         public void stop(){
@@ -119,34 +125,48 @@ public class DataSocketHandler implements SocketHandler {
         public void run() {
             RabbitUtil rabbitUtil = SpringContextUtil.getBean("RabbitUtil");
             EnumUtil enumUtil = SpringContextUtil.getBean("EnumUtil");
+            CourseMapper courseMapper = SpringContextUtil.getBean("CourseMapper");
+            StudentRedis studentRedis = SpringContextUtil.getBean("StudentRedis");
             SocketContext context = SocketContextHandler.getContext("data:" + courseId);
-            while (this.isRunning){
-                String data = rabbitUtil.consume(queueName, 100);
+            Course course = courseMapper.selectById(courseId);
+            RollDataVo statistic = new RollDataVo().setDate(new Date(System.currentTimeMillis())).setEnrollNum(course.getEnrollNum()).setFlag(0);
 
+            boolean flag = true;//标记是否为刚刚开始接收信号
+            while (this.isRunning){
+                String data = rabbitUtil.consume(queueName, 500);
                 /*收到考勤数据，向前端发送*/
                 try {
                     if (data!=null){
-                        RollData rollData = JsonUtil.toObject(data,RollData.class);
+                        RollData rollData = JsonUtil.toObject(data,RollData.class).setFlag(1);
+                        log.info("收到数据：{}",rollData);
                         if (rollData.getEnrollNum()!=null) statistic.setEnrollNum(rollData.getEnrollNum());
-                        /*生成累积统计数据*/
-                        switch (enumUtil.getEnumByCode(RollState.class,rollData.getState())){
-                            case ATTENDANCE:
-                                statistic.incrAttendanceNum();
-                                break;
-                            case ABSENCE:
-                                statistic.incrAbsenceNum();
-                                break;
-                            case LATE:
-                                statistic.incrLateNum();
-                                statistic.incrAttendanceNum();
-                                break;
-                            case LEAVE:
-                                statistic.incrLeaveNum();
+                        rollData.setStudentName(studentRedis.getName(rollData.getStudentId()));
+                        if (flag){
+                            /*生成累积统计数据*/
+                            switch (enumUtil.getEnumByCode(RollState.class,rollData.getState())){
+                                case ATTENDANCE:
+                                    statistic.incrAttendanceNum();
+                                    break;
+                                case ABSENCE:
+                                    statistic.addAbsence(rollData.getStudentId(),rollData.getStudentName());
+                                    break;
+                                case LATE:
+                                    statistic.addLate(rollData.getStudentId(),rollData.getStudentName());
+                                    break;
+                                case LEAVE:
+                                    statistic.addLeave(rollData.getStudentId(),rollData.getStudentName());
+                            }
+                        }else {
+                            /*发送最近一次的考勤数据*/
+                            context.sendMessage(ResultCode.SUCCESS,rollData);
                         }
-                        /*发送累积统计数据+最近一次考勤数据*/
-                        context.sendMessage(ResultCode.SUCCESS,statistic.setRollData(rollData));
                     }else {
-                        Thread.sleep(900);
+                        /*刚刚开始接收信号完毕，一口气发送累积的结果*/
+                        if (flag){
+                            flag = false;
+                            context.sendMessage(ResultCode.SUCCESS,statistic);
+                        }
+                        Thread.sleep(500);
                     }
                 }catch (Exception e){
                     try {

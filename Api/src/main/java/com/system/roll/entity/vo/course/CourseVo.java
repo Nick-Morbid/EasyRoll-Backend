@@ -24,4 +24,6 @@ public class CourseVo {
     private Integer endWeek;
 
     private String professorName;
+
+    private String classroom;
 }

@@ -6,11 +6,11 @@ import com.system.roll.entity.vo.student.StudentRollDataListVo;
 import com.system.roll.entity.vo.student.StudentRollRecord;
 
 public interface ProfessorRollService {
-    RollDataVo getRollData(Long courseId);
+    RollDataVo getRollData(String courseId);
 
-    StudentRollRecord getOneClassMember(Long courseId, Long studentId);
+    StudentRollRecord getOneClassMember(String courseId, String studentId);
 
-    TotalRollStatisticVo getStatistic(Long courseId, Integer sortRole);
+    TotalRollStatisticVo getStatistic(String courseId, Integer sortRole);
 
-    StudentRollDataListVo getClassMembers(Long courseId, Integer sortRule);
+    StudentRollDataListVo getClassMembers(String courseId, Integer sortRule);
 }

@@ -97,14 +97,14 @@ public class StudentRollServiceImpl implements StudentRollService {
             String courseId = relation.getCourseId();
             LambdaQueryWrapper<CourseArrangement> caqw = new LambdaQueryWrapper<>();
             caqw.eq(CourseArrangement::getCourseId,courseId)
-                            .eq(CourseArrangement::getWeekDay,dateUtil.getWeekDay(date));
+                    .eq(CourseArrangement::getWeekDay,dateUtil.getWeekDay(date));
             CourseArrangement courseArrangement = courseArrangementMapper.selectOne(caqw);
             rollRecord.setPeriod(courseArrangement.getPeriod());
 
             // 查出课程名称
             String courseName = courseRedis.getCourseName(courseId);
             rollRecord.setCourseId(courseId)
-                            .setCourseName(courseName);
+                    .setCourseName(courseName);
 
             aqw.clear();
             aqw.eq(AttendanceRecord::getStudentId,studentId)

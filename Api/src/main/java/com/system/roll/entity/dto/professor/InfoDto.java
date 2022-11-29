@@ -14,5 +14,6 @@ public class InfoDto{
     private String name;
     private String departmentName;
     private String code;
+    private String socketId;
     private Integer role;
 }

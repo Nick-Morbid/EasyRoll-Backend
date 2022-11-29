@@ -20,10 +20,14 @@ public class RollData implements Serializable {
     private String courseId;
     /*学生id*/
     private String studentId;
+    /*学生名称*/
+    private String studentName;
     /*状态*/
     private Integer state;
     /*有点名的总人数*/
     private Integer enrollNum;
     /*点名时间*/
     private Timestamp time;
+
+    private Integer flag;//0表示统计数据，1表示单条考勤数据
 }

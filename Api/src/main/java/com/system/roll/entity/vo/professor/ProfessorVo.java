@@ -17,6 +17,7 @@ public class ProfessorVo {
     private String departmentId;
     private String departmentName;
     private Integer role;
+    private Integer currentWeek;
     private List<CourseVo> courses;
     private Integer weekDay;
 

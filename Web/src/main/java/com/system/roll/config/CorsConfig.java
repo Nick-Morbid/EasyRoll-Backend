@@ -22,7 +22,7 @@ public class CorsConfig {
 
         corsConfiguration.setAllowCredentials(true);
 
-        corsConfiguration.setExposedHeaders(Arrays.asList("Authorization","SocketId"));//将Authorization暴露出来，解决跨域token携带问题
+        corsConfiguration.setExposedHeaders(Arrays.asList("Authorization"));//将Authorization暴露出来，解决跨域token携带问题
         return corsConfiguration;
     }
 

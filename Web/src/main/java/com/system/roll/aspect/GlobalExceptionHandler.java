@@ -31,25 +31,29 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = NullPointerException.class)
     public Result<?> NullPointerExceptionHandler(Exception e){
+        e.printStackTrace();
 //        System.out.println("空指针异常！原因是："+e);
         e.printStackTrace();
         return Result.error(ResultCode.NULL_POINT);
     }
 
     @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
-    public Result<?> HttpMediaTypeNotSupportedExceptionHandler(){
+    public Result<?> HttpMediaTypeNotSupportedExceptionHandler(HttpMediaTypeNotSupportedException e){
+        e.printStackTrace();
 //        System.out.println("请求格式异常！原因是："+e);
         return Result.error(ResultCode.BODY_NOT_MATCH);
     }
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
-    public Result<?> HttpRequestMethodNotSupportedExceptionHandler(){
+    public Result<?> HttpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException e){
+        e.printStackTrace();
 //        System.out.println("请求方法异常！原因是："+e);
         return Result.error(ResultCode.METHOD_NOT_MATCH);
     }
 
     @ExceptionHandler(value = ClassCastException.class)
     public Result<?> ClassCastExceptionHandler(ClassCastException e){
+        e.printStackTrace();
         System.out.println("请求路径异常！原因是："+e);
         return Result.error(ResultCode.PATH_NOT_MATCH);
     }
@@ -57,8 +61,9 @@ public class GlobalExceptionHandler {
     /*
     处理其他异常
      */
-//    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value = Exception.class)
     public Result<?> ExceptionHandler(Exception e){
+        e.printStackTrace();
         System.out.println("未知异常！原因是："+e);
         return Result.error(ResultCode.UNKNOWN);
     }

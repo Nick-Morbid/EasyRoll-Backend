@@ -38,9 +38,9 @@ public class InitializingHandler {
         rabbitUtil.createExchange(rabbitProperties.getRollDataExchange());
         log.info("[Thread:{}]:交换机:{}创建完成.",Thread.currentThread().getId(),rabbitProperties.getRollDataExchange());
         /*执行所有的task*/
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+//        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         for (String taskClassName : taskClassNames) {
-            FlinkTask task = (FlinkTask) classLoader.loadClass(taskClassName).getDeclaredConstructor().newInstance();
+            FlinkTask task = (FlinkTask) Class.forName(taskClassName).getDeclaredConstructor().newInstance();
             /*定义任务的内容*/
             task.defineTask();
             /*执行任务*/

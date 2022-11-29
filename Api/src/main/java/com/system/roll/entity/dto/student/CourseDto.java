@@ -7,8 +7,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,6 +20,6 @@ public class CourseDto{
     private Integer startWeek;
     private Integer endWeek;
     private Integer grade;
-    private List<String> courseArrangements;
+    private String courseArrangements;
     private MultipartFile studentList;
 }

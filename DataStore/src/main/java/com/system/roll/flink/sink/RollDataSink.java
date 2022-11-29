@@ -1,15 +1,12 @@
 package com.system.roll.flink.sink;
 
-import com.system.roll.entity.constant.impl.RollState;
 import com.system.roll.entity.constant.impl.TimeUnit;
 import com.system.roll.entity.pojo.RollData;
-import com.system.roll.entity.vo.roll.SingleRollStatisticVo;
-import com.system.roll.flink.context.FlinkContext;
 import com.system.roll.entity.properites.CommonProperties;
 import com.system.roll.entity.properites.RabbitProperties;
+import com.system.roll.flink.context.FlinkContext;
 import com.system.roll.rabbit.utils.RabbitUtil;
 import com.system.roll.redis.RollDataRedis;
-import com.system.roll.utils.EnumUtil;
 import com.system.roll.utils.JsonUtil;
 import com.system.roll.utils.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +14,6 @@ import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.sql.Date;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -55,31 +50,9 @@ public class RollDataSink extends RichSinkFunction<RollData> {
         /*检查是否完成点名*/
         if (Objects.equals(rollDataContext.listLength(courseId), rollDataContext.get(courseId))){
             log.info("课程号：{}完成点名",courseId);
-            /*计算统计数据*/
-            List<RollData> rollDataList = rollDataContext.listGet(courseId);
             RollDataRedis rollDataRedis = SpringContextUtil.getBean("RollDataRedis");
-            EnumUtil enumUtil = SpringContextUtil.getBean("EnumUtil");
-            SingleRollStatisticVo statistic = new SingleRollStatisticVo().setDate(new Date(System.currentTimeMillis())).setEnrollNum(rollDataContext.get(courseId));
-            for (RollData rollData : rollDataList) {
-                switch (enumUtil.getEnumByCode(RollState.class,rollData.getState())){
-                    case ATTENDANCE:
-                        statistic.incrAttendanceNum();
-                        break;
-                    case ABSENCE:
-                        statistic.incrAbsenceNum();
-                        break;
-                    case LATE:
-                        statistic.incrLateNum();
-                        statistic.incrAttendanceNum();
-                        break;
-                    case LEAVE:
-                        statistic.incrLeaveNum();
-                }
-            }
-            /*保存到redis中*/
-            rollDataRedis.saveRollDataStatistics(courseId,statistic);
-            /*todo 保存到mysql中*/
-
+            /*将统计结果暂存到redis中*/
+            rollDataRedis.saveRollDataList(courseId,rollDataContext.listGet(courseId));
             rollDataContext.remove(courseId);
             rollDataContext.listRemove(courseId);
         }

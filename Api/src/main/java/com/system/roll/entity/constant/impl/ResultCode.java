@@ -23,6 +23,7 @@ public enum  ResultCode implements CommonEnum {
     FAILED_TO_IMPORT_EXCEL("excel导入异常",403),
     FAILED_TO_EXPORT_EXCEL("excel导出异常",404),
     PARAM_NOT_MATCH("请求参数异常",405),
+    INVALID_ROLL("无效点名",406),
 
 
     NULL_POINT("空指针异常",500),
@@ -32,6 +33,8 @@ public enum  ResultCode implements CommonEnum {
     FAILED_TO_GET_ELEMENT_FROM_MAP("map中无对应的元素",504),
     RESOURCE_NOT_FOUND("资源未找到",505),
     UPLOAD_FAILURE("文件上传失败",506),
+    PROFILE_ERROR("配置文件无效",507),
+    FAILED_TO_SEND_MESSAGE("消息发送失败",508),
 
     WEBSOCKET_NOT_BUILT("长连接未建立",601),
     WEBSOCKET_SEND_FAILED("长连接消息发送失败",602),

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-@Component
+@Component(value = "IdUtil")
 public class IdUtil {
     public String getId(){
         Calendar c=Calendar.getInstance();
@@ -21,6 +21,6 @@ public class IdUtil {
      * 生成长连接的id
      * */
     public String getWebSocketId(){
-        return "ws:"+getId();
+        return "ws"+getId();
     }
 }

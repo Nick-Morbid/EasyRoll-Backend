@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.system.roll.mapper.LeaveMapper">
+<mapper namespace="com.system.roll.mapper.LeaveRelationMapper">
 
-    <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.Leave">
+    <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.LeaveRelation">
         <id property="id" column="id" jdbcType="VARCHAR"/>
         <result property="studentId" column="student_id" jdbcType="VARCHAR"/>
         <result property="studentName" column="student_name" jdbcType="VARCHAR"/>
@@ -18,5 +18,6 @@
         <result property="result" column="result" jdbcType="INTEGER"/>
 
     </resultMap>
+
 
 </mapper>

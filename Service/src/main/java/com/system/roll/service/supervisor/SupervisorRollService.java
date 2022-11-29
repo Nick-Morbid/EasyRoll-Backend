@@ -1,7 +1,7 @@
 package com.system.roll.service.supervisor;
 
 import com.system.roll.entity.vo.message.MessageListVo;
-import com.system.roll.entity.vo.roll.SingleRollStatisticVo;
+import com.system.roll.entity.vo.roll.RollDataVo;
 import com.system.roll.entity.vo.roll.statistics.StatisticDetailVo;
 import com.system.roll.entity.vo.roll.statistics.StatisticsVo;
 import com.system.roll.entity.vo.student.StudentRollListVo;
@@ -28,7 +28,7 @@ public interface SupervisorRollService {
     /**
      * 获取单次点名的统计结果
      * */
-    SingleRollStatisticVo getRollDataStatistic(String courseId) throws InterruptedException;
+    RollDataVo getRollDataStatistic(Integer enrollNum, String courseId) throws InterruptedException;
 
     /**
      * 获取消息列表

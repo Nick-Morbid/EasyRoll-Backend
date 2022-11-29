@@ -64,6 +64,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ProfessorVo professorLogin(String socketId, String code) {
+        log.warn("第三方授权的socketId为：{}",socketId);
         /*根据code获取用户唯一的标识*/
         JsCode2sessionBo jsCode2sessionBo = wxApiService.jsCode2session(code);
         String openId = jsCode2sessionBo.getOpenId();
