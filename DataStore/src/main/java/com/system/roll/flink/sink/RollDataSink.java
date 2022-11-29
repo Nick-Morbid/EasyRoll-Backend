@@ -1,6 +1,5 @@
 package com.system.roll.flink.sink;
 
-import com.system.roll.entity.constant.impl.TimeUnit;
 import com.system.roll.entity.pojo.RollData;
 import com.system.roll.entity.properites.CommonProperties;
 import com.system.roll.entity.properites.RabbitProperties;
@@ -37,7 +36,7 @@ public class RollDataSink extends RichSinkFunction<RollData> {
             rollDataContext.add(courseId,value.getEnrollNum());
             /*创建对应的消息队列*/
             CommonProperties commonProperties = SpringContextUtil.getBean("CommonProperties");
-            rabbitUtil.createTTLQueue(rabbitProperties.getRollDataQueuePrefix()+courseId,rabbitProperties.getRollDataExchange(),courseId,true,commonProperties.RollDataTTL(TimeUnit.MINUTE));
+            rabbitUtil.createQueue(rabbitProperties.getRollDataQueuePrefix()+courseId,rabbitProperties.getRollDataExchange(),courseId,false);
             return;
         }
         else {
