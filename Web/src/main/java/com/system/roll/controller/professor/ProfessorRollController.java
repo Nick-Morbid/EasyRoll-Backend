@@ -1,5 +1,6 @@
 package com.system.roll.controller.professor;
 
+import com.system.roll.entity.vo.roll.GradeRollStatisticVo;
 import com.system.roll.entity.vo.roll.RollDataVo;
 import com.system.roll.entity.vo.roll.TotalRollStatisticVo;
 import com.system.roll.entity.vo.student.StudentRollDataListVo;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.sql.Date;
 
 @RestController
 @RequestMapping("/professor")
@@ -51,6 +53,11 @@ public class ProfessorRollController {
     @GetMapping("/roll/output/custom")
     public void getCustomOutput(){
 
+    }
+
+    @GetMapping("/rollData/getAll")
+    public GradeRollStatisticVo getAll(@RequestParam("date")Date date){
+        return professorRollService.getAll(date);
     }
 
 }

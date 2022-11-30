@@ -27,6 +27,8 @@ public class GradeRollStatisticVo {
         private String courseName;
         private Integer classroomNo;
         private String professorName;
+        private Integer absenceNum;
+        private List<String> absenceList;
         private Integer lateNum;
         private List<String> lateList;
         private Integer leaveNum;

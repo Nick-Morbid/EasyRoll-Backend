@@ -2,27 +2,27 @@ package com.system.roll.service.professor.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.entity.constant.impl.RollState;
-import com.system.roll.entity.pojo.AttendanceRecord;
-import com.system.roll.entity.pojo.CourseRelation;
-import com.system.roll.entity.pojo.RollStatistics;
+import com.system.roll.entity.pojo.*;
+import com.system.roll.entity.vo.roll.GradeRollStatisticVo;
 import com.system.roll.entity.vo.roll.RollDataVo;
 import com.system.roll.entity.vo.roll.TotalRollStatisticVo;
 import com.system.roll.entity.vo.student.StudentRollDataListVo;
 import com.system.roll.entity.vo.student.StudentRollRecord;
-import com.system.roll.mapper.AttendanceRecordMapper;
-import com.system.roll.mapper.CourseMapper;
-import com.system.roll.mapper.CourseRelationMapper;
-import com.system.roll.mapper.RollStatisticsMapper;
+import com.system.roll.mapper.*;
 import com.system.roll.redis.CourseRedis;
 import com.system.roll.service.professor.ProfessorRollService;
 import com.system.roll.utils.DateUtil;
 import com.system.roll.utils.EnumUtil;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component(value = "ProfessorRollService")
 public class ProfessorRollServiceImpl implements ProfessorRollService {
@@ -46,6 +46,12 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
 
     @Resource
     private CourseRedis courseRedis;
+
+    @Resource
+    private DeliveryMapper deliveryMapper;
+
+    @Resource
+    private CourseArrangementMapper courseArrangementMapper;
 
     @Override
     public RollDataVo getRollData(String courseId) {
@@ -221,6 +227,67 @@ public class ProfessorRollServiceImpl implements ProfessorRollService {
 
         return studentRollDataListVo;
 
+    }
+
+    @Override
+    public GradeRollStatisticVo getAll(Date date) {
+        GradeRollStatisticVo gradeRollStatisticVo = new GradeRollStatisticVo();
+        gradeRollStatisticVo.setTotal(0);
+        List<GradeRollStatisticVo.GradeRollData> records = new ArrayList<>();
+
+        // 查出当天所有考勤数据
+        LambdaQueryWrapper<RollStatistics> rsqw = new LambdaQueryWrapper<>();
+        rsqw.eq(RollStatistics::getDate,date);
+        List<RollStatistics> rollStatistics = rollStatisticsMapper.selectList(rsqw);
+        rollStatistics.forEach(roll->{
+            GradeRollStatisticVo.GradeRollData rollData = new GradeRollStatisticVo.GradeRollData();
+            rollData.setCourseName(courseRedis.getCourseName(roll.getCourseId()))
+                    .setAbsenceNum(roll.getAbsenceNum())
+                    .setLateNum(roll.getLateNum())
+                    .setLeaveNum(roll.getLeaveNum());
+
+            // 查出课程教师
+            LambdaQueryWrapper<Delivery> dqw = new LambdaQueryWrapper<>();
+            dqw.eq(Delivery::getCourseId,roll.getCourseId());
+            List<Delivery> deliveries = deliveryMapper.selectList(dqw);
+            List<String> professorName = deliveries.stream().map(Delivery::getProfessorName).collect(Collectors.toList());
+            String professorNames = StringUtils.join(professorName,',');
+            rollData.setProfessorName(professorNames);
+
+            // 查出课程教师
+            LambdaQueryWrapper<Course> caqw = new LambdaQueryWrapper<>();
+            caqw.eq(Course::getId,roll.getCourseId());
+            Course course = courseMapper.selectOne(caqw);
+            rollData.setClassroomNo(course.getClassroomNo());
+
+
+            LambdaQueryWrapper<AttendanceRecord> aqw = new LambdaQueryWrapper<>();
+            aqw.eq(AttendanceRecord::getCourseId,roll.getCourseId())
+                    .eq(AttendanceRecord::getDate,date);
+
+            List<AttendanceRecord> list = attendanceRecordMapper.selectList(aqw);
+            List<String> absenceList = new ArrayList<>();
+            List<String> lateList = new ArrayList<>();
+            List<String> leaveList = new ArrayList<>();
+
+            list.forEach(item->{
+                switch (item.getState()){
+                    case ABSENCE:absenceList.add(item.getStudentName());break;
+                    case LEAVE:leaveList.add(item.getStudentName());break;
+                    case LATE:lateList.add(item.getStudentName());break;
+                    default:break;
+                }
+            });
+            rollData.setAbsenceList(absenceList);
+            rollData.setLateList(lateList);
+            rollData.setLeaveList(leaveList);
+
+            records.add(rollData);
+
+        });
+        gradeRollStatisticVo.setRollDataList(records);
+
+        return gradeRollStatisticVo;
     }
 
     private void sortByRole(Integer sortRule,List<TotalRollStatisticVo.Record> students){
