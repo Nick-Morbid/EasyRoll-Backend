@@ -3,10 +3,8 @@ package com.system.roll.rabbit.utils;
 import com.system.roll.entity.properites.RabbitProperties;
 import com.system.roll.rabbit.context.RabbitContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.stereotype.Component;
 
@@ -126,5 +124,22 @@ public class RabbitUtil {
     public void sendMessage(String exchangeName,String routingKey,String data) {
         log.info("交换机为：{}，路由规则为：{}，发送数据内容为：{}",exchangeName,routingKey,data);
         rabbitAdmin.getRabbitTemplate().convertAndSend(exchangeName,routingKey,data);
+    }
+
+    /**
+     * 发送一条ttl消息
+     * */
+    public void sendTTLMessage(String exchangeName,String routingKey,String data,long timeLimit){
+        MessagePostProcessor messagePostProcessor = new MessagePostProcessor() {
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                //用这么方法来设置消息的参数！
+                message.getMessageProperties().setExpiration(String.valueOf(timeLimit));//这里传入的参数类型为字符串！
+                message.getMessageProperties().setContentEncoding("UTF-8");
+                return message;
+            }
+        };
+        log.info("交换机为：{}，路由规则为：{}，发送数据内容为：{}，过期时间：{} s",exchangeName,routingKey,data,timeLimit/1000);
+        rabbitAdmin.getRabbitTemplate().convertAndSend(exchangeName,routingKey,data,messagePostProcessor);
     }
 }

@@ -38,6 +38,7 @@ public class SocketContext {
         synchronized (this.session) {
             session.getAsyncRemote().sendText(JsonUtil.toJson(result));
         }
+        log.info("[ws session:{}]发送了一条消息，消息内容为：{}",session.getId(),data);
     }
 
     /*销毁操作*/

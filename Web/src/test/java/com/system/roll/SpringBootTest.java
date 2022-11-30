@@ -19,6 +19,7 @@ import com.system.roll.oss.OssHandler;
 import com.system.roll.oss.OssResource;
 import com.system.roll.redis.CourseRedis;
 import com.system.roll.redis.StudentRedis;
+import com.system.roll.service.supervisor.SupervisorBaseService;
 import com.system.roll.utils.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -310,6 +311,21 @@ public class SpringBootTest {
         }).collect(Collectors.toList());
         String s = excelUtil.exportExcel(ExcelItem.class, list, ExcelUtil.ExcelType.XLSX);
         System.out.println(s);
+    }
+
+    @Resource(name = "SupervisorBaseService")
+    private SupervisorBaseService supervisorBaseService;
+    @Resource
+    private RollRelationMapper rollRelationMapper;
+
+    @Test
+    public void deleteAllCourse(){
+        for (Course course : courseMapper.selectList(null)) {
+            supervisorBaseService.deleteCourse(course.getId());
+        }
+        leaveRelationMapper.delete(null);
+        rollRelationMapper.delete(null);
+        attendanceRecordMapper.delete(null);
     }
 
     @Data

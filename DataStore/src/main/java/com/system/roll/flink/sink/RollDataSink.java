@@ -1,5 +1,6 @@
 package com.system.roll.flink.sink;
 
+import com.system.roll.entity.constant.impl.TimeUnit;
 import com.system.roll.entity.pojo.RollData;
 import com.system.roll.entity.properites.CommonProperties;
 import com.system.roll.entity.properites.RabbitProperties;
@@ -35,7 +36,6 @@ public class RollDataSink extends RichSinkFunction<RollData> {
             log.info("开始对课程号：{}的点名",courseId);
             rollDataContext.add(courseId,value.getEnrollNum());
             /*创建对应的消息队列*/
-            CommonProperties commonProperties = SpringContextUtil.getBean("CommonProperties");
             rabbitUtil.createQueue(rabbitProperties.getRollDataQueuePrefix()+courseId,rabbitProperties.getRollDataExchange(),courseId,false);
             return;
         }
@@ -44,7 +44,8 @@ public class RollDataSink extends RichSinkFunction<RollData> {
             if (!rollDataContext.listContainKey(courseId)) value.setEnrollNum(rollDataContext.get(courseId));
             rollDataContext.listAdd(courseId,value);
             /*给相应课程的老师推送数据*/
-            rabbitUtil.sendMessage(rabbitProperties.getRollDataExchange(),courseId, JsonUtil.toJson(value));
+            CommonProperties commonProperties = SpringContextUtil.getBean("CommonProperties");
+            rabbitUtil.sendTTLMessage(rabbitProperties.getRollDataExchange(),courseId, JsonUtil.toJson(value),commonProperties.MessageTTL(TimeUnit.MINUTE));
         }
         /*检查是否完成点名*/
         if (Objects.equals(rollDataContext.listLength(courseId), rollDataContext.get(courseId))){
