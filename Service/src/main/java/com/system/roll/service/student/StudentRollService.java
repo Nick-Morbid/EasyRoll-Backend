@@ -20,8 +20,10 @@ public interface StudentRollService {
     void applyQuery(LeaveQueryDTO leaveDto);
 
     RollHistoryVo getHistory(Date date);
-
-    Boolean putPosition(RollTaskDTO rollTaskDTO);
+    /**
+     * 上传经纬度信息，并进行判断
+     * */
+    void putPosition(PositionDto data);
 
     @Data
     @AllArgsConstructor
@@ -33,16 +35,5 @@ public interface StudentRollService {
         private Timestamp endTime;
         private String excuse;
         private String attachment;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    @ToString
-    class RollTaskDTO {
-        private String courseId;
-        private Double longitude;
-        private Double latitude;
     }
 }

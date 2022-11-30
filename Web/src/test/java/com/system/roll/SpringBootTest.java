@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.context.common.CommonContext;
 import com.system.roll.entity.constant.impl.Period;
 import com.system.roll.entity.constant.impl.TimeUnit;
-import com.system.roll.entity.pojo.AttendanceRecord;
-import com.system.roll.entity.pojo.Course;
-import com.system.roll.entity.pojo.CourseArrangement;
-import com.system.roll.entity.pojo.LeaveRelation;
+import com.system.roll.entity.pojo.*;
 import com.system.roll.entity.properites.CommonProperties;
 import com.system.roll.entity.vo.Result;
 import com.system.roll.entity.vo.student.StudentRollListVo;
@@ -19,11 +16,13 @@ import com.system.roll.oss.OssHandler;
 import com.system.roll.oss.OssResource;
 import com.system.roll.redis.CourseRedis;
 import com.system.roll.redis.StudentRedis;
+import com.system.roll.service.supervisor.SupervisorBaseService;
 import com.system.roll.utils.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -32,15 +31,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @org.springframework.boot.test.context.SpringBootTest(webEnvironment = org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Slf4j
 public class SpringBootTest {
 
     @Resource(name = "ExcelUtil")
@@ -312,6 +309,60 @@ public class SpringBootTest {
         System.out.println(s);
     }
 
+    @Resource(name = "SupervisorBaseService")
+    private SupervisorBaseService supervisorBaseService;
+    @Resource
+    private RollRelationMapper rollRelationMapper;
+
+    @Test
+    public void deleteAllCourse(){
+        for (Course course : courseMapper.selectList(null)) {
+            supervisorBaseService.deleteCourse(course.getId());
+        }
+        leaveRelationMapper.delete(null);
+        rollRelationMapper.delete(null);
+        attendanceRecordMapper.delete(null);
+    }
+
+
+    @Resource
+    private PositionMapper positionMapper;
+    @Resource(name = "PositionUtil")
+    private PositionUtil positionUtil;
+    @Test
+    public void insertPoint() throws IOException {
+        String positionRelation = "F:\\软工大作业\\项目代码\\EasyRoll-Backend\\Web\\resource\\经纬度信息.xlsx";
+        String positionInfo = "F:\\软工大作业\\项目代码\\EasyRoll-Backend\\Web\\resource\\教学楼定位信息.xlsx";
+        List<PositionInfo> positionInfos = excelUtil.importExcel(PositionInfo.class, new FileInputStream(positionInfo), ExcelUtil.ExcelType.XLSX);
+        List<PositionRelation> positionRelations = excelUtil.importExcel(PositionRelation.class, new FileInputStream(positionRelation), ExcelUtil.ExcelType.XLSX);
+        Map<String,Point> pointMap = new HashMap<>();
+        for (PositionRelation relation : positionRelations) {
+            Point point = new Point().setLongitude(positionUtil.toDecimal(relation.getLongitude())).setDimension(positionUtil.toDecimal(relation.getDimension()));
+            pointMap.put(relation.getPointNo(),point);
+//            log.info("转换前：经度：{}，维度：{}",relation.getLongitude(),relation.getDimension());
+//            log.info("转换后：经度：{}，维度：{}",point.getLongitude(),point.getDimension());
+        }
+        for (PositionInfo info : positionInfos) {
+            Point point1 = pointMap.get(info.getPoint1());
+            Point point2 = pointMap.get(info.getPoint2());
+            Point point3 = pointMap.get(info.getPoint3());
+            Point point4 = pointMap.get(info.getPoint4());
+
+            Position position = new Position()
+                    .setPositionId(idUtil.getId())
+                    .setDormNo(Integer.valueOf(info.getDorm_no()))
+                    .setPoint1Longitude(point1.getLongitude())
+                    .setPoint1Dimension(point1.getDimension())
+                    .setPoint2Longitude(point2.getLongitude())
+                    .setPoint2Dimension(point2.getDimension())
+                    .setPoint3Longitude(point3.getLongitude())
+                    .setPoint3Dimension(point3.getDimension())
+                    .setPoint4Longitude(point4.getLongitude())
+                    .setPoint4Dimension(point4.getDimension());
+            positionMapper.insert(position);
+        }
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -324,4 +375,45 @@ public class SpringBootTest {
         @Excel(value = "状态")
         private String state;
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class PositionInfo{
+        @Excel(value = "教学楼编号")
+        private String dorm_no;
+        @Excel(value = "定位点1编号")
+        private String point1;
+        @Excel(value = "定位点2编号")
+        private String point2;
+        @Excel(value = "定位点3编号")
+        private String point3;
+        @Excel(value = "定位点4编号")
+        private String point4;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class Point{
+        private Double longitude;
+        private Double dimension;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class PositionRelation{
+        @Excel(value = "点位")
+        private String pointNo;
+        @Excel(value = "经度")
+        private String longitude;
+        @Excel(value = "纬度")
+        private String dimension;
+    }
 }
+
+

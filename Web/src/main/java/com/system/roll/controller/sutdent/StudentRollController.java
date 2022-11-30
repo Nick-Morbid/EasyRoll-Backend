@@ -25,8 +25,9 @@ public class StudentRollController {
     }
 
     @PostMapping("/putPosition")
-    public Boolean putPosition(StudentRollService.RollTaskDTO rollTaskDTO){
-        return studentRollService.putPosition(rollTaskDTO);
+    public void putPosition(@RequestBody PositionDto data){
+        /*上传经纬度信息，进行判断*/
+        studentRollService.putPosition(data);
     }
 
     @PostMapping("/leave/apply")
