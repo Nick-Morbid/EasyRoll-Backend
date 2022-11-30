@@ -24,6 +24,7 @@ public enum  ResultCode implements CommonEnum {
     FAILED_TO_EXPORT_EXCEL("excel导出异常",404),
     PARAM_NOT_MATCH("请求参数异常",405),
     INVALID_ROLL("无效点名",406),
+    NOT_ROLL_STATISTIC("无点名统计数据",407),
 
 
     NULL_POINT("空指针异常",500),

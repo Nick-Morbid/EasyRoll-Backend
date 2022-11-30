@@ -41,7 +41,7 @@ public class SupervisorBaseController {
         return supervisorBaseService.uploadCourse(courseDto);
     }
 
-    @PutMapping("/course/update")
+    @PostMapping("/course/update")
     public CourseVo updateCourse(
             @RequestParam(value = "courseId") String courseId,
             @RequestParam(value = "courseName") String courseName,
@@ -66,7 +66,7 @@ public class SupervisorBaseController {
         return supervisorBaseService.updateCourse(courseDTO);
     }
 
-    @DeleteMapping("/course/delete")
+    @GetMapping("/course/delete")
     public void deleteCourse(@RequestParam(value = "courseId")String courseId){
         supervisorBaseService.deleteCourse(courseId);
     }

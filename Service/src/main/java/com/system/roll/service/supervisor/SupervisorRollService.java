@@ -48,7 +48,7 @@ public interface SupervisorRollService {
     /**
      * 导出为text
      * */
-    void outputText(Long courseId);
+    String outputText(String courseId);
 
     StatisticsVo getStatistics(Date weekDay);
 

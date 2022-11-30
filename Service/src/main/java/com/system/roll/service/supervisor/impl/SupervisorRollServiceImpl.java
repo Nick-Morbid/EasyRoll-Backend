@@ -12,6 +12,7 @@ import com.system.roll.entity.vo.roll.RollDataVo;
 import com.system.roll.entity.vo.roll.statistics.StatisticDetailVo;
 import com.system.roll.entity.vo.roll.statistics.StatisticsVo;
 import com.system.roll.entity.vo.student.StudentRollListVo;
+import com.system.roll.exporter.TextExporter;
 import com.system.roll.formBuilder.FormBuilder;
 import com.system.roll.handler.mapstruct.RollDataConvertor;
 import com.system.roll.handler.mapstruct.StudentConvertor;
@@ -88,6 +89,9 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
 
     @Resource
     private LeaveRelationMapper leaveRelationMapper;
+
+    @Resource(name = "TextExporter")
+    private TextExporter textExporter;
 
     @Override
     public void publishRoll(RollDto data) {
@@ -200,8 +204,16 @@ public class SupervisorRollServiceImpl implements SupervisorRollService {
     }
 
     @Override
-    public void outputText(Long courseId) {
-
+    public String outputText(String courseId) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        Period period = commonProperties.getPeriod(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        LambdaQueryWrapper<RollStatistics> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(RollStatistics::getDate,new Date(System.currentTimeMillis()));
+        wrapper.eq(RollStatistics::getPeriod,period);
+        List<RollStatistics> rollStatistics = rollStatisticsMapper.selectList(wrapper);
+        if (rollStatistics==null||rollStatistics.size()==0) throw new ServiceException(ResultCode.NOT_ROLL_STATISTIC);
+        return textExporter.outputText(courseId,new Date(System.currentTimeMillis()),period);
     }
 
     @Override
