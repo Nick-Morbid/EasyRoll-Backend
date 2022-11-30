@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.roll.mapper.PositionMapper">
+
+    <resultMap id="BaseResultMap" type="com.system.roll.entity.pojo.Position">
+        <id property="positionId" column="position_id" jdbcType="VARCHAR"/>
+        <result property="point1Longitude" column="point1_longitude" jdbcType="DOUBLE"/>
+        <result property="point1Dimension" column="point1_dimension" jdbcType="DOUBLE"/>
+        <result property="point2Longitude" column="point2_longitude" jdbcType="DOUBLE"/>
+        <result property="point2Dimension" column="point2_dimension" jdbcType="DOUBLE"/>
+        <result property="point3Longitude" column="point3_longitude" jdbcType="DOUBLE"/>
+        <result property="point3Dimension" column="point3_dimension" jdbcType="DOUBLE"/>
+        <result property="point4Longitude" column="point4_longitude" jdbcType="DOUBLE"/>
+        <result property="point4Dimension" column="point4_dimension" jdbcType="DOUBLE"/>
+    </resultMap>
+
+</mapper>

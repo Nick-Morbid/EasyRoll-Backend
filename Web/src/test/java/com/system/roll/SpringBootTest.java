@@ -328,6 +328,20 @@ public class SpringBootTest {
         attendanceRecordMapper.delete(null);
     }
 
+
+    @Resource
+    private PositionMapper positionMapper;
+
+    @Test
+    public void insertPoint() throws IOException {
+        String positionRelation = "F:\\软工大作业\\项目代码\\EasyRoll-Backend\\Web\\resource\\经纬度信息.xlsx";
+        String positionInfo = "F:\\软工大作业\\项目代码\\EasyRoll-Backend\\Web\\resource\\教学楼定位信息.xlsx";
+        List<PositionInfo> positionInfos = excelUtil.importExcel(PositionInfo.class, new FileInputStream(positionInfo), ExcelUtil.ExcelType.XLSX);
+        List<PositionRelation> positionRelations = excelUtil.importExcel(PositionRelation.class, new FileInputStream(positionRelation), ExcelUtil.ExcelType.XLSX);
+        positionInfos.forEach(System.out::println);
+        positionRelations.forEach(System.out::println);
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -340,4 +354,36 @@ public class SpringBootTest {
         @Excel(value = "状态")
         private String state;
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class PositionInfo{
+        @Excel(value = "教学楼编号")
+        private String dorm_no;
+        @Excel(value = "定位点1编号")
+        private String point1;
+        @Excel(value = "定位点2编号")
+        private String point2;
+        @Excel(value = "定位点3编号")
+        private String point3;
+        @Excel(value = "定位点4编号")
+        private String point4;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class PositionRelation{
+        @Excel(value = "点位")
+        private String pointNo;
+        @Excel(value = "经度")
+        private String longitude;
+        @Excel(value = "纬度")
+        private String dimension;
+    }
 }
+
+

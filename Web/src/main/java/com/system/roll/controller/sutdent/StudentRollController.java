@@ -1,6 +1,7 @@
 package com.system.roll.controller.sutdent;
 
 import com.system.roll.entity.constant.impl.ResultCode;
+import com.system.roll.entity.dto.student.PositionDto;
 import com.system.roll.entity.vo.leave.LeaveListVo;
 import com.system.roll.entity.vo.leave.LeaveVo;
 import com.system.roll.entity.exception.impl.ServiceException;
@@ -25,7 +26,9 @@ public class StudentRollController {
     }
 
     @PostMapping("/putPosition")
-    public void putPosition(){
+    public void putPosition(@RequestBody PositionDto data){
+        /*上传经纬度信息，进行判断*/
+        studentRollService.putPosition(data);
     }
 
     @PostMapping("/leave/apply")

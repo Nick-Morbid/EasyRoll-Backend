@@ -2,6 +2,7 @@ package com.system.roll.service.student.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.entity.constant.impl.RollState;
+import com.system.roll.entity.dto.student.PositionDto;
 import com.system.roll.entity.pojo.*;
 import com.system.roll.entity.vo.leave.LeaveListVo;
 import com.system.roll.entity.vo.leave.LeaveVo;
@@ -132,5 +133,10 @@ public class StudentRollServiceImpl implements StudentRollService {
         rollHistoryVo.setRollRecords(rollRecords);
 
         return rollHistoryVo;
+    }
+
+    @Override
+    public void putPosition(PositionDto data) {
+
     }
 }

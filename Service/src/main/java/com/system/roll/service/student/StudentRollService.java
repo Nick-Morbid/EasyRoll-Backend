@@ -1,5 +1,6 @@
 package com.system.roll.service.student;
 
+import com.system.roll.entity.dto.student.PositionDto;
 import com.system.roll.entity.vo.leave.LeaveListVo;
 import com.system.roll.entity.vo.leave.LeaveVo;
 import com.system.roll.entity.vo.student.RollHistoryVo;
@@ -20,6 +21,11 @@ public interface StudentRollService {
     void applyQuery(LeaveQueryDTO leaveDto);
 
     RollHistoryVo getHistory(Date date);
+
+    /**
+     * 上传经纬度信息，并进行判断
+     * */
+    void putPosition(PositionDto data);
 
     @Data
     @AllArgsConstructor
