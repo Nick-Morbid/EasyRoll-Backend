@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.context.common.CommonContext;
 import com.system.roll.entity.constant.impl.Period;
 import com.system.roll.entity.constant.impl.TimeUnit;
-import com.system.roll.entity.pojo.AttendanceRecord;
-import com.system.roll.entity.pojo.Course;
-import com.system.roll.entity.pojo.CourseArrangement;
-import com.system.roll.entity.pojo.LeaveRelation;
+import com.system.roll.entity.pojo.*;
 import com.system.roll.entity.properites.CommonProperties;
 import com.system.roll.entity.vo.Result;
 import com.system.roll.entity.vo.student.StudentRollListVo;
@@ -25,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -33,15 +31,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @org.springframework.boot.test.context.SpringBootTest(webEnvironment = org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Slf4j
 public class SpringBootTest {
 
     @Resource(name = "ExcelUtil")
@@ -331,15 +327,40 @@ public class SpringBootTest {
 
     @Resource
     private PositionMapper positionMapper;
-
+    @Resource(name = "PositionUtil")
+    private PositionUtil positionUtil;
     @Test
     public void insertPoint() throws IOException {
         String positionRelation = "F:\\软工大作业\\项目代码\\EasyRoll-Backend\\Web\\resource\\经纬度信息.xlsx";
         String positionInfo = "F:\\软工大作业\\项目代码\\EasyRoll-Backend\\Web\\resource\\教学楼定位信息.xlsx";
         List<PositionInfo> positionInfos = excelUtil.importExcel(PositionInfo.class, new FileInputStream(positionInfo), ExcelUtil.ExcelType.XLSX);
         List<PositionRelation> positionRelations = excelUtil.importExcel(PositionRelation.class, new FileInputStream(positionRelation), ExcelUtil.ExcelType.XLSX);
-        positionInfos.forEach(System.out::println);
-        positionRelations.forEach(System.out::println);
+        Map<String,Point> pointMap = new HashMap<>();
+        for (PositionRelation relation : positionRelations) {
+            Point point = new Point().setLongitude(positionUtil.toDecimal(relation.getLongitude())).setDimension(positionUtil.toDecimal(relation.getDimension()));
+            pointMap.put(relation.getPointNo(),point);
+//            log.info("转换前：经度：{}，维度：{}",relation.getLongitude(),relation.getDimension());
+//            log.info("转换后：经度：{}，维度：{}",point.getLongitude(),point.getDimension());
+        }
+        for (PositionInfo info : positionInfos) {
+            Point point1 = pointMap.get(info.getPoint1());
+            Point point2 = pointMap.get(info.getPoint2());
+            Point point3 = pointMap.get(info.getPoint3());
+            Point point4 = pointMap.get(info.getPoint4());
+
+            Position position = new Position()
+                    .setPositionId(idUtil.getId())
+                    .setDormNo(Integer.valueOf(info.getDorm_no()))
+                    .setPoint1Longitude(point1.getLongitude())
+                    .setPoint1Dimension(point1.getDimension())
+                    .setPoint2Longitude(point2.getLongitude())
+                    .setPoint2Dimension(point2.getDimension())
+                    .setPoint3Longitude(point3.getLongitude())
+                    .setPoint3Dimension(point3.getDimension())
+                    .setPoint4Longitude(point4.getLongitude())
+                    .setPoint4Dimension(point4.getDimension());
+            positionMapper.insert(position);
+        }
     }
 
     @Data
@@ -370,6 +391,15 @@ public class SpringBootTest {
         private String point3;
         @Excel(value = "定位点4编号")
         private String point4;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class Point{
+        private Double longitude;
+        private Double dimension;
     }
 
     @Data
