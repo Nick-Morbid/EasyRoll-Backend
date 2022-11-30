@@ -25,7 +25,8 @@ public class StudentRollController {
     }
 
     @PostMapping("/putPosition")
-    public void putPosition(){
+    public Boolean putPosition(StudentRollService.RollTaskDTO rollTaskDTO){
+        return studentRollService.putPosition(rollTaskDTO);
     }
 
     @PostMapping("/leave/apply")

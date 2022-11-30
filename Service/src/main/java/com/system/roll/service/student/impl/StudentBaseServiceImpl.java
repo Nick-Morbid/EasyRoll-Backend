@@ -99,8 +99,7 @@ public class StudentBaseServiceImpl implements StudentBaseService {
         LambdaQueryWrapper<CourseArrangement> caqw = new LambdaQueryWrapper<>();
         caqw.in(CourseArrangement::getId,courseIds)
                 .eq(CourseArrangement::getWeekDay,currentDay)
-                .eq(CourseArrangement::getMode, isOdd ? TeachingMode.ODD_SINGLE_WEEK : TeachingMode.EVEN_SINGLE_WEEK)
-                .eq(CourseArrangement::getMode,TeachingMode.EVERY_WEEK);
+                .in(CourseArrangement::getMode,isOdd ? TeachingMode.ODD_SINGLE_WEEK : TeachingMode.EVEN_SINGLE_WEEK,TeachingMode.EVERY_WEEK);
 
         List<CourseArrangement> courseArrangements = courseArrangementMapper.selectList(caqw);
 

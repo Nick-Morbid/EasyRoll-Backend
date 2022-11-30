@@ -23,7 +23,7 @@ import java.util.List;
 @Component(value = "studentRollService")
 public class StudentRollServiceImpl implements StudentRollService {
     @Resource
-    private LeaveMapper leaveMapper;
+    private LeaveRelationMapper leaveMapper;
 
     @Resource
     private CourseRelationMapper courseRelationMapper;
@@ -50,11 +50,11 @@ public class StudentRollServiceImpl implements StudentRollService {
     public LeaveListVo getAllLeave() {
 
         String studentId = SecurityContextHolder.getContext().getAuthorization().getInfo(String.class, "id");
-        LambdaQueryWrapper<Leave> leaveQueryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<LeaveRelation> leaveQueryWrapper = new LambdaQueryWrapper<>();
 
         // 获取该学生的所有请假记录
-        leaveQueryWrapper.eq(Leave::getStudentId,studentId);
-        List<Leave> leaves = leaveMapper.selectList(leaveQueryWrapper);
+        leaveQueryWrapper.eq(LeaveRelation::getStudentId,studentId);
+        List<LeaveRelation> leaves = leaveMapper.selectList(leaveQueryWrapper);
         LeaveListVo leaveRecords = new LeaveListVo();
         leaveRecords.setTotal(leaves.size());
 
@@ -67,7 +67,7 @@ public class StudentRollServiceImpl implements StudentRollService {
 
     @Override
     public LeaveVo leaveQuery(String leaveId) {
-        Leave leave = leaveMapper.selectById(leaveId);
+        LeaveRelation leave = leaveMapper.selectById(leaveId);
         return LeaveConvertor.INSTANCE.LeaveToLeaveVo(leave);
     }
 
@@ -132,5 +132,11 @@ public class StudentRollServiceImpl implements StudentRollService {
         rollHistoryVo.setRollRecords(rollRecords);
 
         return rollHistoryVo;
+    }
+
+    @Override
+    public Boolean putPosition(RollTaskDTO rollTaskDTO) {
+
+        return true;
     }
 }

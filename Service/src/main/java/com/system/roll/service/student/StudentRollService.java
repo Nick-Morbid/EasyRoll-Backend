@@ -21,6 +21,8 @@ public interface StudentRollService {
 
     RollHistoryVo getHistory(Date date);
 
+    Boolean putPosition(RollTaskDTO rollTaskDTO);
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -31,5 +33,16 @@ public interface StudentRollService {
         private Timestamp endTime;
         private String excuse;
         private String attachment;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    @ToString
+    class RollTaskDTO {
+        private String courseId;
+        private Double longitude;
+        private Double latitude;
     }
 }
