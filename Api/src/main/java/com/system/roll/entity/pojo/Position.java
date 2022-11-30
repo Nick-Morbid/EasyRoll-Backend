@@ -35,4 +35,13 @@ public class Position {
     @TableField(value = "point4_dimension")
     private Double point4Dimension;
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    public static class Point{
+        public Double x;
+        public Double y;
+    }
+
 }

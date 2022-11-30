@@ -362,7 +362,6 @@ public class SpringBootTest {
             positionMapper.insert(position);
         }
     }
-
     @Data
     @AllArgsConstructor
     @NoArgsConstructor

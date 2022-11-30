@@ -14,7 +14,8 @@ public enum BuildingNo implements CommonEnum {
     ART_ONE("文1",8),
     ART_TWO("文2",9),
     ART_THREE("文3",10),
-    ART_FOUR("文4",11)
+    ART_FOUR("文4",11),
+    DEPART_BUILD("院楼",12)
     ;
 
     private final String msg;

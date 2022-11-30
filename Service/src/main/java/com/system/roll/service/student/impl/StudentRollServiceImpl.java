@@ -2,8 +2,10 @@ package com.system.roll.service.student.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.system.roll.context.security.SecurityContextHolder;
+import com.system.roll.entity.constant.impl.ResultCode;
 import com.system.roll.entity.constant.impl.RollState;
 import com.system.roll.entity.dto.student.PositionDto;
+import com.system.roll.entity.exception.impl.ServiceException;
 import com.system.roll.entity.pojo.*;
 import com.system.roll.entity.vo.leave.LeaveListVo;
 import com.system.roll.entity.vo.leave.LeaveVo;
@@ -14,6 +16,7 @@ import com.system.roll.redis.CourseRedis;
 import com.system.roll.redis.StudentRedis;
 import com.system.roll.service.student.StudentRollService;
 import com.system.roll.utils.DateUtil;
+import com.system.roll.utils.PositionUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -46,6 +49,15 @@ public class StudentRollServiceImpl implements StudentRollService {
 
     @Resource
     private DateUtil dateUtil;
+
+    @Resource
+    private PositionUtil positionUtil;
+
+    @Resource
+    private CourseMapper courseMapper;
+
+    @Resource
+    private PositionMapper positionMapper;
 
     @Override
     public LeaveListVo getAllLeave() {
@@ -137,6 +149,15 @@ public class StudentRollServiceImpl implements StudentRollService {
 
     @Override
     public void putPosition(PositionDto data) {
+        Position.Point point = new Position.Point(data.getLongitude(), data.getDimension());
+        Course course = courseMapper.selectById(data.getCourseId());
+        int buildingNo = course.getClassroomNo() / 1000;
+        LambdaQueryWrapper<Position> pqw = new LambdaQueryWrapper<>();
+        pqw.eq(Position::getDormNo,buildingNo);
 
+        Position position = positionMapper.selectOne(pqw);
+        if(!positionUtil.isInside(point,position)){
+            throw new ServiceException(ResultCode.FAILED_TO_POSITION);
+        }
     }
 }
