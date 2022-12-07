@@ -8,8 +8,8 @@ import com.system.roll.service.supervisor.SupervisorRollService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.xml.crypto.Data;
 import java.sql.Date;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/supervisor/roll")
@@ -44,8 +44,8 @@ public class SupervisorRollController {
     }
 
     @GetMapping("/output/text")
-    public void outputText(@RequestParam("courseId") Long courseId){
-        supervisorRollService.outputText(courseId);
+    public Map<String, String> outputText(@RequestParam("courseId") String courseId){
+        return Map.of("output",supervisorRollService.outputText(courseId));
     }
 
     @GetMapping("/statistics")

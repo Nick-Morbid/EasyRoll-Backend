@@ -46,4 +46,11 @@ public interface SocketHandler {
     default void onClose(String socketId) throws IOException{
         SocketContextHandler.clearContext(socketId);//清除上下文环境
     }
+
+    /**
+     * 出现异常
+     * */
+    default void OnError(Throwable throwable) throws IOException {
+
+    }
 }

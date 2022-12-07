@@ -97,11 +97,13 @@ public class StudentBaseServiceImpl implements StudentBaseService {
 
         // 2.查出该学生所选的课程中，当天需要点名的课程信息
         LambdaQueryWrapper<CourseArrangement> caqw = new LambdaQueryWrapper<>();
-        caqw.in(CourseArrangement::getId,courseIds)
+        caqw.in(CourseArrangement::getCourseId,courseIds)
                 .eq(CourseArrangement::getWeekDay,currentDay)
                 .in(CourseArrangement::getMode,isOdd ? TeachingMode.ODD_SINGLE_WEEK : TeachingMode.EVEN_SINGLE_WEEK,TeachingMode.EVERY_WEEK);
 
         List<CourseArrangement> courseArrangements = courseArrangementMapper.selectList(caqw);
+
+
 
         // 3.将数据封装成vo对象
         LambdaQueryWrapper<Delivery> dqw = new LambdaQueryWrapper<>();

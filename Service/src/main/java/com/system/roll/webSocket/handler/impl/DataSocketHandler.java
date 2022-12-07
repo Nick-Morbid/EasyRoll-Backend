@@ -1,6 +1,7 @@
 package com.system.roll.webSocket.handler.impl;
 
 import com.system.roll.entity.constant.impl.ResultCode;
+import com.system.roll.entity.constant.impl.RollDataType;
 import com.system.roll.entity.constant.impl.RollState;
 import com.system.roll.entity.constant.impl.TimeUnit;
 import com.system.roll.entity.exception.impl.ServiceException;
@@ -88,19 +89,33 @@ public class DataSocketHandler implements SocketHandler {
 
     @OnMessage
     @Override
-    public void onMessage(String data) {
-        try {
-            SocketContextHandler.getContext("data:"+courseId).sendMessage(ResultCode.SUCCESS,new RollData().setFlag(2));
-        } catch (IOException | EncodeException e) {
-            e.printStackTrace();
-        }
+    public void onMessage(String data) throws IOException {
+//        if (data.equals("close")){
+//            SocketContextHandler.clearContext("data:"+this.courseId);
+//        }
+//        try {
+//            SocketContextHandler.getContext("data:"+courseId).sendMessage(ResultCode.SUCCESS,new RollData().setFlag(2));
+//        } catch (IOException | EncodeException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @OnClose
-    @OnError
     @Override
     public void onClose(@PathParam(value = "courseId")String courseId) throws IOException {
+        log.info("课程：{}的点名关闭",this.courseId);
         SocketHandler.super.onClose("data:"+courseId);
+        this.listener.stop();
+    }
+
+    @OnError
+    public void OnError(Throwable throwable) {
+        log.info("课程：{}的点名关闭（可能是由于异常引起的）",this.courseId);
+        try {
+            SocketHandler.super.onClose("data:"+this.courseId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.listener.stop();
     }
 
@@ -132,13 +147,15 @@ public class DataSocketHandler implements SocketHandler {
             RollDataVo statistic = new RollDataVo().setDate(new Date(System.currentTimeMillis())).setEnrollNum(course.getEnrollNum()).setFlag(0);
 
             boolean flag = true;//标记是否为刚刚开始接收信号
+            int count = 0;
             while (this.isRunning){
                 String data = rabbitUtil.consume(queueName, 500);
                 /*收到考勤数据，向前端发送*/
                 try {
                     if (data!=null){
-                        RollData rollData = JsonUtil.toObject(data,RollData.class).setFlag(1);
-                        log.info("收到数据：{}",rollData);
+                        count++;
+                        RollData rollData = JsonUtil.toObject(data,RollData.class).setFlag(RollDataType.SINGLE);
+                        log.info("[DataSocketHandler]收到数据：{}，当前已完成点名人数：{}",rollData,count);
                         if (rollData.getEnrollNum()!=null) statistic.setEnrollNum(rollData.getEnrollNum());
                         rollData.setStudentName(studentRedis.getName(rollData.getStudentId()));
                         if (flag){
@@ -159,6 +176,12 @@ public class DataSocketHandler implements SocketHandler {
                         }else {
                             /*发送最近一次的考勤数据*/
                             context.sendMessage(ResultCode.SUCCESS,rollData);
+                            if (statistic.getEnrollNum()!=null&&count==statistic.getEnrollNum()){
+                                this.isRunning = false;
+                                log.info("课程：{}完成点名",this.courseId);
+                                SocketContextHandler.clearContext("data:"+courseId);
+                            }
+
                         }
                     }else {
                         /*刚刚开始接收信号完毕，一口气发送累积的结果*/

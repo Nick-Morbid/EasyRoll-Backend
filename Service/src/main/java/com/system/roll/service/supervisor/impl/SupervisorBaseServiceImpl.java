@@ -150,39 +150,41 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
         List<String> courseIds = rollRelations.stream().map(RollRelation::getCourseId).collect(Collectors.toList());
 
         // 2.查出该督导员当天需要点名的课程信息
-        LambdaQueryWrapper<CourseArrangement> caqw = new LambdaQueryWrapper<>();
-        caqw.in(CourseArrangement::getCourseId,courseIds)
-                .eq(CourseArrangement::getWeekDay,currentDay)
-                .in(CourseArrangement::getMode,isOdd ? TeachingMode.ODD_SINGLE_WEEK : TeachingMode.EVEN_SINGLE_WEEK,TeachingMode.EVERY_WEEK);
+        if (courseIds.size()>0){
+            LambdaQueryWrapper<CourseArrangement> caqw = new LambdaQueryWrapper<>();
+            caqw.in(CourseArrangement::getCourseId,courseIds)
+                    .eq(CourseArrangement::getWeekDay,currentDay)
+                    .in(CourseArrangement::getMode,isOdd ? TeachingMode.ODD_SINGLE_WEEK : TeachingMode.EVEN_SINGLE_WEEK,TeachingMode.EVERY_WEEK);
 
-        List<CourseArrangement> courseArrangements = courseArrangementMapper.selectList(caqw);
+            List<CourseArrangement> courseArrangements = courseArrangementMapper.selectList(caqw);
 
-        // 3.将数据封装成vo对象
-        LambdaQueryWrapper<Delivery> dqw = new LambdaQueryWrapper<>();
-        LambdaQueryWrapper<Course> cqw = new LambdaQueryWrapper<>();
-        for (CourseArrangement item : courseArrangements) {
-            dqw.clear();
-            cqw.clear();
+            // 3.将数据封装成vo对象
+            LambdaQueryWrapper<Delivery> dqw = new LambdaQueryWrapper<>();
+            LambdaQueryWrapper<Course> cqw = new LambdaQueryWrapper<>();
+            for (CourseArrangement item : courseArrangements) {
+                dqw.clear();
+                cqw.clear();
 
-            cqw.eq(Course::getId,item.getCourseId())
-                    .le(Course::getStartWeek,currentWeek)
-                    .ge(Course::getEndWeek,currentWeek);
+                cqw.eq(Course::getId,item.getCourseId())
+                        .le(Course::getStartWeek,currentWeek)
+                        .ge(Course::getEndWeek,currentWeek);
 
-            Course course = courseMapper.selectOne(cqw);
-            if (course==null) continue;
-            dqw.eq(Delivery::getCourseId,item.getCourseId());
-            List<Delivery> deliveries = deliveryMapper.selectList(dqw);
-            List<String> professorNames = deliveries.stream().map(Delivery::getProfessorName).collect(Collectors.toList());
-            CourseVo courseVo = new CourseVo();
-            courseVo.setEndWeek(course.getEndWeek())
-                    .setStartWeek(course.getStartWeek())
-                    .setPeriod(item.getPeriod().getMsg())
-                    .setId(item.getCourseId())
-                    .setName(course.getCourseName())
-                    .setProfessorName(StringUtils.join(professorNames,','))
-                    .setClassroom(commonUtil.getClassroom(course.getClassroomNo()));
+                Course course = courseMapper.selectOne(cqw);
+                if (course==null) continue;
+                dqw.eq(Delivery::getCourseId,item.getCourseId());
+                List<Delivery> deliveries = deliveryMapper.selectList(dqw);
+                List<String> professorNames = deliveries.stream().map(Delivery::getProfessorName).collect(Collectors.toList());
+                CourseVo courseVo = new CourseVo();
+                courseVo.setEndWeek(course.getEndWeek())
+                        .setStartWeek(course.getStartWeek())
+                        .setPeriod(item.getPeriod().getMsg())
+                        .setId(item.getCourseId())
+                        .setName(course.getCourseName())
+                        .setProfessorName(StringUtils.join(professorNames,','))
+                        .setClassroom(commonUtil.getClassroom(course.getClassroomNo()));
 
-            courses.add(courseVo);
+                courses.add(courseVo);
+            }
         }
 
         return new CourseListVo(courses,courses.size());
@@ -190,7 +192,7 @@ public class SupervisorBaseServiceImpl implements SupervisorBaseService {
 
     @Override
     @Transactional
-    @Operation(type = OperationType.DELETE_COURSE)
+//    @Operation(type = OperationType.DELETE_COURSE)
     public void deleteCourse(String courseId) {
         if (courseMapper.selectById(courseId)==null) throw new ServiceException(ResultCode.RESOURCE_NOT_FOUND);
         courseRedis.deleteCourseName(courseId);

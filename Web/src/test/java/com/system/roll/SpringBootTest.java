@@ -26,9 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.*;
@@ -362,6 +360,21 @@ public class SpringBootTest {
             positionMapper.insert(position);
         }
     }
+
+    @Test
+    public void Test1() throws IOException {
+        String path = "F:\\软工大作业\\项目代码\\EasyRoll-Backend\\Web\\resource\\日志.txt";
+        File file = new File(path);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String str;
+        StringBuilder res = new StringBuilder();
+        while ((str=reader.readLine())!=null){
+            res.append(str);
+        }
+        System.out.println(res.toString());
+    }
+
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor

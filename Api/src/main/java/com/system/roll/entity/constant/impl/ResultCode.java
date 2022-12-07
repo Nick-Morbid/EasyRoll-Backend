@@ -25,6 +25,7 @@ public enum  ResultCode implements CommonEnum {
     PARAM_NOT_MATCH("请求参数异常",405),
     INVALID_ROLL("无效点名",406),
     FAILED_TO_POSITION("定位失败",407),
+    NOT_ROLL_STATISTIC("无点名统计数据",408),
 
 
     NULL_POINT("空指针异常",500),
