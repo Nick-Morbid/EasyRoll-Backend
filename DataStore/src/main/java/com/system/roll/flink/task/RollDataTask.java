@@ -1,5 +1,6 @@
 package com.system.roll.flink.task;
 
+import com.system.roll.entity.constant.impl.RollDataType;
 import com.system.roll.entity.pojo.RollData;
 import com.system.roll.flink.sink.RollDataSink;
 import com.system.roll.flink.source.RabbitSource;
@@ -45,13 +46,19 @@ public class RollDataTask implements FlinkTask{
         @Override
         public RollData map(String s) {
             String[] split = s.split(",");
+            /*如果长度为1，说明要中断点名*/
+            if(split.length==1){
+                log.info("中断课程号为：{}的点名任务",split[0]);
+                return new RollData().setCourseId(split[0]).setFlag(RollDataType.ABORT_ROLL);
+            }
             /*如果长度为2，说明传入了课程号和总人数信息*/
-            if (split.length==2){
+            else if (split.length==2){
                 log.info("收到了课程号为：{}的点名请求，点名人数为：{}",split[0],split[1]);
-                return new RollData().setCourseId(split[0]).setEnrollNum(Integer.valueOf(split[1])).setTime(new Timestamp(System.currentTimeMillis()));
+                return new RollData().setCourseId(split[0]).setEnrollNum(Integer.valueOf(split[1])).setTime(new Timestamp(System.currentTimeMillis())).setFlag(RollDataType.START_ROLL);
+            /*如果长度为3，说明传入单条考勤数据*/
             }else if (split.length==3){
                 log.info("在课程号：{}的课程中，学号：{}的同学的考勤状态为：{}",split[0],split[1],split[2]);
-                return new RollData().setCourseId(split[0]).setStudentId(split[1]).setState(Integer.valueOf(split[2])).setTime(new Timestamp(System.currentTimeMillis()));
+                return new RollData().setCourseId(split[0]).setStudentId(split[1]).setState(Integer.valueOf(split[2])).setTime(new Timestamp(System.currentTimeMillis())).setFlag(RollDataType.SINGLE);
             }
             return null;
         }

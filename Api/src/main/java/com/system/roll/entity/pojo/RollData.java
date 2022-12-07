@@ -1,5 +1,6 @@
 package com.system.roll.entity.pojo;
 
+import com.system.roll.entity.constant.impl.RollDataType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,6 @@ public class RollData implements Serializable {
     private Integer enrollNum;
     /*点名时间*/
     private Timestamp time;
-
-    private Integer flag;//0表示统计数据，1表示单条考勤数据
+    /*考勤数据类型*/
+    private RollDataType flag;
 }

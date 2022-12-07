@@ -87,7 +87,7 @@ public class RollSocketHandler implements SocketHandler {
         rabbitUtil.sendMessage(rabbitProperties.getWsExchange(),rabbitProperties.getRollDataSource(),this.courseId+","+data);
         this.count++;
         /*完成点名*/
-        log.info("当前已完成点名人数：{}，总计需要完成点名人数：{}",this.count,this.enrollNum);
+        log.info("[RollSocketHandler]当前已完成点名人数：{}，总计需要完成点名人数：{}",this.count,this.enrollNum);
         if (Objects.equals(this.count, this.enrollNum)){
             /*更新环境类的映射（在需要使用到环境类的线程中，需要更新一下环境类的映射）*/
             SecurityContextHolder.setContext(securityContext);
@@ -102,6 +102,8 @@ public class RollSocketHandler implements SocketHandler {
                 e.printStackTrace();
                 SocketContextHandler.getContext("roll:"+courseId).sendMessage(ResultCode.SERVER_ERROR,null);
             }
+            /*count清空为0*/
+            this.count = 0;
         }
     }
 

@@ -1,6 +1,7 @@
 package com.system.roll.webSocket.handler.impl;
 
 import com.system.roll.entity.constant.impl.ResultCode;
+import com.system.roll.entity.constant.impl.RollDataType;
 import com.system.roll.entity.constant.impl.RollState;
 import com.system.roll.entity.constant.impl.TimeUnit;
 import com.system.roll.entity.exception.impl.ServiceException;
@@ -100,10 +101,21 @@ public class DataSocketHandler implements SocketHandler {
     }
 
     @OnClose
-    @OnError
     @Override
     public void onClose(@PathParam(value = "courseId")String courseId) throws IOException {
+        log.info("课程：{}的点名关闭",this.courseId);
         SocketHandler.super.onClose("data:"+courseId);
+        this.listener.stop();
+    }
+
+    @OnError
+    public void OnError(Throwable throwable) {
+        log.info("课程：{}的点名关闭（可能是由于异常引起的）",this.courseId);
+        try {
+            SocketHandler.super.onClose("data:"+this.courseId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.listener.stop();
     }
 
@@ -142,8 +154,8 @@ public class DataSocketHandler implements SocketHandler {
                 try {
                     if (data!=null){
                         count++;
-                        RollData rollData = JsonUtil.toObject(data,RollData.class).setFlag(1);
-                        log.info("收到数据：{}",rollData);
+                        RollData rollData = JsonUtil.toObject(data,RollData.class).setFlag(RollDataType.SINGLE);
+                        log.info("[DataSocketHandler]收到数据：{}，当前已完成点名人数：{}",rollData,count);
                         if (rollData.getEnrollNum()!=null) statistic.setEnrollNum(rollData.getEnrollNum());
                         rollData.setStudentName(studentRedis.getName(rollData.getStudentId()));
                         if (flag){
@@ -166,6 +178,7 @@ public class DataSocketHandler implements SocketHandler {
                             context.sendMessage(ResultCode.SUCCESS,rollData);
                             if (statistic.getEnrollNum()!=null&&count==statistic.getEnrollNum()){
                                 this.isRunning = false;
+                                log.info("课程：{}完成点名",this.courseId);
                                 SocketContextHandler.clearContext("data:"+courseId);
                             }
 
